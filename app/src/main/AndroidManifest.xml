@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.brentondurkee.ccm" >
+
+    <uses-permission
+        android:name="android.permission.INTERNET"/>
+    <uses-permission
+        android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission
+        android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission
+        android:name="com.brentondurkee.ccm.permission.C2D_MESSAGE"/>
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+
+        <receiver
+            android:name="com.brentondurkee.ccm.provider.gcm.Receiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.brentondurkee.ccm" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name="com.brentondurkee.ccm.provider.gcm.ListenService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.brentondurkee.ccm.provider.gcm.InstanceIDListenService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.brentondurkee.ccm.provider.gcm.RegIntentService"
+            android:exported="false">
+        </service>
+
+
+        <activity
+            android:name=".Main"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".events.Events"
+            android:label="@string/title_activity_events"
+            android:parentActivityName=".Main" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.brentondurkee.ccm.Main" />
+        </activity>
+        <activity
+            android:name=".events.EventDetail"
+            android:label="@string/title_activity_event_detail"
+            android:parentActivityName=".events.Events" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".events.Events" />
+        </activity>
+        <activity
+            android:name=".inbox.Msgs"
+            android:label="@string/title_activity_msgs"
+            android:parentActivityName=".Main" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.brentondurkee.ccm.Main" />
+        </activity>
+        <activity
+            android:name=".inbox.MsgDetail"
+            android:label="@string/title_activity_msg_detail"
+            android:parentActivityName=".inbox.Msgs" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".inbox.Msgs" />
+        </activity>
+        <activity
+            android:name=".talks.TalkDetail"
+            android:label="@string/title_activity_talk_detail"
+            android:parentActivityName=".talks.Talks" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".talks.Talks" />
+            >
+        </activity>
+        <activity
+            android:name=".talks.Talks"
+            android:label="@string/title_activity_talks"
+            android:parentActivityName=".Main" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.brentondurkee.ccm.Main" />
+            >
+        </activity>
+        <provider
+            android:name=".provider.DataProvider"
+            android:authorities="com.brentondurkee.ccm"
+            android:exported="false" />
+        <service
+            android:name=".provider.SyncService"
+            android:exported="true"
+            android:process=":sync">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
+        </service>
+        <service android:name="com.brentondurkee.ccm.common.accounts.GenericAccountService">
+            <!-- Required filter used by the system to launch our account service. -->
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <!-- This points to an XMLf ile which describes our account service. -->
+            <meta-data android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+       </application>
+</manifest>
