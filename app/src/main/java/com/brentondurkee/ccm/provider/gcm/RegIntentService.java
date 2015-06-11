@@ -8,6 +8,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.brentondurkee.ccm.R;
+import com.brentondurkee.ccm.auth.AuthRequests;
+import com.brentondurkee.ccm.provider.SyncUtil;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -19,8 +21,12 @@ import java.io.IOException;
  */
 public class RegIntentService extends IntentService{
 
-    private static final String TAG = "RegIntentService";
+    private final static String TAG="RegIntentService";
+
+
     private static final String[] TOPICS = {"global"};
+
+    public static String PREF_GCM_TOKEN="gcm_token";
 
     public RegIntentService() {
         super(TAG);
@@ -29,7 +35,7 @@ public class RegIntentService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.v(TAG, "Start Intent");
+        Log.v(TAG, "Handle Intent");
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         try {
@@ -44,10 +50,13 @@ public class RegIntentService extends IntentService{
                 String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                         GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
                 // [END get_token]
-                Log.i(TAG, "GCM Registration Token: " + token);
+                Log.v(TAG, "GCM Registration Token: " + token);
+                if(!sharedPreferences.getString(PREF_GCM_TOKEN, "").equals(token)){
+                    Log.v(TAG, "New Token");
+                    sendRegistrationToServer(token);
+                    sharedPreferences.edit().putString(PREF_GCM_TOKEN, token).commit();
+                }
 
-                // TODO: Implement this method to send any registration to your app's servers.
-                sendRegistrationToServer(token);
 
                 // Subscribe to topic channels
                 subscribeTopics(token);
@@ -75,11 +84,13 @@ public class RegIntentService extends IntentService{
      * Modify this method to associate the user's GCM registration token with any server-side account
      * maintained by your application.
      *
-     * @param token The new token.
-     */
-    private void sendRegistrationToServer(String token) {
+//     * @param token The new token.
+//     */
+    private void sendRegistrationToServer(String gcm) throws Exception{
         // Add custom implementation, as needed.
-
+        if(!AuthRequests.updateGCM(gcm, SyncUtil.getAuthToken())){
+            throw new Exception("Update GCM Failed");
+        }
     }
 
     /**

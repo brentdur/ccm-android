@@ -11,9 +11,11 @@ import com.google.android.gms.gcm.GcmReceiver;
  * Created by brenton on 6/9/15.
  */
 public class Receiver extends GcmReceiver{
-    @Override
+
+    private final String TAG=getClass().getSimpleName();
+
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        Log.d("OnReceive", "Recieved");
+        Log.v(TAG, "Received GCM");
     }
 }

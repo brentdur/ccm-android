@@ -10,12 +10,14 @@ import com.google.android.gms.gcm.GcmListenerService;
  * Created by brenton on 6/9/15.
  */
 public class ListenService extends GcmListenerService{
+
+    private final String TAG=getClass().getSimpleName();
+
     @Override
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("message");
 
-        Log.d("GCMRec", "From: " + from);
-        Log.d("GCMRec", "Message: " + message);
+        Log.d(TAG, "Message: " + message);
         if(message.contains("sync")){
             SyncUtil.TriggerRefresh();
         }

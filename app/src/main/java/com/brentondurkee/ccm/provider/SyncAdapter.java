@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,7 +76,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
        sync(eventFeed, DataContract.Event.CONTENT_URI, EVENT_PROJECTION, "event");
        sync(talkFeed, DataContract.Talk.CONTENT_URI, TALK_PROJECTION, "talk");
-        sync(msgFeed, DataContract.Msg.CONTENT_URI, MSG_PROJECTION, "msg");
+       sync(msgFeed, DataContract.Msg.CONTENT_URI, MSG_PROJECTION, "msg");
 
     }
 
@@ -97,7 +98,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 int response = conn.getResponseCode();
                 Log.v(TAG, "response: "+response);
                 if (response == 200) {
-                    stream = conn.getInputStream();
+                    stream = new BufferedInputStream(conn.getInputStream());
                     Log.v(TAG, "start update");
                     Scanner reader = new Scanner(stream);
                     StringBuilder string = new StringBuilder();
