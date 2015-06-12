@@ -2,13 +2,13 @@ package com.brentondurkee.ccm.talks;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.ListFragment;
-import android.content.Context;
-import android.content.CursorLoader;
-import android.content.Intent;
 import android.database.Cursor;
-import android.app.LoaderManager;
-import android.content.Loader;
+import android.support.v4.app.ListFragment;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -33,7 +33,7 @@ public class Talks extends ActionBarActivity {
 
         FragmentManager fragManager = getFragmentManager();
         FragmentTransaction fragTrans = fragManager.beginTransaction();
-        fragTrans.add(R.id.container, new TalkList());
+//        fragTrans.add(R.id.container, new TalkList());
         fragTrans.commit();
     }
 

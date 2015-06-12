@@ -2,12 +2,12 @@ package com.brentondurkee.ccm.events;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.ListFragment;
+import android.support.v4.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.CursorLoader;
-import android.app.LoaderManager;
-import android.content.Loader;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -33,7 +33,7 @@ public class Events extends ActionBarActivity {
 
         FragmentManager fragManager = getFragmentManager();
         FragmentTransaction fragTrans = fragManager.beginTransaction();
-        fragTrans.add(R.id.container, new EventList());
+//        fragTrans.add(R.id.container, new EventList());
         fragTrans.commit();
     }
 
@@ -74,6 +74,7 @@ public class Events extends ActionBarActivity {
                 DataContract.Event.COLUMN_NAME_DATE,
                 DataContract.Event.COLUMN_NAME_LOCATION
         };
+        private final String TAG=getClass().getSimpleName();
 
         public Event[] eventsArray = Event.createList(10);
 
@@ -85,6 +86,7 @@ public class Events extends ActionBarActivity {
             super.onActivityCreated(savedInstanceState);
 
             mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.event, null, from, to, 0);
+            Log.v(TAG, "list created");
 
 //            EventAdapter adapter = new EventAdapter(getActivity(), R.layout.event, R.id.eventTitle, eventsArray);
             setListAdapter(mAdapter);
@@ -105,14 +107,15 @@ public class Events extends ActionBarActivity {
         }
 
         @Override
-        public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-            mAdapter.changeCursor(cursor);
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            mAdapter.changeCursor(data);
         }
 
         @Override
-        public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        public void onLoaderReset(Loader<Cursor> loader) {
             mAdapter.changeCursor(null);
         }
+
     }
 }
 

@@ -28,7 +28,7 @@ public class AuthRequests {
     private final static String signInUrl="http://ccm.brentondurkee.com/auth/local";
     private final static String GCMUrl="http://ccm.brentondurkee.com/api/users/gcm";
 
-
+    //TODO: fill all exceptions
     public static String userSignUp(final String name, final String email, final String pass, String authType){
         Log.v(TAG, "Start Signup");
         String token = "";

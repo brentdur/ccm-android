@@ -60,7 +60,7 @@ public class SignUpActivity extends Activity {
                 Bundle data = new Bundle();
                 try{
                     authToken = AuthRequests.userSignUp(name, email, password, AuthUtil.TOKEN_TYPE_ACCESS);
-
+                    //TODO: what if signup fails
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, email);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, mAccountType);
                     data.putString(AccountManager.KEY_AUTHTOKEN, authToken);
@@ -77,6 +77,7 @@ public class SignUpActivity extends Activity {
             @Override
             protected void onPostExecute(Intent intent) {
                 setResult(RESULT_OK, intent);
+                //TODO: update user
                 finish();
             }
         }.execute();

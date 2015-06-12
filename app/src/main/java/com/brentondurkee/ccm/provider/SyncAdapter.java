@@ -80,6 +80,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     }
 
+    //TODO: update all exceptions
+    //TODO: clean up database entry
     public void sync(String feed, Uri content, String[] projection, String type){
         InputStream stream = null;
         Log.v(TAG, "started for " +type);

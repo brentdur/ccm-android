@@ -26,6 +26,7 @@ import android.provider.BaseColumns;
 public class DataContract {
     private DataContract() {
     }
+    //TODO: clean up strings
 
     /**
      * Content provider authority.

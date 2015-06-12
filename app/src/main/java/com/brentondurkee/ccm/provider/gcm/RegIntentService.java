@@ -54,7 +54,8 @@ public class RegIntentService extends IntentService{
                 if(!sharedPreferences.getString(PREF_GCM_TOKEN, "").equals(token)){
                     Log.v(TAG, "New Token");
                     sendRegistrationToServer(token);
-                    sharedPreferences.edit().putString(PREF_GCM_TOKEN, token).commit();
+                    //TODO: what if it fails?
+                    sharedPreferences.edit().putString(PREF_GCM_TOKEN, token).apply();
                 }
 
 

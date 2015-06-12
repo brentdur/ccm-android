@@ -2,12 +2,13 @@ package com.brentondurkee.ccm.inbox;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.ListFragment;
-import android.app.LoaderManager;
+import android.support.v4.app.ListFragment;
 import android.content.Context;
-import android.content.CursorLoader;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.content.Intent;
-import android.content.Loader;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -32,8 +33,14 @@ public class Msgs extends ActionBarActivity {
 
         FragmentManager fragManager = getFragmentManager();
         FragmentTransaction fragTrans = fragManager.beginTransaction();
-        fragTrans.add(R.id.container, new MsgList());
+//        fragTrans.add(R.id.container, new MsgList());
         fragTrans.commit();
+        findViewById(R.id.container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Msgs.this, MsgDetail.class));
+            }
+        });
     }
 
 

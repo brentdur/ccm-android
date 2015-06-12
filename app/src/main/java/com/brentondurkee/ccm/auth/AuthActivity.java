@@ -73,6 +73,7 @@ public class AuthActivity extends AccountAuthenticatorActivity{
         }
         else {
             super.onActivityResult(requestCode, resultCode, data);
+            //TODO: test failed signup
         }
     }
 
@@ -86,6 +87,7 @@ public class AuthActivity extends AccountAuthenticatorActivity{
             @Override
             protected Intent doInBackground(Void... params){
                 String authToken = AuthRequests.userSignIn(email, password, mAuthTokenType);
+                //TODO: what if signin fails?
                 final Intent res = new Intent();
                 res.putExtra(AccountManager.KEY_ACCOUNT_NAME, email);
                 res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
@@ -96,6 +98,7 @@ public class AuthActivity extends AccountAuthenticatorActivity{
             @Override
             protected void onPostExecute(Intent intent){
                 finishLogin(intent);
+                //TODO: update user
             }
         }.execute();
     }

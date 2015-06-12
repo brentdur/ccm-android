@@ -1,0 +1,47 @@
+
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"-->
+    <!--android:paddingRight="@dimen/activity_horizontal_margin"-->
+    <!--android:paddingTop="@dimen/activity_vertical_margin"-->
+    <!--android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".Main">-->
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true">
+
+    <android.support.design.widget.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:id="@+id/frame"
+        android:background="@color/primaryCCM"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:focusable="true"
+        style="@style/MyTab" />
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="371dp" android:layout_height="504dp" android:id="@+id/pager"
+        android:layout_gravity="center_horizontal|bottom">
+
+
+        <!--<android.support.v4.view.PagerTabStrip-->
+            <!--android:id="@+id/pager_tab_strip"-->
+            <!--android:layout_width
+
+              ="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="top"-->
+            <!--android:background="#33b5e5"-->
+            <!--android:textColor="#fff"-->
+            <!--android:paddingTop="4dp"-->
+            <!--android:paddingBottom="4dp" />-->
+
+
+</android.support.v4.view.ViewPager>
+
+</FrameLayout>
+

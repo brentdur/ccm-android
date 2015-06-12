@@ -21,6 +21,8 @@ public class ListenService extends GcmListenerService{
         if(message.contains("sync")){
             SyncUtil.TriggerRefresh();
         }
+        //TODO: add other messages
+        //TODO: add sync based on type (selective sync)
 
     }
 

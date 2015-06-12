@@ -60,6 +60,9 @@ public class Authenticator extends AbstractAccountAuthenticator {
                 authToken = AuthRequests.userSignIn(account.name, password, authTokenType);
             }
         }
+        else {
+            // TODO: add "test authKey"
+        }
 
         if(!TextUtils.isEmpty(authToken)){
             final Bundle result = new Bundle();
