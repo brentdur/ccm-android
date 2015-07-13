@@ -17,6 +17,7 @@ import com.brentondurkee.ccm.R;
 public class SignUpActivity extends Activity {
 
     private String mAccountType;
+    private boolean fine = true;
 
     private final String TAG=getClass().getSimpleName();
 
@@ -60,11 +61,15 @@ public class SignUpActivity extends Activity {
                 Bundle data = new Bundle();
                 try{
                     authToken = AuthRequests.userSignUp(name, email, password, AuthUtil.TOKEN_TYPE_ACCESS);
-                    //TODO: what if signup fails
+                    if(authToken.contains("FAILED")){
+                        fine = false;
+                    }
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, email);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, mAccountType);
                     data.putString(AccountManager.KEY_AUTHTOKEN, authToken);
                     data.putString(AuthUtil.PARAM_USER_PASS, password);
+                    data.putString(AuthUtil.REG_TYPE, "Signup");
+                    data.putInt(AuthUtil.SUCCESS, 1);
                 } catch(Exception e){
 
                 }
@@ -76,8 +81,12 @@ public class SignUpActivity extends Activity {
 
             @Override
             protected void onPostExecute(Intent intent) {
-                setResult(RESULT_OK, intent);
-                //TODO: update user
+                if(fine == true) {
+                    setResult(RESULT_OK, intent);
+                }
+                else {
+                    setResult(RESULT_CANCELED);
+                }
                 finish();
             }
         }.execute();

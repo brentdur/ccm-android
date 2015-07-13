@@ -5,4 +5,6 @@
     <color name="primaryAccent">#FFC400</color>
     <color name="primaryBackground">#FFFFFF</color>
     <color name="primaryTextColor">#000000</color>
+
+    <color name="leadText">#aaa</color>
 </resources>

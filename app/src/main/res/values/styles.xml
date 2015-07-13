@@ -20,6 +20,9 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="SuperHeadText">
+        <item name="android:textSize">45sp</item>
+    </style>
     <style name="PrimaryText">
         <item name="android:textSize">34sp</item>
     </style>
@@ -34,6 +37,87 @@
     </style>
     <style name="BodyText">
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="EditDate" parent="HeaderText">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/date_hint</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="ShowDate" parent="EditDate">
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="EditSubject" parent="SuperHeadText">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/subject_hint</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="ShowSubject" parent="EditSubject">
+    </style>
+    <style name="EditTitle" parent="SuperHeadText">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/title_hint</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="ShowTitle" parent="EditTitle">
+    </style>
+    <style name="EditLocation" parent="HeaderText">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/location_hint</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="ShowLocation" parent="EditLocation">
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+    <style name="EditAuthor" parent="PrimaryText">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/author_hint</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="ShowAuthor" parent="EditAuthor">
+        <item name="android:layout_marginLeft">5dp</item>
+    </style>
+    <style name="EditTo" parent="PrimaryText">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/to_lead</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="ShowTo" parent="EditTo">
+        <item name="android:layout_marginLeft">5dp</item>
+    </style>
+    <style name="EditMsg" parent="TitleText">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/message_hint</item>
+    </style>
+    <style name="EditDesc" parent="TitleText">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/description_hint</item>
+    </style>
+
+    <style name="EditSubmit" parent="TitleText">
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/submit_button</item>
     </style>
 
     <style name="editTextCCM">

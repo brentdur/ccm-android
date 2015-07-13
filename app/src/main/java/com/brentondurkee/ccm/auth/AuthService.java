@@ -10,7 +10,7 @@ import android.util.Log;
  */
 public class AuthService extends Service {
 
-    private final String TAG=getClass().getSimpleName();
+    private final String TAG="CCMAuthService";
 
 
     @Override

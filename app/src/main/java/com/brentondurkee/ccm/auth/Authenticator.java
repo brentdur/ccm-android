@@ -17,7 +17,7 @@ import android.util.Log;
 public class Authenticator extends AbstractAccountAuthenticator {
 
     Context mContext;
-    private final String TAG=getClass().getSimpleName();
+    private final String TAG="CCMAuthenticator";
 
     public Authenticator(Context context){
         super(context);
@@ -48,6 +48,8 @@ public class Authenticator extends AbstractAccountAuthenticator {
         return null;
     }
 
+
+
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
         Log.v(TAG, "Get Token");
@@ -60,8 +62,12 @@ public class Authenticator extends AbstractAccountAuthenticator {
                 authToken = AuthRequests.userSignIn(account.name, password, authTokenType);
             }
         }
-        else {
-            // TODO: add "test authKey"
+
+        Log.v(TAG, AuthRequests.testAuth(authToken) + " auth test");
+
+        if(!AuthRequests.testAuth(authToken)){
+            authToken = "";
+            Log.v(TAG, "Test Auth Failed");
         }
 
         if(!TextUtils.isEmpty(authToken)){
@@ -95,4 +101,6 @@ public class Authenticator extends AbstractAccountAuthenticator {
     public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account, String[] features) throws NetworkErrorException {
         return null;
     }
+
+
 }

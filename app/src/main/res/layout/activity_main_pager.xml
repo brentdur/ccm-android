@@ -13,35 +13,48 @@
     android:layout_alignParentTop="true"
     android:layout_centerHorizontal="true">
 
-    <android.support.design.widget.TabLayout
-        android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:id="@+id/frame"
-        android:background="@color/primaryCCM"
-        android:clickable="true"
-        android:elevation="10dp"
-        android:focusable="true"
-        style="@style/MyTab" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top">
 
-    <android.support.v4.view.ViewPager
-        android:layout_width="371dp" android:layout_height="504dp" android:id="@+id/pager"
-        android:layout_gravity="center_horizontal|bottom">
+        <android.support.design.widget.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:id="@+id/frame"
+            android:background="@color/primaryCCM"
+            android:clickable="true"
+            android:elevation="10dp"
+            android:focusable="true"
+            style="@style/MyTab"
+            android:layout_gravity="center" />
 
-
-        <!--<android.support.v4.view.PagerTabStrip-->
-            <!--android:id="@+id/pager_tab_strip"-->
-            <!--android:layout_width
-
-              ="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="top"-->
-            <!--android:background="#33b5e5"-->
-            <!--android:textColor="#fff"-->
-            <!--android:paddingTop="4dp"-->
-            <!--android:paddingBottom="4dp" />-->
+        <android.support.v4.view.ViewPager
+            android:layout_width="fill_parent" android:layout_height="450dp" android:id="@+id/pager"
+            android:layout_gravity="center_horizontal|bottom">
 
 
-</android.support.v4.view.ViewPager>
+            <!--<android.support.v4.view.PagerTabStrip-->
+                <!--android:id="@+id/pager_tab_strip"-->
+                <!--android:layout_width
+
+                  ="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="top"-->
+                <!--android:background="#33b5e5"-->
+                <!--android:textColor="#fff"-->
+                <!--android:paddingTop="4dp"-->
+                <!--android:paddingBottom="4dp" />-->
+
+
+    </android.support.v4.view.ViewPager>
+
+        <include
+            android:id="@+id/app_bar"
+            layout="@layout/app_bar" />
+
+    </LinearLayout>
 
 </FrameLayout>
 

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.brentondurkee.ccm.R;
 
@@ -73,7 +74,9 @@ public class AuthActivity extends AccountAuthenticatorActivity{
         }
         else {
             super.onActivityResult(requestCode, resultCode, data);
-            //TODO: test failed signup
+            Log.v(TAG, "signup failed");
+            toast("Signup Failed");
+
         }
     }
 
@@ -87,18 +90,18 @@ public class AuthActivity extends AccountAuthenticatorActivity{
             @Override
             protected Intent doInBackground(Void... params){
                 String authToken = AuthRequests.userSignIn(email, password, mAuthTokenType);
-                //TODO: what if signin fails?
                 final Intent res = new Intent();
                 res.putExtra(AccountManager.KEY_ACCOUNT_NAME, email);
                 res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
                 res.putExtra(AccountManager.KEY_AUTHTOKEN, authToken);
                 res.putExtra(AuthUtil.PARAM_USER_PASS, password);
+                res.putExtra(AuthUtil.REG_TYPE, "Login");
+                res.putExtra(AuthUtil.SUCCESS, 1);
                 return res;
             }
             @Override
             protected void onPostExecute(Intent intent){
                 finishLogin(intent);
-                //TODO: update user
             }
         }.execute();
     }
@@ -107,20 +110,33 @@ public class AuthActivity extends AccountAuthenticatorActivity{
         Log.v(TAG, "Finish Login");
         String email = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String password = intent.getStringExtra(AuthUtil.PARAM_USER_PASS);
+        String type = intent.getStringExtra(AuthUtil.REG_TYPE);
         final Account account = new Account(email, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
-        Log.v(TAG, "" + intent.toString());
         Log.v(TAG, "" + intent.getExtras().toString());
-        if(getIntent().getBooleanExtra(AuthUtil.ARG_IS_ADDING_NEW, false)) {
+        Log.v(TAG, intent.getStringExtra(AccountManager.KEY_AUTHTOKEN).contains("FAILED") + " return");
+        if(intent.getStringExtra(AccountManager.KEY_AUTHTOKEN).contains("FAILED")){
+            setResult(RESULT_CANCELED);
+            finish();
+            toast(type + " Failed");
+        }
+        else if(getIntent().getBooleanExtra(AuthUtil.ARG_IS_ADDING_NEW, false)) {
+            toast(type + " Complete");
             String authToken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
             String authTokenType = mAuthTokenType;
             mAccountManager.addAccountExplicitly(account, password, null);
             mAccountManager.setAuthToken(account, authTokenType, authToken);
         } else {
+            toast(type + " Complete");
             mAccountManager.setPassword(account, password);
         }
 
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    private void toast(String message){
+        Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

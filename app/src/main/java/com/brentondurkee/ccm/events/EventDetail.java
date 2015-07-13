@@ -1,36 +1,52 @@
 package com.brentondurkee.ccm.events;
 
+//import android.app.FragmentManager;
 import android.content.ContentResolver;
-import android.database.Cursor;
-import android.provider.ContactsContract;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
+        import android.database.Cursor;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+        import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
-import android.widget.SimpleCursorAdapter;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.R;
-import com.brentondurkee.ccm.provider.DataContract;
+import com.brentondurkee.ccm.Utils;
+        import com.brentondurkee.ccm.provider.DataContract;
+import com.brentondurkee.ccm.provider.SyncUtil;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+        import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import org.w3c.dom.Text;
 
 
-public class EventDetail extends ActionBarActivity {
+public class EventDetail extends FragmentActivity{
+
+    private Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_detail);
+        setContentView(R.layout.activity_detail);
+
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
+        setActionBar(toolbar);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new EventDetailFragment())
@@ -41,11 +57,10 @@ public class EventDetail extends ActionBarActivity {
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_event_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
         return true;
     }
 
@@ -58,6 +73,7 @@ public class EventDetail extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            SyncUtil.TriggerRefresh();
             return true;
         }
 
@@ -67,11 +83,21 @@ public class EventDetail extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class EventDetailFragment extends Fragment {
+    public static class EventDetailFragment extends Fragment implements OnMapReadyCallback {
 
         Cursor cursor;
         ContentResolver mResolver;
         Thread t;
+        private String location;
+
+        private String TAG = getClass().getSimpleName();
+
+        private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+        private SupportMapFragment m;
+        //private String location;
+        private double[] latLng;
+        private boolean open = false;
+        private TextView openButton;
 
         final String[] PROJECTION = new String[]{
                 DataContract.Event.COLUMN_NAME_TITLE,
@@ -88,6 +114,14 @@ public class EventDetail extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
+            Log.v(TAG, "create view");
+
+            location = getActivity().getIntent().getStringExtra(Utils.MAP_LOCATION);
+            latLng = new double[2];
+            latLng[0] = getActivity().getIntent().getDoubleExtra(Utils.LAT, 180);
+            latLng[1] = getActivity().getIntent().getDoubleExtra(Utils.LONG, 180);
+
             Bundle extras = getActivity().getIntent().getExtras();
             String id = extras.getString("id");
             mResolver = getActivity().getContentResolver();
@@ -96,82 +130,91 @@ public class EventDetail extends ActionBarActivity {
             cursor.moveToFirst();
             String title = cursor.getString(0);
             String location = cursor.getString(1);
+            this.location = location;
             String date = cursor.getString(2);
-            Date time;
             View rootView = inflater.inflate(R.layout.fragment_event_detail, container, false);
-            try {
-                date = date.replace("Z", " GMT");
-                time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS zzz").parse(date);
-                long millis = (time.getTime() - System.currentTimeMillis());
-                long seconds = (millis/1000)%60;
-                long mins = (millis/60000)%60;
-                long hours = (millis/3600000)%24;
-                long days = (millis/86400000);
-                timer(days, hours, mins, seconds, rootView);
-                date = String.format("%d days %d:%d:%d", days, hours, mins, seconds);
-                Log.v("Time Parse", time.toString());
-            }
-            catch (ParseException e){
-                Log.w("Time Parse Exception", e.toString());
-            }
+            t = Utils.timer(date, (TextView) rootView.findViewById(R.id.eventDetailDate), this.getActivity());
+            t.start();
+            date = Utils.dateTo(date);
             String description = cursor.getString(3);
             cursor.close();
 
             ((TextView) rootView.findViewById(R.id.eventDetailTitle)).setText(title);
             ((TextView) rootView.findViewById(R.id.eventDetailLocation)).setText(location);
+            ((TextView) rootView.findViewById(R.id.eventDetailLocation)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openMaps();
+                }
+            });
             ((TextView) rootView.findViewById(R.id.eventDetailDate)).setText(date);
             ((TextView) rootView.findViewById(R.id.eventDetailDesc)).setText(description);
 
+            openButton = (TextView) rootView.findViewById(R.id.openMaps);
+            openButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    openMaps();
+                }
+            });
 
+
+            m = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map1));
+            getChildFragmentManager().beginTransaction().hide(m).commit();
+            m.getMapAsync(this);
 
             return rootView;
         }
 
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            Log.v(TAG, "activity");
+            super.onActivityCreated(savedInstanceState);
 
-        public void timer(final long days, final long hours, final long minutes, final long seconds, final View rootView){
-            t = new Thread() {
-                long secs = seconds;
-                long mins = minutes;
-                long hrs = hours;
-                long dys = days;
-                @Override
-                public void run() {
-                    try {
-                        while (!isInterrupted()) {
-                            Thread.sleep(1000);
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    secs--;
-                                    if (secs < 0) {
-                                        secs = 59;
-                                        mins--;
-                                        if (mins < 0) {
-                                            mins = 59;
-                                            hrs--;
-                                            if (hrs < 0) {
-                                                hrs = 23;
-                                                dys--;
-                                            }
-                                        }
-                                    }
+        }
 
-                                    String date;
-                                    if (dys > 0) {
-                                        date = String.format("%d days %d:%d:%d", dys, hrs, mins, secs);
-                                    } else {
-                                        date = String.format("%d:%d:%d", hrs, mins, secs);
-                                    }
-                                    ((TextView) rootView.findViewById(R.id.eventDetailDate)).setText(date);
-                                }
-                            });
-                        }
-                    } catch (InterruptedException e) {
-                    }
-                }
-            };
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            mMap = googleMap;
+            latLng = new double[2];
+            latLng[0] = 40.785212;
+            latLng[1] = -73.975663;
+            setUpMap();
+        }
 
-            t.start();
+        /**
+         * This is where we can add markers or lines, add listeners or move the camera. In this case, we
+         * just add a marker near Africa.
+         * <p/>
+         * This should only be called once and when we are sure that {@link #mMap} is not null.
+         */
+        private void setUpMap() {
+            mMap.addMarker(new MarkerOptions().position(new LatLng(latLng[0], latLng[1])).title(location));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng[0], latLng[1]), 15));
+        }
+
+        public void openMaps(){
+            FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+            ft.setCustomAnimations(android.R.anim.fade_in,
+                    android.R.anim.fade_out);
+
+            if(open) {
+                openButton.setText(">");
+                ft.hide(m);
+            } else {
+                openButton.setText("V");
+                ft.show(m);
+            }
+            ft.commit();
+            open = !open;
+
+//            double lat = 40.785212;
+//            double lng = -73.975663;
+//            Intent maps = new Intent(this.getActivity(), Map.class);
+//            maps.putExtra(Utils.MAP_LOCATION, location);
+//            maps.putExtra(Utils.LAT, lat);
+//            maps.putExtra(Utils.LONG, lng);
+//            startActivity(maps);
         }
 
         @Override

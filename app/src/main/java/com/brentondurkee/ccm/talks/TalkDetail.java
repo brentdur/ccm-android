@@ -1,9 +1,10 @@
 package com.brentondurkee.ccm.talks;
 
+import android.animation.ObjectAnimator;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,20 +13,34 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.R;
+import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.provider.DataContract;
+import com.brentondurkee.ccm.provider.SyncUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TalkDetail extends ActionBarActivity {
+public class TalkDetail extends FragmentActivity {
+
+    private Toolbar toolbar;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_talk_detail);
+        setContentView(R.layout.activity_detail);
+
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
+        setActionBar(toolbar);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new TalkDetailFragment())
@@ -37,7 +52,7 @@ public class TalkDetail extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_talk_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
         return true;
     }
 
@@ -50,6 +65,7 @@ public class TalkDetail extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            SyncUtil.TriggerRefresh();
             return true;
         }
 
@@ -57,6 +73,11 @@ public class TalkDetail extends ActionBarActivity {
     }
 
     public static class TalkDetailFragment extends Fragment {
+
+        private TextView reference;
+        private TextView fullRef;
+        private boolean open = false;
+        private TextView openButton;
 
         Cursor mCursor;
         ContentResolver mResolve;
@@ -82,33 +103,53 @@ public class TalkDetail extends ActionBarActivity {
             mCursor.moveToFirst();
             String subject = mCursor.getString(1);
             String author = mCursor.getString(2);
-            String date = mCursor.getString(3);
+            String date = Utils.dateForm(mCursor.getString(3));
             String reference = mCursor.getString(4);
             String outline = mCursor.getString(5);
-            outline = "->> " + outline;
-            outline = outline.replace("\",,,\"", "\n ->> ");
-            Date time;
+            Log.v("Talk Details", outline);
+//            outline = "->> " + outline;
+            String[] outlist = outline.split("\",,,\"");
+            String numbers = "";
+            outline = "";
+            for(int i = 0; i<outlist.length; i ++){
+                outline += outlist[i] + "\n";
+                numbers += i+1 + "\n\n";
+            }
+//            outline = outline.replace("\",,,\"", "\n->> ");
+
             View rootView = inflater.inflate(R.layout.fragment_talk_detail, container, false);
-            try {
-                date = date.replace("Z", " GMT");
-                time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS zzz").parse(date);
-                long millis = (time.getTime() - System.currentTimeMillis());
-                long seconds = (millis/1000)%60;
-                long mins = (millis/60000)%60;
-                long hours = (millis/3600000)%24;
-                long days = (millis/86400000);
-                date = String.format("%d days %d:%d:%d", days, hours, mins, seconds);
-                Log.v("Time Parse", time.toString());
-            }
-            catch (ParseException e){
-                Log.w("Time Parse Exception", e.toString());
-            }
             ((TextView) rootView.findViewById(R.id.talkDetailTopic)).setText(subject);
             ((TextView) rootView.findViewById(R.id.talkDetailAuthor)).setText(author);
             ((TextView) rootView.findViewById(R.id.talkDetailTime)).setText(date);
-            ((TextView) rootView.findViewById(R.id.talkDetailVerse)).setText(reference);
+            this.reference = (TextView) rootView.findViewById(R.id.talkDetailVerse);
+            this.reference.setText(reference);
+            this.fullRef = (TextView) rootView.findViewById(R.id.fullVerse);
+            this.reference.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickRef();
+                }
+            });
             ((TextView) rootView.findViewById(R.id.talkDetailOutline)).setText(outline);
+            ((TextView) rootView.findViewById(R.id.talkDetailNumbers)).setText(numbers);
+            openButton = (TextView) rootView.findViewById(R.id.openVerse);
+
             return rootView;
         }
+
+        public void clickRef(){
+            if(open){
+                openButton.setText(">");
+                ObjectAnimator animation = ObjectAnimator.ofInt(fullRef, "maxLines", 0);
+                animation.setDuration(300).start();
+            } else {
+                openButton.setText("V");
+                ObjectAnimator animation = ObjectAnimator.ofInt(fullRef, "maxLines", 40);
+                animation.setDuration(600).start();
+
+            }
+            open = !open;
+        }
+
     }
 }

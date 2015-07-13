@@ -28,7 +28,6 @@ public class AuthRequests {
     private final static String signInUrl="http://ccm.brentondurkee.com/auth/local";
     private final static String GCMUrl="http://ccm.brentondurkee.com/api/users/gcm";
 
-    //TODO: fill all exceptions
     public static String userSignUp(final String name, final String email, final String pass, String authType){
         Log.v(TAG, "Start Signup");
         String token = "";
@@ -54,11 +53,15 @@ public class AuthRequests {
                     JSONObject data = new JSONObject(input.nextLine());
                     token = data.getString("token");
                     Log.v(TAG, "Token: " + token);
-
+                }
+                else {
+                    Log.v(TAG, "SignUp Failed: " + response);
+                    token = "FAILED: " + response;
                 }
             }
             catch(JSONException e){
                 Log.w(TAG, "JSON Exception");
+                token = "FAILED";
             }
             finally {
                 conn.disconnect();
@@ -66,6 +69,7 @@ public class AuthRequests {
         }
         catch(IOException e){
             Log.w(TAG, "IOException");
+            token = "FAILED";
         }
 
         return token;
@@ -101,6 +105,12 @@ public class AuthRequests {
         return good;
     }
 
+    public static boolean testAuth(final String auth){
+        //TODO: fill with test to call to an auth-requried end point
+        //true means it's valid
+        return true;
+    }
+
 
     public static String userSignIn(final String email, final String pass, String authType){
         Log.v(TAG, "Start Signin");
@@ -128,9 +138,14 @@ public class AuthRequests {
                     token = data.getString("token");
                     Log.v(TAG, "Token: " + token);
                 }
+                else {
+                    Log.v(TAG, "SignUp Failed: " + response);
+                    token = "FAILED: " + response;
+                }
             }
             catch(JSONException e){
                 Log.w(TAG, "JSON Exception");
+                token = "FAILED";
             }
             finally {
                 conn.disconnect();
@@ -138,6 +153,7 @@ public class AuthRequests {
         }
         catch(IOException e){
             Log.w(TAG, "IOException");
+            token = "FAILED";
         }
 
         return token;

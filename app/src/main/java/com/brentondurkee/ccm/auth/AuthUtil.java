@@ -18,6 +18,10 @@ public class AuthUtil {
 
     public final static String ACCOUNT_TYPE="com.brentondurkee.ccm";
 
+
+    public final static String REG_TYPE="REG_TYPE";
+    public final static String SUCCESS="SUCCESS";
+
     //return intent
 //    res.putExtra(AccountManager.KEY_ACCOUNT_NAME, email);
 //    res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);

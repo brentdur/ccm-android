@@ -15,15 +15,24 @@
      option is required to comply with the Google+ Sign-In developer policies
     -->
     <uses-permission android:name="android.permission.USE_CREDENTIALS" /> <!-- To retrieve the account name (email) as part of sign-in: -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <!--
+ The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but are recommended.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:uiOptions="splitActionBarWhenNarrow">
+        android:uiOptions="splitActionBarWhenNarrow" >
         <receiver
             android:name=".provider.gcm.Receiver"
             android:exported="true"
@@ -55,77 +64,37 @@
         </service>
 
         <activity
-            android:name=".Main"
-            android:label="@string/app_name"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:name=".Pager"
+            android:label="CCM" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.support.UI_OPTIONS"
-                android:value="splitActionBarWhenNarrow" />
-        </activity>
-        <activity
-            android:name=".events.Events"
-            android:label="@string/title_activity_events"
-            android:parentActivityName=".Main" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.brentondurkee.ccm.Main" />
-
-        </activity>
-        <activity
-            android:name=".Pager"
-            android:label="Pager"
-            android:parentActivityName=".Main"
-            android:uiOptions="splitActionBarWhenNarrow" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.brentondurkee.ccm.Main" />
-            <meta-data android:name="android.support.UI_OPTIONS"
-                android:value="splitActionBarWhenNarrow" />
         </activity>
         <activity
             android:name=".events.EventDetail"
             android:label="@string/title_activity_event_detail"
-            android:parentActivityName=".events.Events" >
+            android:parentActivityName=".Pager" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".events.Events" />
-        </activity>
-        <activity
-            android:name=".inbox.Msgs"
-            android:label="@string/title_activity_msgs"
-            android:parentActivityName=".Main" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.brentondurkee.ccm.Main" />
+                android:value=".Pager" />
         </activity>
         <activity
             android:name=".inbox.MsgDetail"
             android:label="@string/title_activity_msg_detail"
-            android:parentActivityName=".inbox.Msgs" >
+            android:parentActivityName=".Pager" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".inbox.Msgs" />
+                android:value=".Pager" />
         </activity>
         <activity
             android:name=".talks.TalkDetail"
             android:label="@string/title_activity_talk_detail"
-            android:parentActivityName=".talks.Talks" >
+            android:parentActivityName=".Pager" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".talks.Talks" />
-            >
-        </activity>
-        <activity
-            android:name=".talks.Talks"
-            android:label="@string/title_activity_talks"
-            android:parentActivityName=".Main" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.brentondurkee.ccm.Main" />
+                android:value=".Pager" />
             >
         </activity>
 
@@ -146,23 +115,26 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
-        <!--<service android:name=".common.accounts.GenericAccountService" >-->
+        <!-- <service android:name=".common.accounts.GenericAccountService" > -->
 
-            <!--&lt;!&ndash; Required filter used by the system to launch our account service. &ndash;&gt;-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.accounts.AccountAuthenticator" />-->
-            <!--</intent-filter>-->
-            <!--&lt;!&ndash; This points to an XMLf ile which describes our account service. &ndash;&gt;-->
-            <!--<meta-data-->
-                <!--android:name="android.accounts.AccountAuthenticator"-->
-                <!--android:resource="@xml/authenticator" />-->
-        <!--</service>-->
 
-        <service android:name="com.brentondurkee.ccm.auth.AuthService">
+        <!-- &lt;!&ndash; Required filter used by the system to launch our account service. &ndash;&gt; -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.accounts.AccountAuthenticator" /> -->
+        <!-- </intent-filter> -->
+        <!-- &lt;!&ndash; This points to an XMLf ile which describes our account service. &ndash;&gt; -->
+        <!-- <meta-data -->
+        <!-- android:name="android.accounts.AccountAuthenticator" -->
+        <!-- android:resource="@xml/authenticator" /> -->
+        <!-- </service> -->
+
+        <service android:name=".auth.AuthService" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
-            <meta-data android:name="android.accounts.AccountAuthenticator"
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
 
@@ -171,7 +143,6 @@
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
-
         <activity
             android:name=".auth.SignUpActivity"
             android:label="SignUp"
@@ -181,6 +152,34 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".admin.AddEvent"
+            android:label="@string/title_activity_add_event"
+            android:parentActivityName=".Pager" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.brentondurkee.ccm.Pager" />
+        </activity>
+        <activity
+            android:name=".admin.AddTalk"
+            android:label="@string/title_activity_add_talk"
+            android:parentActivityName=".Pager" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.brentondurkee.ccm.Pager" />
+        </activity>
+        <activity
+            android:name=".admin.AddMsg"
+            android:label="@string/title_activity_add_msg"
+            android:parentActivityName=".Pager" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.brentondurkee.ccm.Pager" />
+        </activity>
     </application>
 
 </manifest>

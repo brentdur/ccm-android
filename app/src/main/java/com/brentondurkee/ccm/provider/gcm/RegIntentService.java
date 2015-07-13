@@ -23,9 +23,6 @@ public class RegIntentService extends IntentService{
 
     private final static String TAG="RegIntentService";
 
-
-    private static final String[] TOPICS = {"global"};
-
     public static String PREF_GCM_TOKEN="gcm_token";
 
     public RegIntentService() {
@@ -42,26 +39,17 @@ public class RegIntentService extends IntentService{
             // In the (unlikely) event that multiple refresh operations occur simultaneously,
             // ensure that they are processed sequentially.
             synchronized (TAG) {
-                // [START register_for_gcm]
                 // Initially this call goes out to the network to retrieve the token, subsequent calls
                 // are local.
-                // [START get_token]
                 InstanceID instanceID = InstanceID.getInstance(this);
                 String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                         GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-                // [END get_token]
                 Log.v(TAG, "GCM Registration Token: " + token);
                 if(!sharedPreferences.getString(PREF_GCM_TOKEN, "").equals(token)){
                     Log.v(TAG, "New Token");
                     sendRegistrationToServer(token);
-                    //TODO: what if it fails?
                     sharedPreferences.edit().putString(PREF_GCM_TOKEN, token).apply();
                 }
-
-
-                // Subscribe to topic channels
-                subscribeTopics(token);
-
                 // You should store a boolean that indicates whether the generated token has been
                 // sent to your server. If the boolean is false, send the token to your server,
                 // otherwise your server should have already received the token.
@@ -88,24 +76,8 @@ public class RegIntentService extends IntentService{
 //     * @param token The new token.
 //     */
     private void sendRegistrationToServer(String gcm) throws Exception{
-        // Add custom implementation, as needed.
         if(!AuthRequests.updateGCM(gcm, SyncUtil.getAuthToken())){
             throw new Exception("Update GCM Failed");
         }
     }
-
-    /**
-     * Subscribe to any GCM topics of interest, as defined by the TOPICS constant.
-     *
-     * @param token GCM token
-     * @throws IOException if unable to reach the GCM PubSub service
-     */
-    // [START subscribe_topics]
-    private void subscribeTopics(String token) throws IOException {
-        for (String topic : TOPICS) {
-            GcmPubSub pubSub = GcmPubSub.getInstance(this);
-            pubSub.subscribe(token, "/topics/" + topic, null);
-        }
-    }
-    // [END subscribe_topics]
 }

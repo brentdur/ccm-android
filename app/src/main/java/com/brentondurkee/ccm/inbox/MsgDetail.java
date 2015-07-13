@@ -3,7 +3,7 @@ package com.brentondurkee.ccm.inbox;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,21 +11,33 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.R;
+import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.provider.DataContract;
+import com.brentondurkee.ccm.provider.SyncUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class MsgDetail extends ActionBarActivity {
+public class MsgDetail extends FragmentActivity {
+
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_detail);
+        setContentView(R.layout.activity_detail);
+
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
+        setActionBar(toolbar);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new MsgDetailFragment())
@@ -37,7 +49,7 @@ public class MsgDetail extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_event_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
         return true;
     }
 
@@ -50,6 +62,7 @@ public class MsgDetail extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            SyncUtil.TriggerRefresh();
             return true;
         }
 
@@ -82,23 +95,8 @@ public class MsgDetail extends ActionBarActivity {
             String from = mCursor.getString(0);
             String to = mCursor.getString(1);
             String subject = mCursor.getString(2);
-            String date = mCursor.getString(3);
+            String date = Utils.dateForm(mCursor.getString(3));
             String message = mCursor.getString(4);
-            Date time;
-            try {
-                date = date.replace("Z", " GMT");
-                time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS zzz").parse(date);
-                long millis = (time.getTime() - System.currentTimeMillis());
-                long seconds = (millis/1000)%60;
-                long mins = (millis/60000)%60;
-                long hours = (millis/3600000)%24;
-                long days = (millis/86400000);
-                date = String.format("%d days %d:%d:%d", days, hours, mins, seconds);
-                Log.v("Time Parse", time.toString());
-            }
-            catch (ParseException e){
-                Log.w("Time Parse Exception", e.toString());
-            }
 
             View rootView = inflater.inflate(R.layout.fragment_msg_detail, container, false);
             ((TextView) rootView.findViewById(R.id.msgDetailSubject)).setText(subject);

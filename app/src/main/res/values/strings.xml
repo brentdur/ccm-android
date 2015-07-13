@@ -14,4 +14,31 @@
     <string name="title_activity_msg_detail">Message</string>
     <string name="title_activity_talk_detail">TalkDetail</string>
     <string name="title_activity_talks">Talks</string>
+    <string name="title_activity_map">Map</string>
+    <string name="title_activity_add_event">AddEvent</string>
+    <string name="title_activity_add_talk">AddTalk</string>
+    <string name="title_activity_add_msg">AddMsg</string>
+    <array name="to">
+        <item>All</item>
+        <item>MT</item>
+        <item>Admin</item>
+    </array>
+
+    <string name="date_hint">13:21 6/14/2016</string>
+    <string name="location_hint">location</string>
+    <string name="title_hint">title</string>
+    <string name="subject_hint">subject</string>
+    <string name="author_hint">author</string>
+    <string name="message_hint">message</string>
+    <string name="description_hint">description</string>
+    <string name="reference_hint">reference</string>
+
+    <string name="submit_button">Submit</string>
+
+    <string name="author_lead">by</string>
+    <string name="to_lead">for</string>
+    <string name="date_lead">since</string>
+    <string name="count_lead">Be there in</string>
+    <string name="count_edit_lead">Starts at</string>
+    <string name="location_lead">at</string>
 </resources>
