@@ -15,10 +15,22 @@ public class ListenService extends GcmListenerService{
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
+        String message = data.getString("sync");
 
-        Log.d(TAG, "Message: " + message);
-        if(message.contains("sync")){
+        Log.d(TAG, "Sync: " + message);
+        if(message.contains("all")){
+            SyncUtil.TriggerRefresh();
+        }
+        if(message.contains("events")){
+            SyncUtil.TriggerRefresh();
+        }
+        if(message.contains("messages")){
+            SyncUtil.TriggerRefresh();
+        }
+        if(message.contains("talks")){
+            SyncUtil.TriggerRefresh();
+        }
+        if(message.contains("locations")){
             SyncUtil.TriggerRefresh();
         }
         //TODO: add other messages

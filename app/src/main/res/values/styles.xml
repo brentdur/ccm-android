@@ -70,6 +70,15 @@
     </style>
     <style name="ShowTitle" parent="EditTitle">
     </style>
+    <style name="EditTopic" parent="SuperHeadText">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/topic_hint</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="ShowTopic" parent="EditTopic">
+    </style>
     <style name="EditLocation" parent="HeaderText">
         <item name="android:gravity">left</item>
         <item name="android:layout_width">fill_parent</item>
@@ -78,6 +87,17 @@
         <item name="android:singleLine">true</item>
     </style>
     <style name="ShowLocation" parent="EditLocation">
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+    <style name="EditReference" parent="HeaderText">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/reference_hint</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="ShowReference" parent="EditReference">
         <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_marginBottom">4dp</item>
     </style>
@@ -112,6 +132,14 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:hint">@string/description_hint</item>
+    </style>
+    <style name="EditOutline" parent="TitleText">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/outline_hint</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:ems">10</item>
     </style>
 
     <style name="EditSubmit" parent="TitleText">

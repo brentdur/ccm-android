@@ -131,7 +131,7 @@ public class TalkDetail extends FragmentActivity {
                 }
             });
             ((TextView) rootView.findViewById(R.id.talkDetailOutline)).setText(outline);
-            ((TextView) rootView.findViewById(R.id.talkDetailNumbers)).setText(numbers);
+//            ((TextView) rootView.findViewById(R.id.talkDetailNumbers)).setText(numbers);
             openButton = (TextView) rootView.findViewById(R.id.openVerse);
 
             return rootView;

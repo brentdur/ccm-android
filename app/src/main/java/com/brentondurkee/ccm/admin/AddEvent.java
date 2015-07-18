@@ -2,9 +2,15 @@ package com.brentondurkee.ccm.admin;
 
 import android.animation.ObjectAnimator;
 import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.SyncRequest;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,12 +19,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.provider.DataContract;
+import com.brentondurkee.ccm.provider.SyncPosts;
+import com.brentondurkee.ccm.provider.SyncUtil;
 
 public class AddEvent extends FragmentActivity {
     Toolbar toolbar;
@@ -64,12 +77,24 @@ public class AddEvent extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class EventAddFragment extends Fragment {
+    public static class EventAddFragment extends Fragment implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
+
+        private static final String TAG = "EventAddFragment";
 
         private TextView reference;
         private TextView fullRef;
         private boolean open = false;
         private TextView openButton;
+        SimpleCursorAdapter mAdapter;
+        Spinner spin;
+        String toSelect = "";
+
+        private String[] from = {DataContract.Location.COLUMN_NAME_NAME, DataContract.Location.COLUMN_NAME_NAME};
+        private int[] to = {R.id.spinnerTarget, android.R.id.text1};
+        private static final String[] PROJECTION = new String[]{
+                DataContract.Location._ID,
+                DataContract.Location.COLUMN_NAME_NAME
+        };
 
         public EventAddFragment() {
         }
@@ -78,10 +103,69 @@ public class AddEvent extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
+            mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.spinner_layout, null, from, to, 0);
+            mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            getLoaderManager().initLoader(0, null, this);
 
-            View rootView = inflater.inflate(R.layout.fragment_add_event, container, false);
+            final View rootView = inflater.inflate(R.layout.fragment_add_event, container, false);
+
+            spin = (Spinner) rootView.findViewById(R.id.spinner_to);
+            spin.setAdapter(mAdapter);
+            spin.setOnItemSelectedListener(this);
+
+            rootView.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle data = new Bundle();
+                    data.putString(SyncPosts.EVENT_TITLE, ((EditText) rootView.findViewById(R.id.addEventTitle)).getText().toString());
+                    data.putString(SyncPosts.EVENT_DATE, ((EditText) rootView.findViewById(R.id.addEventDate)).getText().toString());
+                    data.putString(SyncPosts.EVENT_LOCATION, ((EditText) rootView.findViewById(R.id.addEventLocation)).getText().toString());
+                    data.putString(SyncPosts.EVENT_DESCRIPTION, ((EditText) rootView.findViewById(R.id.addEventDesc)).getText().toString());
+
+                    new AsyncTask<Bundle, Void, Boolean>() {
+                        @Override
+                        protected Boolean doInBackground(Bundle... data) {
+                            return SyncPosts.addEvent(data[0], SyncUtil.getAccount(), getActivity());
+                        }
+
+                        @Override
+                        protected void onPostExecute(Boolean aBoolean) {
+                            super.onPostExecute(aBoolean);
+                            //TODO: display toast to user
+                        }
+                    }.execute(data);
+
+
+                }
+            });
 
             return rootView;
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            Log.v(TAG, parent.getItemAtPosition(position).toString());
+            toSelect = parent.getItemAtPosition(position).toString();
+        }
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return new CursorLoader(getActivity(), DataContract.Group.CONTENT_URI, PROJECTION, null, null, null);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            mAdapter.changeCursor(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+            mAdapter.changeCursor(null);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
         }
     }
 

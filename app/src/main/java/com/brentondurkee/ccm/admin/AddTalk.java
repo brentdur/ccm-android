@@ -1,18 +1,23 @@
 package com.brentondurkee.ccm.admin;
 
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.R;
+import com.brentondurkee.ccm.provider.SyncPosts;
+import com.brentondurkee.ccm.provider.SyncUtil;
 
 public class AddTalk extends FragmentActivity {
     Toolbar toolbar;
@@ -72,7 +77,36 @@ public class AddTalk extends FragmentActivity {
                                  Bundle savedInstanceState) {
 
 
-            View rootView = inflater.inflate(R.layout.fragment_add_talk, container, false);
+            final View rootView = inflater.inflate(R.layout.fragment_add_talk, container, false);
+
+            rootView.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle data = new Bundle();
+                    data.putString(SyncPosts.TALK_AUTHOR, ((EditText) rootView.findViewById(R.id.talkAddAuthor)).getText().toString());
+                    data.putString(SyncPosts.TALK_SUBJECT, ((EditText) rootView.findViewById(R.id.talkAddTopic)).getText().toString());
+                    data.putString(SyncPosts.TALK_DATE, ((EditText) rootView.findViewById(R.id.talkAddTime)).getText().toString());
+                    data.putString(SyncPosts.TALK_REFERENCE, ((EditText) rootView.findViewById(R.id.talkAddVerse)).getText().toString());
+                    String outline = ((EditText) rootView.findViewById(R.id.talkAddOutline)).getText().toString();
+                    Log.v("Outline split", outline);
+                    data.putStringArray(SyncPosts.TALK_OUTLINE, outline.split("\\n"));
+
+                    new AsyncTask<Bundle, Void, Boolean>(){
+                        @Override
+                        protected Boolean doInBackground(Bundle... data) {
+                            return SyncPosts.addTalk(data[0], SyncUtil.getAccount(), getActivity());
+                        }
+
+                        @Override
+                        protected void onPostExecute(Boolean aBoolean) {
+                            super.onPostExecute(aBoolean);
+                            //TODO: display toast to user
+                        }
+                    }.execute(data);
+
+
+                }
+            });
 
             return rootView;
         }

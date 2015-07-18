@@ -62,7 +62,7 @@ public class Pager extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_pager);
 
-        SyncUtil.mainContext = this;
+        SyncUtil.mainContext = this.getApplicationContext();
 
         Log.v(TAG, "Create Activity");
         Log.v(TAG, "Test token: " + SyncUtil.getAuthToken());

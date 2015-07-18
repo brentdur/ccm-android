@@ -16,110 +16,69 @@
 
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="WLG - Sorrow"
             android:id="@+id/talkDetailTopic"
-            android:layout_gravity="center_horizontal"
-            android:textSize="40dp"
+            style="@style/ShowTopic"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Eric"
             android:id="@+id/talkDetailAuthor"
-            android:layout_gravity="center_horizontal"
-            android:textSize="40dp"
-            android:paddingLeft="5dp"
+            style="@style/ShowAuthor"
             android:layout_alignBottom="@+id/textView6"
             android:layout_alignStart="@+id/talkDetailVerse" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/talkDetailTime"
-            android:layout_gravity="center_horizontal"
-            android:textSize="40dp"
             android:layout_alignBottom="@+id/textView7"
             android:layout_toEndOf="@+id/textView7"
-            android:paddingLeft="5dp" />
+            style="@style/ShowDate" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Text"
+            style="@style/ShowReference"
             android:id="@+id/talkDetailVerse"
-            android:layout_gravity="center_horizontal"
-            android:textSize="40dp"
             android:layout_alignBottom="@+id/textView8"
-            android:layout_toEndOf="@+id/textView8"
-            android:paddingLeft="5dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Text\nNew Text\nNew Text"
-            android:id="@+id/talkDetailOutline"
-            android:layout_gravity="center_horizontal"
-            android:textSize="36dp"
-            android:paddingLeft="5dp"
-            android:layout_below="@+id/fullVerse"
             android:layout_toEndOf="@+id/textView8" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="by"
-            android:id="@+id/textView6"
-            android:textColor="#aaa"
-            android:textSize="35dp"
-            android:layout_below="@+id/talkDetailTopic"
-            android:layout_alignStart="@+id/talkDetailTopic" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="since"
-            android:id="@+id/textView7"
-            android:textColor="#aaa"
-            android:textSize="35dp"
-            android:layout_below="@+id/talkDetailAuthor"
-            android:layout_alignStart="@+id/textView6" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="on"
-            android:id="@+id/textView8"
-            android:textColor="#aaa"
-            android:textSize="35dp"
-            android:layout_below="@+id/talkDetailTime"
-            android:layout_alignStart="@+id/textView7" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="1\n\n2\n\n\3"
-            android:id="@+id/talkDetailNumbers"
-            android:paddingTop="12dp"
-            android:singleLine="false"
-            android:textSize="18dp"
+            style="@style/EditOutline"
+            android:id="@+id/talkDetailOutline"
             android:layout_below="@+id/fullVerse"
+            android:layout_toEndOf="@+id/textView8"
             android:layout_alignParentStart="true" />
 
         <TextView
+            android:id="@+id/textView6"
+            android:layout_below="@+id/talkDetailTopic"
+            android:layout_alignStart="@+id/talkDetailTopic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Full Verse Goes Here Right Now"
+            android:text="@string/author_lead"
+            android:textColor="@color/leadText"
+            style="@style/PrimaryText"/>
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_below="@+id/talkDetailAuthor"
+            android:layout_alignStart="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date_lead"
+            android:textColor="@color/leadText"
+            style="@style/PrimaryText"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView8"
+            android:layout_below="@+id/talkDetailTime"
+            android:layout_alignStart="@+id/textView7"
+            android:text="@string/reference_lead"
+            android:textColor="@color/leadText"
+            style="@style/PrimaryText" />
+
+        <TextView
             android:id="@+id/fullVerse"
+            style="@style/ShowReference"
             android:layout_below="@+id/talkDetailVerse"
             android:layout_alignStart="@+id/textView8"
             android:maxLines="0" />

@@ -1,6 +1,7 @@
 package com.brentondurkee.ccm.provider;
 
 import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Application;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
@@ -14,6 +15,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
+
+import com.brentondurkee.ccm.auth.AuthUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,9 +54,19 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             DataContract.Msg.COLUMN_NAME_ENTRY_ID,
             DataContract.Msg.COLUMN_NAME_VERSION,
             DataContract.Msg._ID};
-    String eventFeed = new String("http://ccm.brentondurkee.com/api/events");
-    String talkFeed = new String("http://ccm.brentondurkee.com/api/talks");
-    String msgFeed = new String("http://ccm.brentondurkee.com/api/messages");
+    final String[] LOCATION_PROJECTION = new String[]{
+            DataContract.Location.COLUMN_NAME_ENTRY_ID,
+            DataContract.Location.COLUMN_NAME_VERSION,
+            DataContract.Location._ID};
+    final String[] GROUP_PROJECTION = new String[]{
+            DataContract.Group.COLUMN_NAME_ENTRY_ID,
+            DataContract.Group.COLUMN_NAME_VERSION,
+            DataContract.Group._ID};
+    String eventFeed = "http://ccm.brentondurkee.com/api/events";
+    String talkFeed = "http://ccm.brentondurkee.com/api/talks";
+    String msgFeed ="http://ccm.brentondurkee.com/api/messages/mine";
+    String locationFeed = "http://ccm.brentondurkee.com/api/locations";
+    String groupFeed = "http://ccm.brentondurkee.com/api/groups";
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -74,20 +87,25 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-       sync(eventFeed, DataContract.Event.CONTENT_URI, EVENT_PROJECTION, "event");
-       sync(talkFeed, DataContract.Talk.CONTENT_URI, TALK_PROJECTION, "talk");
-       sync(msgFeed, DataContract.Msg.CONTENT_URI, MSG_PROJECTION, "msg");
+        Log.v(TAG, "starting sync");
+        String token = AccountManager.get(getContext()).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);
+        sync(eventFeed, DataContract.Event.CONTENT_URI, EVENT_PROJECTION, "event", token);
+        sync(talkFeed, DataContract.Talk.CONTENT_URI, TALK_PROJECTION, "talk", token);
+        sync(msgFeed, DataContract.Msg.CONTENT_URI, MSG_PROJECTION, "msg", token);
+        sync(locationFeed, DataContract.Location.CONTENT_URI, LOCATION_PROJECTION, "location", token);
+        sync(groupFeed, DataContract.Group.CONTENT_URI, GROUP_PROJECTION, "group", token);
 
     }
 
     //TODO: update all exceptions
     //TODO: clean up database entry
-    public void sync(String feed, Uri content, String[] projection, String type){
+    public void sync(String feed, Uri content, String[] projection, String type, String token){
         InputStream stream = null;
-        Log.v(TAG, "started for " +type);
+        Log.v(TAG, "started for " + type);
         try{
             URL eventURL = new URL(feed);
             HttpURLConnection conn = (HttpURLConnection) eventURL.openConnection();
+            conn.addRequestProperty("Authorization", "Bearer " + token);
             conn.setReadTimeout(10000 /* milliseconds */);
             conn.setConnectTimeout(15000 /* milliseconds */);
             conn.setRequestMethod("GET");
@@ -190,6 +208,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getString("location"),
                     object.getString("date"),
                     object.getString("description"),
+                    object.getDouble("lat"),
+                    object.getDouble("lng"),
                     object.getInt("version"));
         }
         if(type.equals("talk")){
@@ -198,16 +218,33 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getString("subject"),
                     object.getString("date"),
                     object.getString("reference"),
+                    object.getString("fullVerse"),
                     object.getJSONArray("outline"),
                     object.getInt("version"));
         }
         if(type.equals("msg")){
             return updateMsg(content,
                     object.getString("from"),
-                    object.getString("to"),
+                    object.getString("simpleTo"),
                     object.getString("subject"),
                     object.getString("date"),
                     object.getString("message"),
+                    object.getInt("version"));
+        }
+        if(type.equals("group")){
+            return updateGroup(content,
+                    object.getString("name"),
+                    object.getString("writeTalks"),
+                    object.getString("writeMsgs"),
+                    object.getString("writeEvents"),
+                    object.getInt("version"));
+        }
+        if(type.equals("location")){
+            return updateLocation(content,
+                    object.getString("name"),
+                    object.getString("address"),
+                    object.getDouble("lat"),
+                    object.getDouble("lng"),
                     object.getInt("version"));
         }
         return null;
@@ -220,6 +257,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getString("location"),
                     object.getString("date"),
                     object.getString("description"),
+                    object.getDouble("lat"),
+                    object.getDouble("lng"),
                     object.getString("_id"),
                     object.getInt("version"));
         }
@@ -229,6 +268,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getString("subject"),
                     object.getString("date"),
                     object.getString("reference"),
+                    object.getString("fullVerse"),
                     object.getJSONArray("outline"),
                     object.getString("_id"),
                     object.getInt("version"));
@@ -236,32 +276,54 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         if(type.equals("msg")){
             return addMsg(content,
                     object.getString("from"),
-                    object.getString("to"),
+                    object.getString("simpleTo"),
                     object.getString("subject"),
                     object.getString("date"),
                     object.getString("message"),
                     object.getString("_id"),
                     object.getInt("version"));
         }
+        if(type.equals("group")){
+            return addGroup(content,
+                    object.getString("name"),
+                    object.getString("writeTalks"),
+                    object.getString("writeMsgs"),
+                    object.getString("writeEvents"),
+                    object.getString("_id"),
+                    object.getInt("version"));
+        }
+        if(type.equals("location")){
+            return addLocation(content,
+                    object.getString("name"),
+                    object.getString("address"),
+                    object.getDouble("lat"),
+                    object.getDouble("lng"),
+                    object.getString("_id"),
+                    object.getInt("version"));
+        }
         return null;
     }
 
-    public ContentProviderOperation updateEvent(Uri existing, String title, String location, String date, String description, int version){
+    public ContentProviderOperation updateEvent(Uri existing, String title, String location, String date, String description, double lat, double lng, int version){
         return ContentProviderOperation.newUpdate(existing)
                 .withValue(DataContract.Event.COLUMN_NAME_TITLE, title)
                 .withValue(DataContract.Event.COLUMN_NAME_LOCATION, location)
                 .withValue(DataContract.Event.COLUMN_NAME_DATE, date)
                 .withValue(DataContract.Event.COLUMN_NAME_DESCRIPTION, description)
+                .withValue(DataContract.Event.COLUMN_NAME_LAT, lat)
+                .withValue(DataContract.Event.COLUMN_NAME_LNG, lng)
                 .withValue(DataContract.Event.COLUMN_NAME_VERSION, version)
                 .build();
     }
 
-    public ContentProviderOperation addEvent(Uri existing, String title, String location, String date, String description, String id, int version){
+    public ContentProviderOperation addEvent(Uri existing, String title, String location, String date, String description, double lat, double lng, String id, int version){
         return ContentProviderOperation.newInsert(existing)
                 .withValue(DataContract.Event.COLUMN_NAME_TITLE, title)
                 .withValue(DataContract.Event.COLUMN_NAME_LOCATION, location)
                 .withValue(DataContract.Event.COLUMN_NAME_DATE, date)
                 .withValue(DataContract.Event.COLUMN_NAME_DESCRIPTION, description)
+                .withValue(DataContract.Event.COLUMN_NAME_LAT, lat)
+                .withValue(DataContract.Event.COLUMN_NAME_LNG, lng)
                 .withValue(DataContract.Event.COLUMN_NAME_ENTRY_ID, id)
                 .withValue(DataContract.Event.COLUMN_NAME_VERSION, version)
                 .build();
@@ -291,7 +353,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
 
-    public ContentProviderOperation updateTalk(Uri existing, String author, String subject, String date, String reference, JSONArray outline, int version) throws JSONException{
+    public ContentProviderOperation updateTalk(Uri existing, String author, String subject, String date, String reference, String verse, JSONArray outline, int version) throws JSONException{
         String stringOutline =outline.getString(0);
         for (int i = 1; i< outline.length(); i++){
             stringOutline += "\",,,\"";
@@ -302,12 +364,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 .withValue(DataContract.Talk.COLUMN_NAME_SUBJECT, subject)
                 .withValue(DataContract.Talk.COLUMN_NAME_DATE, date)
                 .withValue(DataContract.Talk.COLUMN_NAME_REFERENCE, reference)
+                .withValue(DataContract.Talk.COLUMN_NAME_VERSE, verse)
                 .withValue(DataContract.Talk.COLUMN_NAME_OUTLINE, stringOutline)
                 .withValue(DataContract.Talk.COLUMN_NAME_VERSION, version)
                 .build();
     }
 
-    public ContentProviderOperation addTalk(Uri existing, String author, String subject, String date, String reference, JSONArray outline, String id, int version) throws JSONException{
+    public ContentProviderOperation addTalk(Uri existing, String author, String subject, String date, String reference, String verse, JSONArray outline, String id, int version) throws JSONException{
         String stringOutline =outline.getString(0);
         for (int i = 1; i< outline.length(); i++){
             stringOutline += "\",,,\"";
@@ -318,9 +381,53 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 .withValue(DataContract.Talk.COLUMN_NAME_SUBJECT, subject)
                 .withValue(DataContract.Talk.COLUMN_NAME_DATE, date)
                 .withValue(DataContract.Talk.COLUMN_NAME_REFERENCE, reference)
+                .withValue(DataContract.Talk.COLUMN_NAME_VERSE, verse)
                 .withValue(DataContract.Talk.COLUMN_NAME_OUTLINE, stringOutline)
                 .withValue(DataContract.Talk.COLUMN_NAME_ENTRY_ID, id)
                 .withValue(DataContract.Talk.COLUMN_NAME_VERSION, version)
+                .build();
+    }
+
+    public ContentProviderOperation addGroup(Uri existing, String name, String wTalks, String wMsgs, String wEvents, String id, int version) throws JSONException{
+        return ContentProviderOperation.newInsert(existing)
+                .withValue(DataContract.Group.COLUMN_NAME_NAME, name)
+                .withValue(DataContract.Group.COLUMN_NAME_WRITETALKS, wTalks)
+                .withValue(DataContract.Group.COLUMN_NAME_WRITEMSGS, wMsgs)
+                .withValue(DataContract.Group.COLUMN_NAME_WRITEEVENTS, wEvents)
+                .withValue(DataContract.Group.COLUMN_NAME_ENTRY_ID, id)
+                .withValue(DataContract.Group.COLUMN_NAME_VERSION, version)
+                .build();
+    }
+
+    public ContentProviderOperation updateGroup(Uri existing, String name, String wTalks, String wMsgs, String wEvents, int version) throws JSONException{
+        return ContentProviderOperation.newUpdate(existing)
+                .withValue(DataContract.Group.COLUMN_NAME_NAME, name)
+                .withValue(DataContract.Group.COLUMN_NAME_WRITETALKS, wTalks)
+                .withValue(DataContract.Group.COLUMN_NAME_WRITEMSGS, wMsgs)
+                .withValue(DataContract.Group.COLUMN_NAME_WRITEEVENTS, wEvents)
+                .withValue(DataContract.Group.COLUMN_NAME_VERSION, version)
+                .build();
+    }
+
+
+    public ContentProviderOperation addLocation(Uri existing, String name, String address, double lat, double lng, String id, int version) throws JSONException{
+        return ContentProviderOperation.newInsert(existing)
+                .withValue(DataContract.Location.COLUMN_NAME_NAME, name)
+                .withValue(DataContract.Location.COLUMN_NAME_ADDRESS, address)
+                .withValue(DataContract.Location.COLUMN_NAME_LAT, lat)
+                .withValue(DataContract.Location.COLUMN_NAME_LNG, lng)
+                .withValue(DataContract.Location.COLUMN_NAME_ENTRY_ID, id)
+                .withValue(DataContract.Location.COLUMN_NAME_VERSION, version)
+                .build();
+    }
+
+    public ContentProviderOperation updateLocation(Uri existing, String name, String address, double lat, double lng, int version) throws JSONException{
+        return ContentProviderOperation.newUpdate(existing)
+                .withValue(DataContract.Location.COLUMN_NAME_NAME, name)
+                .withValue(DataContract.Location.COLUMN_NAME_ADDRESS, address)
+                .withValue(DataContract.Location.COLUMN_NAME_LAT, lat)
+                .withValue(DataContract.Location.COLUMN_NAME_LNG, lng)
+                .withValue(DataContract.Location.COLUMN_NAME_VERSION, version)
                 .build();
     }
 

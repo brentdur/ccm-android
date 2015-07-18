@@ -45,6 +45,10 @@ public class DataContract {
     private static final String PATH_TALKS = "talks";
 
     private static final String PATH_MSGS = "messages";
+
+    private static final String PATH_LOCATIONS = "locations";
+
+    private static final String PATH_GROUPS = "groups";
     /**
      * Columns supported by "events" records.
      */
@@ -80,6 +84,8 @@ public class DataContract {
         public static final String COLUMN_NAME_TITLE = "title";
         public static final String COLUMN_NAME_LOCATION = "location";
         public static final String COLUMN_NAME_DATE = "date";
+        public static final String COLUMN_NAME_LAT = "lat";
+        public static final String COLUMN_NAME_LNG = "lng";
         public static final String COLUMN_NAME_DESCRIPTION = "description";
         public static final String COLUMN_NAME_VERSION = "version";
     }
@@ -113,11 +119,12 @@ public class DataContract {
         /**
          * talk title
          */
-        public static final String COLUMN_NAME_AUTHOR = "title";
-        public static final String COLUMN_NAME_SUBJECT = "location";
+        public static final String COLUMN_NAME_AUTHOR = "author";
+        public static final String COLUMN_NAME_SUBJECT = "subject";
         public static final String COLUMN_NAME_DATE = "date";
-        public static final String COLUMN_NAME_REFERENCE = "description";
+        public static final String COLUMN_NAME_REFERENCE = "reference";
         public static final String COLUMN_NAME_OUTLINE = "outline";
+        public static final String COLUMN_NAME_VERSE = "verse";
         public static final String COLUMN_NAME_VERSION = "version";
     }
 
@@ -155,6 +162,78 @@ public class DataContract {
         public static final String COLUMN_NAME_DATE = "date";
         public static final String COLUMN_NAME_SUBJECT = "subject";
         public static final String COLUMN_NAME_MESSAGE = "message";
+        public static final String COLUMN_NAME_VERSION = "version";
+    }
+
+    public static class Location implements BaseColumns {
+        /**
+         * MIME type for lists of talks.
+         */
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ccm.locations";
+        /**
+         * MIME type for individual talk.
+         */
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ccm.location";
+
+        /**
+         * Fully qualified URI for "talk" resources.
+         */
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_LOCATIONS).build();
+
+        /**
+         * Table name where records are stored for "talk" resources.
+         */
+        public static final String TABLE_NAME = "location";
+        /**
+         * MongoDB ID. (Note: Not to be confused with the database primary key, which is _ID.
+         */
+        public static final String COLUMN_NAME_ENTRY_ID = "location_id";
+        /**
+         * talk title
+         */
+        public static final String COLUMN_NAME_NAME = "name";
+        public static final String COLUMN_NAME_ADDRESS = "address";
+        public static final String COLUMN_NAME_LAT = "lat";
+        public static final String COLUMN_NAME_LNG = "lng";
+        public static final String COLUMN_NAME_VERSION = "version";
+    }
+
+    public static class Group implements BaseColumns {
+        /**
+         * MIME type for lists of talks.
+         */
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ccm.groups";
+        /**
+         * MIME type for individual talk.
+         */
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ccm.group";
+
+        /**
+         * Fully qualified URI for "talk" resources.
+         */
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_GROUPS).build();
+
+        /**
+         * Table name where records are stored for "talk" resources.
+         */
+        public static final String TABLE_NAME = "user_group";
+        /**
+         * MongoDB ID. (Note: Not to be confused with the database primary key, which is _ID.
+         */
+        public static final String COLUMN_NAME_ENTRY_ID = "group_id";
+        /**
+         * talk title
+         */
+        public static final String COLUMN_NAME_NAME = "name";
+        public static final String COLUMN_NAME_WRITETALKS = "write_talks";
+        public static final String COLUMN_NAME_WRITEMSGS = "write_msgs";
+        public static final String COLUMN_NAME_WRITEEVENTS = "write_events";
         public static final String COLUMN_NAME_VERSION = "version";
     }
 }

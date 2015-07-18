@@ -70,6 +70,10 @@ public class SyncUtil {
 
     }
 
+    public static Account getAccount(){
+        return mAccount;
+    }
+
     public static void flush(){
         Log.v(TAG, "Flushing");
         mAccount=null;

@@ -60,6 +60,14 @@ public class DataProvider extends ContentProvider {
 
     public static final int ROUTE_MSGS_ID = 6;
 
+    public static final int ROUTE_LOCATIONS = 7;
+
+    public static final int ROUTE_LOCATIONS_ID = 8;
+
+    public static final int ROUTE_GROUPS = 9;
+
+    public static final int ROUTE_GROUPS_ID = 10;
+
     /**
      * UriMatcher, used to decode incoming URIs.
      */
@@ -71,6 +79,10 @@ public class DataProvider extends ContentProvider {
         sUriMatcher.addURI(AUTHORITY, "talks/*", ROUTE_TALKS_ID);
         sUriMatcher.addURI(AUTHORITY, "messages", ROUTE_MSGS);
         sUriMatcher.addURI(AUTHORITY, "messages/*", ROUTE_MSGS_ID);
+        sUriMatcher.addURI(AUTHORITY, "groups", ROUTE_GROUPS);
+        sUriMatcher.addURI(AUTHORITY, "groups/*", ROUTE_GROUPS_ID);
+        sUriMatcher.addURI(AUTHORITY, "locations", ROUTE_LOCATIONS);
+        sUriMatcher.addURI(AUTHORITY, "locations/*", ROUTE_LOCATIONS_ID);
     }
 
     @Override
@@ -98,6 +110,14 @@ public class DataProvider extends ContentProvider {
                 return DataContract.Msg.CONTENT_TYPE;
             case ROUTE_MSGS_ID:
                 return DataContract.Msg.CONTENT_ITEM_TYPE;
+            case ROUTE_GROUPS:
+                return DataContract.Group.CONTENT_TYPE;
+            case ROUTE_GROUPS_ID:
+                return DataContract.Group.CONTENT_ITEM_TYPE;
+            case ROUTE_LOCATIONS:
+                return DataContract.Location.CONTENT_TYPE;
+            case ROUTE_LOCATIONS_ID:
+                return DataContract.Location.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -154,6 +174,26 @@ public class DataProvider extends ContentProvider {
                 assert ctx != null;
                 c.setNotificationUri(ctx.getContentResolver(), uri);
                 return c;
+            case ROUTE_GROUPS_ID:
+                id = uri.getLastPathSegment();
+                builder.where(DataContract.Group._ID + "=?", id);
+            case ROUTE_GROUPS:
+                builder.table(DataContract.Group.TABLE_NAME).where(selection, selectionArgs);
+                c = builder.query(db, projection, sortOrder);
+                ctx = getContext();
+                assert ctx != null;
+                c.setNotificationUri(ctx.getContentResolver(), uri);
+                return c;
+            case ROUTE_LOCATIONS_ID:
+                id = uri.getLastPathSegment();
+                builder.where(DataContract.Location._ID + "=?", id);
+            case ROUTE_LOCATIONS:
+                builder.table(DataContract.Location.TABLE_NAME).where(selection, selectionArgs);
+                c = builder.query(db, projection, sortOrder);
+                ctx = getContext();
+                assert ctx != null;
+                c.setNotificationUri(ctx.getContentResolver(), uri);
+                return c;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -187,6 +227,18 @@ public class DataProvider extends ContentProvider {
                 result = Uri.parse(DataContract.Msg.CONTENT_URI + "/" + id);
                 break;
             case ROUTE_MSGS_ID:
+                throw new UnsupportedOperationException("Insert not supported on URI: " + uri);
+            case ROUTE_GROUPS:
+                id = db.insertOrThrow(DataContract.Group.TABLE_NAME, null, values);
+                result = Uri.parse(DataContract.Group.CONTENT_URI + "/" + id);
+                break;
+            case ROUTE_GROUPS_ID:
+                throw new UnsupportedOperationException("Insert not supported on URI: " + uri);
+            case ROUTE_LOCATIONS:
+                id = db.insertOrThrow(DataContract.Location.TABLE_NAME, null, values);
+                result = Uri.parse(DataContract.Location.CONTENT_URI + "/" + id);
+                break;
+            case ROUTE_LOCATIONS_ID:
                 throw new UnsupportedOperationException("Insert not supported on URI: " + uri);
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -238,6 +290,26 @@ public class DataProvider extends ContentProvider {
                 id = uri.getLastPathSegment();
                 count = builder.table(DataContract.Msg.TABLE_NAME)
                         .where(DataContract.Msg._ID + "=?", id)
+                        .where(selection, selectionArgs)
+                        .delete(db);
+                break;
+            case ROUTE_GROUPS:
+                count = builder.table(DataContract.Group.TABLE_NAME).where(selection, selectionArgs).delete(db);
+                break;
+            case ROUTE_GROUPS_ID:
+                id = uri.getLastPathSegment();
+                count = builder.table(DataContract.Group.TABLE_NAME)
+                        .where(DataContract.Group._ID + "=?", id)
+                        .where(selection, selectionArgs)
+                        .delete(db);
+                break;
+            case ROUTE_LOCATIONS:
+                count = builder.table(DataContract.Location.TABLE_NAME).where(selection, selectionArgs).delete(db);
+                break;
+            case ROUTE_LOCATIONS_ID:
+                id = uri.getLastPathSegment();
+                count = builder.table(DataContract.Location.TABLE_NAME)
+                        .where(DataContract.Location._ID + "=?", id)
                         .where(selection, selectionArgs)
                         .delete(db);
                 break;
@@ -298,6 +370,30 @@ public class DataProvider extends ContentProvider {
                         .where(selection, selectionArgs)
                         .update(db, values);
                 break;
+            case ROUTE_GROUPS:
+                count = builder.table(DataContract.Group.TABLE_NAME)
+                        .where(selection, selectionArgs)
+                        .update(db, values);
+                break;
+            case ROUTE_GROUPS_ID:
+                id = uri.getLastPathSegment();
+                count = builder.table(DataContract.Group.TABLE_NAME)
+                        .where(DataContract.Group._ID + "=?", id)
+                        .where(selection, selectionArgs)
+                        .update(db, values);
+                break;
+            case ROUTE_LOCATIONS:
+                count = builder.table(DataContract.Location.TABLE_NAME)
+                        .where(selection, selectionArgs)
+                        .update(db, values);
+                break;
+            case ROUTE_LOCATIONS_ID:
+                id = uri.getLastPathSegment();
+                count = builder.table(DataContract.Location.TABLE_NAME)
+                        .where(DataContract.Location._ID + "=?", id)
+                        .where(selection, selectionArgs)
+                        .update(db, values);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -315,12 +411,13 @@ public class DataProvider extends ContentProvider {
      */
     static class DataDatabase extends SQLiteOpenHelper {
         /** Schema version. */
-        public static final int DATABASE_VERSION = 6;
+        public static final int DATABASE_VERSION = 8;
         /** Filename for SQLite file. */
         public static final String DATABASE_NAME = "ccmdata.db";
 
         private static final String TYPE_TEXT = " TEXT";
         private static final String TYPE_INTEGER = " INTEGER";
+        private static final String TYPE_REAL=" REAL";
         private static final String COMMA_SEP = ",";
         /** SQL statement to create "event" table. */
         private static final String SQL_CREATE_EVENTS =
@@ -329,6 +426,8 @@ public class DataProvider extends ContentProvider {
                         DataContract.Event.COLUMN_NAME_ENTRY_ID + TYPE_TEXT + COMMA_SEP +
                         DataContract.Event.COLUMN_NAME_TITLE    + TYPE_TEXT + COMMA_SEP +
                         DataContract.Event.COLUMN_NAME_LOCATION + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Event.COLUMN_NAME_LAT + TYPE_REAL + COMMA_SEP +
+                        DataContract.Event.COLUMN_NAME_LNG + TYPE_REAL + COMMA_SEP +
                         DataContract.Event.COLUMN_NAME_DESCRIPTION + TYPE_TEXT + COMMA_SEP +
                         DataContract.Event.COLUMN_NAME_VERSION + TYPE_INTEGER + COMMA_SEP +
                         DataContract.Event.COLUMN_NAME_DATE + TYPE_TEXT + ")";
@@ -341,6 +440,7 @@ public class DataProvider extends ContentProvider {
                         DataContract.Talk.COLUMN_NAME_REFERENCE + TYPE_TEXT + COMMA_SEP +
                         DataContract.Talk.COLUMN_NAME_OUTLINE + TYPE_TEXT + COMMA_SEP +
                         DataContract.Talk.COLUMN_NAME_VERSION + TYPE_INTEGER + COMMA_SEP +
+                        DataContract.Talk.COLUMN_NAME_VERSE + TYPE_TEXT + COMMA_SEP +
                         DataContract.Talk.COLUMN_NAME_DATE + TYPE_TEXT + ")";
         private static final String SQL_CREATE_MSGS =
                 "CREATE TABLE " + DataContract.Msg.TABLE_NAME + " (" +
@@ -352,6 +452,24 @@ public class DataProvider extends ContentProvider {
                         DataContract.Msg.COLUMN_NAME_MESSAGE + TYPE_TEXT + COMMA_SEP +
                         DataContract.Msg.COLUMN_NAME_VERSION + TYPE_INTEGER + COMMA_SEP +
                         DataContract.Msg.COLUMN_NAME_DATE + TYPE_TEXT + ")";
+        private static final String SQL_CREATE_GROUPS =
+                "CREATE TABLE " + DataContract.Group.TABLE_NAME + " (" +
+                        DataContract.Group._ID + " INTEGER PRIMARY KEY," +
+                        DataContract.Group.COLUMN_NAME_ENTRY_ID + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Group.COLUMN_NAME_NAME + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Group.COLUMN_NAME_WRITEEVENTS + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Group.COLUMN_NAME_WRITEMSGS + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Group.COLUMN_NAME_WRITETALKS + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Group.COLUMN_NAME_VERSION + TYPE_INTEGER + ")";
+        private static final String SQL_CREATE_LOCATIONS =
+                "CREATE TABLE " + DataContract.Location.TABLE_NAME + " (" +
+                        DataContract.Location._ID + " INTEGER PRIMARY KEY," +
+                        DataContract.Location.COLUMN_NAME_ENTRY_ID + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Location.COLUMN_NAME_NAME + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Location.COLUMN_NAME_ADDRESS + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Location.COLUMN_NAME_LAT + TYPE_REAL + COMMA_SEP +
+                        DataContract.Location.COLUMN_NAME_LNG + TYPE_REAL + COMMA_SEP +
+                        DataContract.Location.COLUMN_NAME_VERSION + TYPE_INTEGER + ")";
 
         /** SQL statement to drop "event" table. */
         private static final String SQL_DELETE_EVENTS =
@@ -360,6 +478,10 @@ public class DataProvider extends ContentProvider {
                 "DROP TABLE IF EXISTS " + DataContract.Talk.TABLE_NAME;
         private static final String SQL_DELETE_MSGS =
                 "DROP TABLE IF EXISTS " + DataContract.Msg.TABLE_NAME;
+        private static final String SQL_DELETE_GROUPS =
+                "DROP TABLE IF EXISTS " + DataContract.Group.TABLE_NAME;
+        private static final String SQL_DELETE_LOCATIONS =
+                "DROP TABLE IF EXISTS " + DataContract.Location.TABLE_NAME;
 
         public DataDatabase(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -370,9 +492,13 @@ public class DataProvider extends ContentProvider {
             Log.v("Database", SQL_CREATE_EVENTS);
             Log.v("Database", SQL_CREATE_TALKS);
             Log.v("Database", SQL_CREATE_MSGS);
+            Log.v("Database", SQL_CREATE_LOCATIONS);
+            Log.v("Database", SQL_CREATE_GROUPS);
             db.execSQL(SQL_CREATE_EVENTS);
             db.execSQL(SQL_CREATE_TALKS);
             db.execSQL(SQL_CREATE_MSGS);
+            db.execSQL(SQL_CREATE_GROUPS);
+            db.execSQL(SQL_CREATE_LOCATIONS);
         }
 
         @Override
@@ -382,6 +508,8 @@ public class DataProvider extends ContentProvider {
             db.execSQL(SQL_DELETE_EVENTS);
             db.execSQL(SQL_DELETE_TALKS);
             db.execSQL(SQL_DELETE_MSGS);
+            db.execSQL(SQL_DELETE_LOCATIONS);
+            db.execSQL(SQL_DELETE_GROUPS);
             onCreate(db);
         }
     }

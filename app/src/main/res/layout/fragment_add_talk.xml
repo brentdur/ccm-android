@@ -12,108 +12,70 @@
 
 
     <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/talkDetailTopic"
-        android:layout_gravity="center_horizontal"
-        android:textSize="50dp"
-        android:gravity="center"
-        android:hint="Topic"
-        android:singleLine="true"
+        android:id="@+id/talkAddTopic"
+        style="@style/EditTopic"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
     <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/talkDetailAuthor"
-        android:layout_gravity="center_horizontal"
-        android:textSize="30dp"
-        android:paddingLeft="5dp"
-        android:hint="Author"
-        android:gravity="center"
-        android:singleLine="true"
-        android:layout_below="@+id/talkDetailTopic"
-        android:layout_alignStart="@+id/talkDetailVerse" />
+        android:id="@+id/talkAddAuthor"
+        style="@style/EditAuthor"
+        android:layout_below="@+id/talkAddTopic"
+        android:layout_alignStart="@+id/talkAddVerse" />
 
     <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/talkDetailTime"
-        android:layout_gravity="center_horizontal"
-        android:textSize="28dp"
-        android:paddingLeft="5dp"
-        android:singleLine="true"
-        android:hint="13:21 6/14/2016"
-        android:gravity="center"
-        android:layout_below="@+id/talkDetailAuthor"
+        android:id="@+id/talkAddTime"
+        style="@style/EditDate"
+        android:layout_below="@+id/talkAddAuthor"
         android:layout_toEndOf="@+id/textView7" />
 
     <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/talkDetailVerse"
-        android:layout_gravity="center_horizontal"
-        android:textSize="30dp"
-        android:paddingLeft="5dp"
-        android:hint="Reference"
-        android:gravity="center"
-        android:singleLine="true"
-        android:layout_below="@+id/talkDetailTime"
+        android:id="@+id/talkAddVerse"
+        style="@style/EditReference"
+        android:layout_below="@+id/talkAddTime"
         android:layout_toEndOf="@+id/textView8" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="by"
         android:id="@+id/textView6"
-        android:textColor="#aaa"
-        android:textSize="35dp"
-        android:layout_alignBottom="@+id/talkDetailAuthor"
-        android:layout_alignParentStart="true" />
+        android:layout_alignBottom="@+id/talkAddAuthor"
+        android:layout_alignParentStart="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/author_lead"
+        android:textColor="@color/leadText"
+        style="@style/PrimaryText"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="since"
         android:id="@+id/textView7"
-        android:textColor="#aaa"
-        android:textSize="35dp"
-        android:layout_above="@+id/talkDetailVerse"
-        android:layout_alignParentStart="true" />
+        android:layout_above="@+id/talkAddVerse"
+        android:layout_alignParentStart="true"
+        android:text="@string/date_lead"
+        android:textColor="@color/leadText"
+        style="@style/PrimaryText"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="on"
+        android:text="@string/reference_lead"
         android:id="@+id/textView8"
-        android:textColor="#aaa"
-        android:textSize="35dp"
-        android:layout_alignBottom="@+id/talkDetailVerse"
+        android:textColor="@color/leadText"
+        style="@style/PrimaryText"
+        android:layout_alignBottom="@+id/talkAddVerse"
         android:layout_alignParentStart="true" />
 
     <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:layout_below="@+id/talkDetailVerse"
-        android:layout_centerHorizontal="true"
-        android:textSize="20dp"
-        android:hint="Outline\n(one point per line)"
-        android:gravity="center" />
+        android:id="@+id/talkAddOutline"
+        style="@style/EditOutline"
+        android:layout_below="@+id/talkAddVerse"
+        android:layout_centerHorizontal="true"/>
 
     <Button
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="Submit"
-        android:id="@+id/button2"
+        android:id="@+id/button"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        style="@style/EditSubmit"/>
 
 
 </RelativeLayout>
