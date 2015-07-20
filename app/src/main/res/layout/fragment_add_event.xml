@@ -21,15 +21,16 @@
             android:layout_toEndOf="@+id/textView1" />
 
         <EditText
-            android:id="@+id/addEventLocation"
-            android:layout_below="@+id/addEventDate"
-            android:layout_toEndOf="@+id/textView2"
-            style="@style/EditLocation"  />
+            android:id="@+id/addEventName"
+            style="@style/EditLocationName"
+            android:visibility="invisible"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
 
         <EditText
             android:id="@+id/addEventDesc"
             style="@style/EditDesc"
-            android:layout_below="@+id/addEventLocation"
+            android:layout_below="@+id/textView2"
             android:layout_alignParentStart="true" />
 
         <TextView
@@ -48,20 +49,31 @@
             android:text="@string/location_lead"
             android:id="@+id/textView2"
             android:textColor="@color/leadText"
-            android:layout_alignBottom="@+id/addEventLocation"
-            android:layout_alignParentStart="true"
-            style="@style/PrimaryText" />
+            style="@style/PrimaryText"
+            android:layout_below="@+id/textView1"
+            android:layout_alignParentStart="true" />
 
      <Spinner
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:id="@+id/spinner_to" />
+         android:id="@+id/spinner_place"
+         android:layout_below="@+id/addEventDate"
+         android:layout_toEndOf="@+id/textView2" />
 
      <Button
          android:id="@+id/button"
          android:layout_alignParentBottom="true"
          android:layout_centerHorizontal="true"
          style="@style/EditSubmit"/>
+
+     <EditText
+         style="@style/EditAddress"
+         android:id="@+id/addEventAddress"
+         android:visibility="invisible"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/addEventName"
+         android:layout_alignParentEnd="true" />
 
 
  </RelativeLayout>

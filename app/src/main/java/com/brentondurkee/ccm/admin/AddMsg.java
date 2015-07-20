@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015. This work has been created by Brenton Durkee.
+ */
+
 package com.brentondurkee.ccm.admin;
 
 import android.database.Cursor;
@@ -25,10 +29,14 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.R;
+import com.brentondurkee.ccm.auth.AuthUtil;
 import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncPosts;
 import com.brentondurkee.ccm.provider.SyncUtil;
 
+/**
+ * Add message activity for posting new messages
+ */
 public class AddMsg extends FragmentActivity {
     Toolbar toolbar;
 
@@ -83,16 +91,12 @@ public class AddMsg extends FragmentActivity {
                 DataContract.Group.COLUMN_NAME_NAME
         };
 
-        private TextView reference;
-        private TextView fullRef;
-        private boolean open = false;
-        private TextView openButton;
-
         private final String TAG = getClass().getSimpleName();
 
         SimpleCursorAdapter mAdapter;
         Spinner spin;
         String toSelect = "";
+
 
         public MsgAddFragment() {
         }
@@ -101,6 +105,7 @@ public class AddMsg extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
+            //loads recieving groups from cursor
             mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.spinner_layout, null, from, to, 0);
             mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             getLoaderManager().initLoader(0, null, this);
@@ -118,7 +123,7 @@ public class AddMsg extends FragmentActivity {
                     data.putString(SyncPosts.MSG_SUBJECT, ((EditText) rootView.findViewById(R.id.msgAddSubject)).getText().toString());
                     data.putString(SyncPosts.MSG_MESSAGE, ((EditText) rootView.findViewById(R.id.msgAddMsg)).getText().toString());
                     if(toSelect.equals("")){
-                        //TODO: Add empty Toast
+                        AdminUtil.toast(getActivity(), "You didn't put in a recipient!");
                     }
                     data.putString(SyncPosts.MSG_TO, toSelect);
 
@@ -131,7 +136,12 @@ public class AddMsg extends FragmentActivity {
                         @Override
                         protected void onPostExecute(Boolean aBoolean) {
                             super.onPostExecute(aBoolean);
-                            //TODO: display toast to user
+                            if (aBoolean) {
+                                AdminUtil.toast(getActivity(), "Message Added Successfully");
+                                AdminUtil.succeed(getActivity());
+                            } else {
+                                AdminUtil.toast(getActivity(), "Failed to Add Message");
+                            }
                         }
                     }.execute(data);
 
@@ -143,10 +153,12 @@ public class AddMsg extends FragmentActivity {
             return rootView;
         }
 
+
+
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Log.v(TAG, parent.getItemAtPosition(position).toString());
-            toSelect = parent.getItemAtPosition(position).toString();
+            Cursor cursor = (Cursor) mAdapter.getItem(position);
+            toSelect = cursor.getString(1);
         }
 
         @Override

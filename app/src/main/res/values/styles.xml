@@ -90,6 +90,20 @@
         <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_marginBottom">4dp</item>
     </style>
+    <style name="EditAddress" parent="HeaderText">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/location_address_hint</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="EditLocationName" parent="HeaderText">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/location_name_hint</item>
+        <item name="android:singleLine">true</item>
+    </style>
     <style name="EditReference" parent="HeaderText">
         <item name="android:gravity">left</item>
         <item name="android:layout_width">fill_parent</item>
@@ -100,6 +114,9 @@
     <style name="ShowReference" parent="EditReference">
         <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_marginBottom">4dp</item>
+    </style>
+    <style name="ShowVerse" parent="ShowReference">
+        <item name="android:singleLine">false</item>
     </style>
     <style name="EditAuthor" parent="PrimaryText">
         <item name="android:gravity">left</item>

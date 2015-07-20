@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015. This work has been created by Brenton Durkee.
+ */
+
 package com.brentondurkee.ccm.admin;
 
 import android.os.AsyncTask;
@@ -19,6 +23,9 @@ import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.provider.SyncPosts;
 import com.brentondurkee.ccm.provider.SyncUtil;
 
+/**
+    Fragment activity for the add talk activity
+ */
 public class AddTalk extends FragmentActivity {
     Toolbar toolbar;
 
@@ -27,6 +34,7 @@ public class AddTalk extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        //sets up the toolbar
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));
         toolbar.setTitleTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
@@ -64,11 +72,6 @@ public class AddTalk extends FragmentActivity {
 
     public static class TalkAddFragment extends Fragment {
 
-        private TextView reference;
-        private TextView fullRef;
-        private boolean open = false;
-        private TextView openButton;
-
         public TalkAddFragment() {
         }
 
@@ -79,6 +82,7 @@ public class AddTalk extends FragmentActivity {
 
             final View rootView = inflater.inflate(R.layout.fragment_add_talk, container, false);
 
+            //puts all the data into the bundle, splitting the outline
             rootView.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -88,9 +92,9 @@ public class AddTalk extends FragmentActivity {
                     data.putString(SyncPosts.TALK_DATE, ((EditText) rootView.findViewById(R.id.talkAddTime)).getText().toString());
                     data.putString(SyncPosts.TALK_REFERENCE, ((EditText) rootView.findViewById(R.id.talkAddVerse)).getText().toString());
                     String outline = ((EditText) rootView.findViewById(R.id.talkAddOutline)).getText().toString();
-                    Log.v("Outline split", outline);
                     data.putStringArray(SyncPosts.TALK_OUTLINE, outline.split("\\n"));
 
+                    //runs the network io in a seperate thread
                     new AsyncTask<Bundle, Void, Boolean>(){
                         @Override
                         protected Boolean doInBackground(Bundle... data) {
@@ -100,7 +104,12 @@ public class AddTalk extends FragmentActivity {
                         @Override
                         protected void onPostExecute(Boolean aBoolean) {
                             super.onPostExecute(aBoolean);
-                            //TODO: display toast to user
+                            if (aBoolean) {
+                                AdminUtil.toast(getActivity(), "Talk Added Successfully");
+                                AdminUtil.succeed(getActivity());
+                            } else {
+                                AdminUtil.toast(getActivity(), "Failed to Add Talk");
+                            }
                         }
                     }.execute(data);
 

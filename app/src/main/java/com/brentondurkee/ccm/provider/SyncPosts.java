@@ -26,6 +26,7 @@ public class SyncPosts {
     public final static String EVENT_TITLE = "EVENT_TITLE";
     public final static String EVENT_DATE= "EVENT_DATE";
     public final static String EVENT_LOCATION= "EVENT_LOCATION";
+    public final static String EVENT_ADDRESS = "EVENT_ADDRESS";
     public final static String EVENT_DESCRIPTION = "EVENT_DESCRIPTION";
 
     public final static String TALK_AUTHOR = "TALK_AUTHOR";
@@ -62,7 +63,12 @@ public class SyncPosts {
 
             OutputStream out = new BufferedOutputStream(conn.getOutputStream());
             PrintWriter output = new PrintWriter(out);
-            String req = String.format("{\"title\": \"%s\",\"location\": \"%s\",\"date\": \"%s\",\"description\": \"%s\"}", data.getString(EVENT_TITLE), data.getString(EVENT_LOCATION), data.getString(EVENT_DATE), data.getString(EVENT_DESCRIPTION));
+            String req = String.format("{\"title\": \"%s\",\"location\": \"%s\",\"date\": \"%s\",\"description\": \"%s\"", data.getString(EVENT_TITLE), data.getString(EVENT_LOCATION), data.getString(EVENT_DATE), data.getString(EVENT_DESCRIPTION));
+            if(!data.getString(EVENT_ADDRESS).isEmpty()){
+                req += String.format(",\"address\":\"%s\"", data.getString(EVENT_ADDRESS));
+            }
+            req += "}";
+            Log.v(TAG, req);
             output.print(req);
             output.close();
 

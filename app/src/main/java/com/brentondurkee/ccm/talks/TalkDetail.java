@@ -3,6 +3,7 @@ package com.brentondurkee.ccm.talks;
 import android.animation.ObjectAnimator;
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -87,6 +88,7 @@ public class TalkDetail extends FragmentActivity {
                 DataContract.Talk.COLUMN_NAME_AUTHOR,
                 DataContract.Talk.COLUMN_NAME_DATE,
                 DataContract.Talk.COLUMN_NAME_REFERENCE,
+                DataContract.Talk.COLUMN_NAME_VERSE,
                 DataContract.Talk.COLUMN_NAME_OUTLINE
         };
 
@@ -105,7 +107,8 @@ public class TalkDetail extends FragmentActivity {
             String author = mCursor.getString(2);
             String date = Utils.dateForm(mCursor.getString(3));
             String reference = mCursor.getString(4);
-            String outline = mCursor.getString(5);
+            String verse = mCursor.getString(5);
+            String outline = mCursor.getString(6);
             Log.v("Talk Details", outline);
 //            outline = "->> " + outline;
             String[] outlist = outline.split("\",,,\"");
@@ -124,6 +127,8 @@ public class TalkDetail extends FragmentActivity {
             this.reference = (TextView) rootView.findViewById(R.id.talkDetailVerse);
             this.reference.setText(reference);
             this.fullRef = (TextView) rootView.findViewById(R.id.fullVerse);
+            fullRef.setText(verse);
+            fullRef.setMaxLines(0);
             this.reference.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

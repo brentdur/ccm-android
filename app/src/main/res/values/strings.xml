@@ -33,6 +33,8 @@
     <string name="description_hint">description</string>
     <string name="reference_hint">reference</string>
     <string name="topic_hint">topic</string>
+    <string name="location_name_hint">location name</string>
+    <string name="location_address_hint">address</string>
     <string name="outline_hint">outline\n(one point per line)</string>
 
     <string name="submit_button">Submit</string>

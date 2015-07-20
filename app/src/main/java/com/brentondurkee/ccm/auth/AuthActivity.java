@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015. This work has been created by Brenton Durkee.
+ */
+
 package com.brentondurkee.ccm.auth;
 
 import android.accounts.Account;

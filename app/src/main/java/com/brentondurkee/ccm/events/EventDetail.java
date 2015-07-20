@@ -103,7 +103,9 @@ public class EventDetail extends FragmentActivity{
                 DataContract.Event.COLUMN_NAME_TITLE,
                 DataContract.Event.COLUMN_NAME_LOCATION,
                 DataContract.Event.COLUMN_NAME_DATE,
-                DataContract.Event.COLUMN_NAME_DESCRIPTION
+                DataContract.Event.COLUMN_NAME_DESCRIPTION,
+                DataContract.Event.COLUMN_NAME_LAT,
+                DataContract.Event.COLUMN_NAME_LNG
         };
 
         final String selection = DataContract.Event._ID + " = '";
@@ -117,10 +119,7 @@ public class EventDetail extends FragmentActivity{
 
             Log.v(TAG, "create view");
 
-            location = getActivity().getIntent().getStringExtra(Utils.MAP_LOCATION);
             latLng = new double[2];
-            latLng[0] = getActivity().getIntent().getDoubleExtra(Utils.LAT, 180);
-            latLng[1] = getActivity().getIntent().getDoubleExtra(Utils.LONG, 180);
 
             Bundle extras = getActivity().getIntent().getExtras();
             String id = extras.getString("id");
@@ -137,6 +136,8 @@ public class EventDetail extends FragmentActivity{
             t.start();
             date = Utils.dateTo(date);
             String description = cursor.getString(3);
+            latLng[0] = cursor.getDouble(4);
+            latLng[1] = cursor.getDouble(5);
             cursor.close();
 
             ((TextView) rootView.findViewById(R.id.eventDetailTitle)).setText(title);
@@ -176,9 +177,6 @@ public class EventDetail extends FragmentActivity{
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
-            latLng = new double[2];
-            latLng[0] = 40.785212;
-            latLng[1] = -73.975663;
             setUpMap();
         }
 

@@ -78,7 +78,7 @@
 
         <TextView
             android:id="@+id/fullVerse"
-            style="@style/ShowReference"
+            style="@style/ShowVerse"
             android:layout_below="@+id/talkDetailVerse"
             android:layout_alignStart="@+id/textView8"
             android:maxLines="0" />
