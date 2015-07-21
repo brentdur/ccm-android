@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015. This work has been created by Brenton Durkee.
+ */
+
 package com.brentondurkee.ccm.auth;
 
 import android.accounts.AccountManager;
@@ -13,6 +17,9 @@ import com.brentondurkee.ccm.R;
 
 /**
  * Created by brenton on 6/10/15.
+ * Activity used when a new account needs to be registerd
+ *
+ * Relies on AuthRequets and AuthUtil
  */
 public class SignUpActivity extends Activity {
 
@@ -60,7 +67,7 @@ public class SignUpActivity extends Activity {
                 String authToken = null;
                 Bundle data = new Bundle();
                 try{
-                    authToken = AuthRequests.userSignUp(name, email, password, AuthUtil.TOKEN_TYPE_ACCESS);
+                    authToken = AuthRequests.userSignUp(name, email, password);
                     if(authToken.contains("FAILED")){
                         fine = false;
                     }

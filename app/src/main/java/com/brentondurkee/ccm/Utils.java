@@ -1,24 +1,22 @@
 package com.brentondurkee.ccm;
 
 import android.app.Activity;
-import android.content.Context;
-import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+
+import com.brentondurkee.ccm.Log;
 
 /**
  * Created by brenton on 7/6/15.
  */
 public class Utils {
 
-    public static final String MAP_LOCATION = "MAP_LOCATION";
-    public static final String LAT = "MAP_LAT";
-    public static final String LONG = "MAP_LONG";
+    private static final String TAG = "Utils";
 
     public static String dateTo(String date){
         long[] parts = getParts(date);
@@ -50,7 +48,7 @@ public class Utils {
         Date time;
         try {
             date = date.replace("Z", " GMT");
-            time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS zzz").parse(date);
+            time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS zzz", Locale.US).parse(date);
             return time.getTime();
         }
         catch (ParseException e){
@@ -75,7 +73,7 @@ public class Utils {
 
     public static Thread timer(String date, final TextView view, final Activity activity){
         final long[] pieces = getParts(date);
-        Thread t = new Thread() {
+        return new Thread() {
             long secs = pieces[1];
             long mins = pieces[2];
             long hrs = pieces[3];
@@ -113,10 +111,9 @@ public class Utils {
                         });
                     }
                 } catch (InterruptedException e) {
+                    com.brentondurkee.ccm.Log.d(TAG, "Failure: " + e.toString());
                 }
             }
         };
-
-        return t;
     }
 }

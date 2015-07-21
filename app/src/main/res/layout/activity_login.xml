@@ -12,25 +12,24 @@
                 android:layout_height="wrap_content" android:orientation="vertical">
 
                 <EditText android:id="@+id/email" android:layout_width="match_parent"
-                    android:layout_height="48dp" android:hint="Email"
+                    android:layout_height="48dp" android:hint="@string/email_hint"
                     android:inputType="textEmailAddress" android:maxLines="1"
                     android:singleLine="true"
                     android:enabled="true" />
 
                 <EditText android:id="@+id/password" android:layout_width="match_parent"
-                    android:layout_height="48dp" android:hint="Password"
-                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:layout_height="48dp" android:hint="@string/pass_hint"
                     android:imeOptions="actionUnspecified" android:inputType="textPassword"
                     android:maxLines="1" android:singleLine="true" />
 
                 <Button android:id="@+id/email_sign_in_button" style="?android:textAppearanceSmall"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp" android:text="Sign In"
+                    android:layout_marginTop="16dp" android:text="@string/signin_button"
                     android:textStyle="bold" />
 
                 <Button android:id="@+id/email_register_button" style="?android:textAppearanceSmall"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp" android:text="Need an account?"
+                    android:layout_marginTop="16dp" android:text="@string/need_account"
                     android:textStyle="bold" />
 
             </LinearLayout>

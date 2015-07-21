@@ -33,6 +33,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:uiOptions="splitActionBarWhenNarrow" >
+
         <receiver
             android:name=".provider.gcm.Receiver"
             android:exported="true"
@@ -43,6 +44,13 @@
                 <category android:name="com.brentondurkee.ccm" />
             </intent-filter>
         </receiver>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="@string/google_maps_key" />
 
         <service
             android:name=".provider.gcm.ListenService"
@@ -62,13 +70,36 @@
             android:name=".provider.gcm.RegIntentService"
             android:exported="false" >
         </service>
+        <service
+            android:name=".provider.SyncService"
+            android:exported="true"
+            android:process=":sync" >
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
+        </service>
+        <service android:name=".auth.AuthService" >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <provider
+            android:name=".provider.DataProvider"
+            android:authorities="com.brentondurkee.ccm"
+            android:exported="false" />
 
         <activity
             android:name=".Pager"
             android:label="CCM" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
@@ -99,86 +130,21 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Pager" />
-            >
         </activity>
-
-        <provider
-            android:name=".provider.DataProvider"
-            android:authorities="com.brentondurkee.ccm"
-            android:exported="false" />
-
-        <service
-            android:name=".provider.SyncService"
-            android:exported="true"
-            android:process=":sync" >
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.content.SyncAdapter"
-                android:resource="@xml/syncadapter" />
-        </service>
-        <!-- <service android:name=".common.accounts.GenericAccountService" > -->
-
-
-        <!-- &lt;!&ndash; Required filter used by the system to launch our account service. &ndash;&gt; -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.accounts.AccountAuthenticator" /> -->
-        <!-- </intent-filter> -->
-        <!-- &lt;!&ndash; This points to an XMLf ile which describes our account service. &ndash;&gt; -->
-        <!-- <meta-data -->
-        <!-- android:name="android.accounts.AccountAuthenticator" -->
-        <!-- android:resource="@xml/authenticator" /> -->
-        <!-- </service> -->
-
-        <service android:name=".auth.AuthService" >
-            <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
-        </service>
-
         <activity
             android:name=".auth.AuthActivity"
-            android:label="@string/title_activity_login"
+            android:label="@string/title_activity_signin"
             android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
         <activity
             android:name=".auth.SignUpActivity"
-            android:label="SignUp"
+            android:label="@string/title_activity_signup"
             android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="@string/google_maps_key" />
-
         <activity
-            android:name=".admin.AddEvent"
-            android:label="@string/title_activity_add_event"
-            android:parentActivityName=".Pager" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.brentondurkee.ccm.Pager" />
-        </activity>
-        <activity
-            android:name=".admin.AddTalk"
-            android:label="@string/title_activity_add_talk"
-            android:parentActivityName=".Pager" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.brentondurkee.ccm.Pager" />
-        </activity>
-        <activity
-            android:name=".admin.AddMsg"
-            android:label="@string/title_activity_add_msg"
+            android:name=".admin.AdminActivity"
+            android:label="@string/title_activity_add"
             android:parentActivityName=".Pager" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

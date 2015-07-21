@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="75dp"
         android:layout_gravity="center_horizontal|top"
@@ -13,7 +9,7 @@
         <TextView
             android:layout_width="275dp"
             android:layout_height="30dp"
-            android:text="Title"
+            android:text="@string/title_hint"
             android:id="@+id/eventTitle"
             style="@style/HeaderText"
             android:layout_gravity="center_horizontal"
@@ -24,7 +20,7 @@
         <TextView
             android:layout_width="275dp"
             android:layout_height="30dp"
-            android:text="Location"
+            android:text="@string/location_hint"
             android:id="@+id/eventLocation"
             style="@style/TitleText"
             android:layout_gravity="left"
@@ -35,7 +31,7 @@
         <TextView
             android:layout_width="90dp"
             android:layout_height="55dp"
-            android:text="Date"
+            android:text="@string/date_hint"
             android:id="@+id/eventDate"
             style="@style/BodyText"
             android:layout_gravity="right|top"
@@ -44,6 +40,4 @@
             android:gravity="center_vertical|center_horizontal"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="10dp" />
-    </RelativeLayout>
-
-</FrameLayout>
+</RelativeLayout>

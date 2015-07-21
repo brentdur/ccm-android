@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. This work has been created by Brenton Durkee.
+ * Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
  */
 
 package com.brentondurkee.ccm.auth;
@@ -10,23 +10,23 @@ import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
 
 /**
  * Created by brenton on 6/10/15.
+ * Activity for sign-in
+ * Activity called when sign-in needed
+ *
+ * Relies on AuthUtil, SignupActivity, AuthRequests
  */
 public class AuthActivity extends AccountAuthenticatorActivity{
 
-    private final String TAG=getClass().getSimpleName();
+    private final String TAG="AuthActivity";
 
     private final static int REQ_SIGNUP = 1;
 
@@ -53,14 +53,14 @@ public class AuthActivity extends AccountAuthenticatorActivity{
             ((TextView) findViewById(R.id.email)).setText(accountEmail);
         }
 
-        ((Button) findViewById(R.id.email_sign_in_button)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.email_sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submit();
             }
         });
 
-        ((Button) findViewById(R.id.email_register_button)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.email_register_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent signup = new Intent(getBaseContext(), SignUpActivity.class);
@@ -78,7 +78,7 @@ public class AuthActivity extends AccountAuthenticatorActivity{
         }
         else {
             super.onActivityResult(requestCode, resultCode, data);
-            Log.v(TAG, "signup failed");
+            Log.v(TAG, "Signup Failed");
             toast("Signup Failed");
 
         }
@@ -93,7 +93,7 @@ public class AuthActivity extends AccountAuthenticatorActivity{
         new AsyncTask<Void, Void, Intent>(){
             @Override
             protected Intent doInBackground(Void... params){
-                String authToken = AuthRequests.userSignIn(email, password, mAuthTokenType);
+                String authToken = AuthRequests.userSignIn(email, password);
                 final Intent res = new Intent();
                 res.putExtra(AccountManager.KEY_ACCOUNT_NAME, email);
                 res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);

@@ -3,11 +3,9 @@ package com.brentondurkee.ccm.talks;
 import android.animation.ObjectAnimator;
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.provider.ContactsContract;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,14 +14,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncUtil;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class TalkDetail extends FragmentActivity {
 
@@ -110,15 +105,11 @@ public class TalkDetail extends FragmentActivity {
             String verse = mCursor.getString(5);
             String outline = mCursor.getString(6);
             Log.v("Talk Details", outline);
-//            outline = "->> " + outline;
             String[] outlist = outline.split("\",,,\"");
-            String numbers = "";
             outline = "";
             for(int i = 0; i<outlist.length; i ++){
                 outline += outlist[i] + "\n";
-                numbers += i+1 + "\n\n";
             }
-//            outline = outline.replace("\",,,\"", "\n->> ");
 
             View rootView = inflater.inflate(R.layout.fragment_talk_detail, container, false);
             ((TextView) rootView.findViewById(R.id.talkDetailTopic)).setText(subject);
@@ -136,7 +127,6 @@ public class TalkDetail extends FragmentActivity {
                 }
             });
             ((TextView) rootView.findViewById(R.id.talkDetailOutline)).setText(outline);
-//            ((TextView) rootView.findViewById(R.id.talkDetailNumbers)).setText(numbers);
             openButton = (TextView) rootView.findViewById(R.id.openVerse);
 
             return rootView;

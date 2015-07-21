@@ -18,10 +18,11 @@ import com.brentondurkee.ccm.provider.DataContract;
 
 /**
  * Created by brenton on 6/12/15.
+ *
+ * List fragment for messages
  */
 public class MsgList extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    //        public Message[] msgsArray = Message.createList(10);
     SimpleCursorAdapter mAdapter;
     final String[] FROM = new String[]{DataContract.Msg.COLUMN_NAME_FROM, DataContract.Msg.COLUMN_NAME_SUBJECT, DataContract.Msg.COLUMN_NAME_DATE};
     final int[] TO = new int[]{R.id.msgFrom, R.id.msgSubject, R.id.msgTime};

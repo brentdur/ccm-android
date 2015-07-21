@@ -17,18 +17,12 @@
 package com.brentondurkee.ccm.provider;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
+
+import com.brentondurkee.ccm.Log;
 
 /**
  * Static helper methods for working with the sync framework.
@@ -37,9 +31,8 @@ public class SyncUtil {
     private static final String TAG="SyncUtil";
     private static final long SYNC_FREQUENCY = 60 * 60;  // 1 hour (in seconds)
     private static final String CONTENT_AUTHORITY = DataContract.CONTENT_AUTHORITY;
-//    private static final String PREF_SETUP_COMPLETE = "setup_complete";
     // Value below must match the account type specified in res/xml/syncadapter.xml
-    public static String PREF_ACCOUNT_EMAIL="account_email";
+    public final static String PREF_ACCOUNT_EMAIL="account_email";
 
     public static Context mainContext;
     private static Account mAccount;

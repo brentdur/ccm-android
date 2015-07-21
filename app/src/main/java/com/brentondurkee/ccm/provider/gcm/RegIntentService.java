@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+ */
+
 package com.brentondurkee.ccm.provider.gcm;
 
 import android.app.IntentService;
@@ -5,16 +9,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
+import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.auth.AuthRequests;
 import com.brentondurkee.ccm.provider.SyncUtil;
-import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
-import java.io.IOException;
 
 /**
  * Created by brenton on 6/9/15.
@@ -23,7 +25,7 @@ public class RegIntentService extends IntentService{
 
     private final static String TAG="RegIntentService";
 
-    public static String PREF_GCM_TOKEN="gcm_token";
+    public final static String PREF_GCM_TOKEN="gcm_token";
 
     public RegIntentService() {
         super(TAG);
@@ -57,7 +59,7 @@ public class RegIntentService extends IntentService{
                 // [END register_for_gcm]
             }
         } catch (Exception e) {
-            Log.d(TAG, "Failed to complete token refresh", e);
+            Log.d(TAG, "Failed to complete token refresh");
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.
             sharedPreferences.edit().putBoolean("sentTokenToServer", false).apply();

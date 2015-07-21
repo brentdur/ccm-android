@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,11 +17,12 @@ import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncUtil;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-
+/**
+ * Created by brenton on 6/12/15.
+ *
+ * Detail fragment for Messages
+ */
 public class MsgDetail extends FragmentActivity {
 
     private Toolbar toolbar;
@@ -104,6 +104,7 @@ public class MsgDetail extends FragmentActivity {
             ((TextView) rootView.findViewById(R.id.msgDetailTo)).setText(to);
             ((TextView) rootView.findViewById(R.id.msgDetailTime)).setText(date);
             ((TextView) rootView.findViewById(R.id.msgDetailMsg)).setText(message);
+            mCursor.close();
             return rootView;
         }
     }

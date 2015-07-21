@@ -1,13 +1,12 @@
+/*
+ * Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+ */
+
 package com.brentondurkee.ccm.provider.gcm;
 
 import android.content.Intent;
 
-import com.brentondurkee.ccm.R;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
 import com.google.android.gms.iid.InstanceIDListenerService;
-
-import java.io.IOException;
 
 /**
  * Created by brenton on 6/9/15.

@@ -1,7 +1,12 @@
+/*
+ * Copyright (c) 2015. This work has been created by Brenton Durkee.
+ */
+
 package com.brentondurkee.ccm.auth;
 
 /**
  * Created by brenton on 6/10/15.
+ * Utilies for authentication and account purposes
  */
 public class AuthUtil {
     //keys for incoming intent
@@ -15,16 +20,7 @@ public class AuthUtil {
 
     //type of token
     public final static String TOKEN_TYPE_ACCESS="user";
-
     public final static String ACCOUNT_TYPE="com.brentondurkee.ccm";
-
-
     public final static String REG_TYPE="REG_TYPE";
     public final static String SUCCESS="SUCCESS";
-
-    //return intent
-//    res.putExtra(AccountManager.KEY_ACCOUNT_NAME, email);
-//    res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-//    res.putExtra(AccountManager.KEY_AUTHTOKEN, authToken);
-//    res.putExtra(AuthUtil.PARAM_USER_PASS, password);
 }

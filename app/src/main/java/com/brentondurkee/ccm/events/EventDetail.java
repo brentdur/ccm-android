@@ -1,34 +1,30 @@
 package com.brentondurkee.ccm.events;
 
-//import android.app.FragmentManager;
 import android.content.ContentResolver;
-        import android.database.Cursor;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.Fragment;
+import android.database.Cursor;
 import android.os.Bundle;
-        import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.Utils;
-        import com.brentondurkee.ccm.provider.DataContract;
+import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-        import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.w3c.dom.Text;
 
 
 public class EventDetail extends FragmentActivity{
@@ -81,7 +77,7 @@ public class EventDetail extends FragmentActivity{
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * A fragment to show the event details
      */
     public static class EventDetailFragment extends Fragment implements OnMapReadyCallback {
 
@@ -90,11 +86,10 @@ public class EventDetail extends FragmentActivity{
         Thread t;
         private String location;
 
-        private String TAG = getClass().getSimpleName();
+        private final String TAG = getClass().getSimpleName();
 
         private GoogleMap mMap; // Might be null if Google Play services APK is not available.
         private SupportMapFragment m;
-        //private String location;
         private double[] latLng;
         private boolean open = false;
         private TextView openButton;
@@ -142,7 +137,7 @@ public class EventDetail extends FragmentActivity{
 
             ((TextView) rootView.findViewById(R.id.eventDetailTitle)).setText(title);
             ((TextView) rootView.findViewById(R.id.eventDetailLocation)).setText(location);
-            ((TextView) rootView.findViewById(R.id.eventDetailLocation)).setOnClickListener(new View.OnClickListener() {
+            rootView.findViewById(R.id.eventDetailLocation).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     openMaps();
@@ -205,14 +200,6 @@ public class EventDetail extends FragmentActivity{
             }
             ft.commit();
             open = !open;
-
-//            double lat = 40.785212;
-//            double lng = -73.975663;
-//            Intent maps = new Intent(this.getActivity(), Map.class);
-//            maps.putExtra(Utils.MAP_LOCATION, location);
-//            maps.putExtra(Utils.LAT, lat);
-//            maps.putExtra(Utils.LONG, lng);
-//            startActivity(maps);
         }
 
         @Override

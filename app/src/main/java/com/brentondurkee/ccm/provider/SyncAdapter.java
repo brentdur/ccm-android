@@ -2,7 +2,6 @@ package com.brentondurkee.ccm.provider;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.Application;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
@@ -14,23 +13,19 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.brentondurkee.ccm.auth.AuthUtil;
+import com.brentondurkee.ccm.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -40,8 +35,7 @@ import java.util.Scanner;
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
-    ContentResolver mResolver;
-    final String TAG = "Sync Adapter";
+    final String TAG = "SyncAdapter";
     final String[] EVENT_PROJECTION = new String[]{
             DataContract.Event.COLUMN_NAME_ENTRY_ID,
             DataContract.Event.COLUMN_NAME_VERSION,
@@ -62,27 +56,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             DataContract.Group.COLUMN_NAME_ENTRY_ID,
             DataContract.Group.COLUMN_NAME_VERSION,
             DataContract.Group._ID};
-    String eventFeed = "http://ccm.brentondurkee.com/api/events";
-    String talkFeed = "http://ccm.brentondurkee.com/api/talks";
-    String msgFeed ="http://ccm.brentondurkee.com/api/messages/mine";
-    String locationFeed = "http://ccm.brentondurkee.com/api/locations";
-    String groupFeed = "http://ccm.brentondurkee.com/api/groups";
+    private final String eventFeed = "http://ccm.brentondurkee.com/api/events";
+    private final String talkFeed = "http://ccm.brentondurkee.com/api/talks";
+    private final String msgFeed ="http://ccm.brentondurkee.com/api/messages/mine";
+    private final String locationFeed = "http://ccm.brentondurkee.com/api/locations";
+    private final String groupFeed = "http://ccm.brentondurkee.com/api/groups";
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
 
-        mResolver = context.getContentResolver();
     }
 
     public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSync) {
         super(context, autoInitialize, allowParallelSync);
 
-        mResolver = context.getContentResolver();
-    }
-
-    @Override
-    public Context getContext() {
-        return super.getContext();
     }
 
     @Override
@@ -150,14 +137,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             Log.w(TAG, "RemoteException: "+ e.toString());
         }
         catch(OperationApplicationException e){
-            Log.w(TAG, "OpperationAppException: "+ e.toString());
+            Log.w(TAG, "OperationAppException: "+ e.toString());
         }
     }
 
     public void updateDatabase(String data, Uri content, String[] projection, String type) throws JSONException, RemoteException, OperationApplicationException{
         JSONArray json = new JSONArray(data);
         ContentResolver mResolver = getContext().getContentResolver();
-        ArrayList<JSONObject> objects = new ArrayList<JSONObject>(json.length());
+        ArrayList<JSONObject> objects = new ArrayList<>(json.length());
         int updates = 0;
         int deletes = 0;
         int creates = 0;
@@ -166,7 +153,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             objects.add(json.getJSONObject(i));
         }
 
-        ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>(json.length());
+        ArrayList<ContentProviderOperation> batch = new ArrayList<>(json.length());
         Cursor cursor = mResolver.query(content, projection, null, null, null);
 
         while(cursor.moveToNext()){
@@ -431,13 +418,4 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 .build();
     }
 
-    @Override
-    public void onSyncCanceled() {
-        super.onSyncCanceled();
-    }
-
-    @Override
-    public void onSyncCanceled(Thread thread) {
-        super.onSyncCanceled(thread);
-    }
 }

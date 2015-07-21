@@ -21,7 +21,6 @@ import com.brentondurkee.ccm.provider.DataContract;
      */
     public class TalkList extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
-//        public Talk[] talkArray = Talk.createList(10);
         SimpleCursorAdapter mAdapter;
         final String [] from = new String[]{DataContract.Talk.COLUMN_NAME_SUBJECT, DataContract.Talk.COLUMN_NAME_AUTHOR, DataContract.Talk.COLUMN_NAME_DATE, DataContract.Talk.COLUMN_NAME_REFERENCE};
         final int [] to = new int[]{R.id.talkTopic, R.id.talkAuthor, R.id.talkTime, R.id.talkVerse};

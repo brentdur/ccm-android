@@ -1,7 +1,12 @@
+/*
+ * Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+ */
+
 package com.brentondurkee.ccm.provider.gcm;
 
 import android.os.Bundle;
-import android.util.Log;
+
+import com.brentondurkee.ccm.Log;
 
 import com.brentondurkee.ccm.provider.SyncUtil;
 import com.google.android.gms.gcm.GcmListenerService;

@@ -1,12 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".Pager">
-    <item android:id="@+id/action_settings" android:title="Refresh"
+    <item android:id="@+id/action_settings" android:title="@string/refresh"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
-    <item android:id="@+id/add_event" android:title="Add Event"
+    <item android:id="@+id/add_event" android:title="@string/add_event"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
-    <item android:id="@+id/add_talk" android:title="Add Talk"
+    <item android:id="@+id/add_talk" android:title="@string/add_talk"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
-    <item android:id="@+id/add_msg" android:title="Add Message"
+    <item android:id="@+id/add_msg" android:title="@string/add_msg"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
 </menu>

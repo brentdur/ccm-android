@@ -15,6 +15,14 @@ import com.brentondurkee.ccm.Pager;
  * Utility classes for admin activities
  */
 public class AdminUtil {
+
+    public final static String ADD_TYPE="ADD_TYPE";
+    public final static String TYPE_EVENT="EVENT";
+    public final static String TYPE_MSG="MSG";
+    public final static String TYPE_TALK="TALK";
+
+
+
     /**
      *
      * @param context the context for the toast to display in

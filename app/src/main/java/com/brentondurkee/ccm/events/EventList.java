@@ -1,19 +1,23 @@
+/*
+ * Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+ */
+
 package com.brentondurkee.ccm.events;
 
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
-import android.content.Intent;
 import android.support.v4.content.Loader;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.provider.DataContract;
@@ -21,22 +25,23 @@ import com.brentondurkee.ccm.provider.DataContract;
 
 /**
  * Created by brenton on 6/12/15.
- */
-/**
- * A placeholder fragment containing a simple view.
+ *
+ * A list fragment, loading a list of events
+ *
+ * Depends on DataContract, Utils,
  */
 public class EventList extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private SimpleCursorAdapter mAdapter;
-    private String[] from = {DataContract.Event.COLUMN_NAME_TITLE, DataContract.Event.COLUMN_NAME_DATE, DataContract.Event.COLUMN_NAME_LOCATION};
-    private int[] to = {R.id.eventTitle, R.id.eventDate, R.id.eventLocation};
+    private final String[] from = {DataContract.Event.COLUMN_NAME_TITLE, DataContract.Event.COLUMN_NAME_DATE, DataContract.Event.COLUMN_NAME_LOCATION};
+    private final int[] to = {R.id.eventTitle, R.id.eventDate, R.id.eventLocation};
     private static final String[] PROJECTION = new String[]{
             DataContract.Event._ID,
             DataContract.Event.COLUMN_NAME_TITLE,
             DataContract.Event.COLUMN_NAME_DATE,
             DataContract.Event.COLUMN_NAME_LOCATION
     };
-    private final String TAG=getClass().getSimpleName();
+    private final String TAG="EventList";
 
     public EventList() {
     }
@@ -60,7 +65,6 @@ public class EventList extends ListFragment implements LoaderManager.LoaderCallb
             }
         });
 
-//            EventAdapter adapter = new EventAdapter(getActivity(), R.layout.event, R.id.eventTitle, eventsArray);
         setListAdapter(mAdapter);
         getLoaderManager().initLoader(0, null, this);
     }

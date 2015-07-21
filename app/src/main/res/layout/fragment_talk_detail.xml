@@ -6,7 +6,7 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
          android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context="com.brentondurkee.ccm.talks.TalkDetail$TalkDetailFragment"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -89,7 +89,7 @@
             android:text=">"
             android:id="@+id/openVerse"
             android:textColor="@color/primaryCCM"
-            android:textSize="40dp"
+            android:textSize="40sp"
             android:layout_above="@+id/fullVerse"
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="12dp" />

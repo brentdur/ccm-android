@@ -24,9 +24,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.provider.ContactsContract;
-import android.util.Log;
 
+import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.common.SelectionBuilder;
 
 public class DataProvider extends ContentProvider {
@@ -35,6 +34,7 @@ public class DataProvider extends ContentProvider {
      * Content authority for this provider.
      */
     private static final String AUTHORITY = DataContract.CONTENT_AUTHORITY;
+    private static final String TAG = "DataProvider";
 
     // The constants below represent individual URI routes, as IDs. Every URI pattern recognized by
     // this ContentProvider is defined using sUriMatcher.addURI(), and associated with one of these
@@ -489,11 +489,11 @@ public class DataProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            Log.v("Database", SQL_CREATE_EVENTS);
-            Log.v("Database", SQL_CREATE_TALKS);
-            Log.v("Database", SQL_CREATE_MSGS);
-            Log.v("Database", SQL_CREATE_LOCATIONS);
-            Log.v("Database", SQL_CREATE_GROUPS);
+            Log.v(TAG, SQL_CREATE_EVENTS);
+            Log.v(TAG, SQL_CREATE_TALKS);
+            Log.v(TAG, SQL_CREATE_MSGS);
+            Log.v(TAG, SQL_CREATE_LOCATIONS);
+            Log.v(TAG, SQL_CREATE_GROUPS);
             db.execSQL(SQL_CREATE_EVENTS);
             db.execSQL(SQL_CREATE_TALKS);
             db.execSQL(SQL_CREATE_MSGS);

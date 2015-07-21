@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+ */
+
 package com.brentondurkee.ccm.auth;
 
 import android.accounts.AbstractAccountAuthenticator;
@@ -9,15 +13,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
+
+import com.brentondurkee.ccm.Log;
 
 /**
  * Created by brenton on 6/10/15.
+ * Basic authenticator
+ * Relies on AuthRequests, AuthUtil, and AuthActivity
  */
 public class Authenticator extends AbstractAccountAuthenticator {
 
-    Context mContext;
-    private final String TAG="CCMAuthenticator";
+    private final Context mContext;
+    private final String TAG="Authenticator";
+    private final Class signin = AuthActivity.class;
 
     public Authenticator(Context context){
         super(context);
@@ -32,7 +40,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
         Log.v(TAG, "Add Account");
-        final Intent intent = new Intent(mContext, AuthActivity.class);
+        final Intent intent = new Intent(mContext, signin);
         intent.putExtra(AuthUtil.ARG_ACCOUNT_TYPE, accountType);
         intent.putExtra(AuthUtil.ARG_AUTH_TYPE, authTokenType);
         intent.putExtra(AuthUtil.ARG_IS_ADDING_NEW, true);
@@ -59,7 +67,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
         if(TextUtils.isEmpty(authToken)){
             final String password = am.getPassword(account);
             if (password != null){
-                authToken = AuthRequests.userSignIn(account.name, password, authTokenType);
+                authToken = AuthRequests.userSignIn(account.name, password);
             }
         }
 

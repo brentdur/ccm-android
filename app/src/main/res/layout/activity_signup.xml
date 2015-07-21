@@ -17,13 +17,13 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:id="@+id/signup_name"
-            android:hint="Name" />
+            android:hint="@string/name_hint" />
 
         <EditText
             android:id="@+id/signup_email"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Email"
+            android:hint="@string/email_hint"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:singleLine="true"
@@ -33,8 +33,7 @@
             android:id="@+id/signup_password"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Password"
-            android:imeActionLabel="@string/action_sign_in_short"
+            android:hint="@string/pass_hint"
             android:imeOptions="actionUnspecified"
             android:inputType="textPassword"
             android:maxLines="1"
@@ -46,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Register"
+            android:text="@string/register_button"
             android:textStyle="bold" />
 
         <Button
@@ -55,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Have an account?"
+            android:text="@string/have_account"
             android:textStyle="bold"
             android:singleLine="true" />
     </LinearLayout>

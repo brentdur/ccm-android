@@ -1,10 +1,13 @@
+/*
+ * Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+ */
+
 package com.brentondurkee.ccm.provider.gcm;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
-import com.google.android.gms.gcm.GcmListenerService;
+import com.brentondurkee.ccm.Log;
 import com.google.android.gms.gcm.GcmReceiver;
 
 /**
