@@ -9,11 +9,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import com.brentondurkee.ccm.R;
+import com.brentondurkee.ccm.Log;
 
 /**
  * Created by brenton on 6/10/15.

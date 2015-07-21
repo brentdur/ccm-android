@@ -26,13 +26,14 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.brentondurkee.ccm.Log;
 
 /**
  * Helper for building selection clauses for {@link android.database.sqlite.SQLiteDatabase}.
@@ -91,7 +92,7 @@ import java.util.Map;
  * This class is <em>not</em> thread safe.
  */
 public class SelectionBuilder {
-    private static final String TAG = "ccm";
+    private static final String TAG = "SelectionBuilder";
 
     private String mTable = null;
     private Map<String, String> mProjectionMap = new HashMap<String, String>();

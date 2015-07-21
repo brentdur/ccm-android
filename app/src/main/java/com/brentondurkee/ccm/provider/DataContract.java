@@ -27,6 +27,8 @@ public class DataContract {
     private DataContract() {
     }
 
+
+
     /**
      * Content provider authority.
      */

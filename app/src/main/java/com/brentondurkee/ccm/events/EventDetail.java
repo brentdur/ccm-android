@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +16,7 @@ import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.Utils;
+import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
