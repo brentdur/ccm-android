@@ -319,7 +319,7 @@ public class SyncPosts {
         Log.v(TAG, "Start Delete Message");
         boolean good = false;
         try {
-            URL url = new URL(deleteMsgUrl+"?"+data.getString(DELETE_MESSAGE));
+            URL url = new URL(deleteMsgUrl+"?message="+data.getString(DELETE_MESSAGE));
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.addRequestProperty("Authorization", "Bearer " + token);
             conn.setRequestProperty("Content-Type", "application/json");

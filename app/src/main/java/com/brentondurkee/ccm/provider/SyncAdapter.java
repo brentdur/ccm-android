@@ -88,8 +88,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         String token = AccountManager.get(getContext()).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);
         if (extras.getBoolean(SyncUtil.SELECTIVE_KEY, false)) {
             Log.v(TAG, "selective sync");
-            if(extras.getString(SyncUtil.SELECTION).equals("signup")){
+            if(extras.getString(SyncUtil.SELECTION).equals(SyncUtil.SELECTIVE_SIGNUP)){
                 sync(signupFeed, DataContract.Signup.CONTENT_URI, SIGNUP_PROJECTION, "signup", token);
+            }
+            else if(extras.getString(SyncUtil.SELECTION).equals(SyncUtil.SELECTIVE_MSG)){
+                sync(msgFeed, DataContract.Msg.CONTENT_URI, MSG_PROJECTION, "msg", token);
             }
             return;
         }

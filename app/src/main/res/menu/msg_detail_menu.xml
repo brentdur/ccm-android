@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".Pager">
+    <item android:id="@+id/delete_msg" android:title="@string/delete_msg"
+        android:orderInCategory="100" app:showAsAction="ifRoom" />
+</menu>

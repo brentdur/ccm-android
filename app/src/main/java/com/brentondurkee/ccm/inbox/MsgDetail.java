@@ -1,11 +1,16 @@
 package com.brentondurkee.ccm.inbox;
 
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.database.CursorWrapper;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +19,10 @@ import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.Utils;
+import com.brentondurkee.ccm.admin.AdminActivity;
+import com.brentondurkee.ccm.admin.AdminUtil;
 import com.brentondurkee.ccm.provider.DataContract;
+import com.brentondurkee.ccm.provider.SyncPosts;
 import com.brentondurkee.ccm.provider.SyncUtil;
 
 
@@ -45,6 +53,48 @@ public class MsgDetail extends FragmentActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater mInflate = getMenuInflater();
+        mInflate.inflate(R.menu.msg_detail_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.delete_msg){
+            String msgId = getIntent().getExtras().getString("entry_id");
+            Bundle data = new Bundle();
+            final Context context = this;
+            data.putString(SyncPosts.DELETE_MESSAGE, msgId);
+            new AsyncTask<Bundle, Void, Boolean>() {
+                @Override
+                protected Boolean doInBackground(Bundle... data) {
+                    return SyncPosts.deleteMsg(data[0], SyncUtil.getAccount(), context);
+                }
+
+                @Override
+                protected void onPostExecute(Boolean aBoolean) {
+                    super.onPostExecute(aBoolean);
+                    if (aBoolean) {
+                        SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_MSG);
+                        finish();
+                    } else {
+                        AdminUtil.toast(getApplicationContext(), "Failed to Delete");
+                    }
+
+                }
+            }.execute(data);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
     /**
      * A placeholder fragment containing a simple view.
      */

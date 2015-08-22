@@ -47,14 +47,7 @@ public class SyncUtil {
     public final static String SELECTION = "selection";
 
     public final static String SELECTIVE_SIGNUP = "signup";
-
-    private static final String[] GROUP_PROJECTION = new String[]{
-            DataContract.Group._ID,
-            DataContract.Group.COLUMN_NAME_NAME,
-            DataContract.Group.COLUMN_NAME_WRITEEVENTS,
-            DataContract.Group.COLUMN_NAME_WRITESIGNUPS,
-            DataContract.Group.COLUMN_NAME_WRITETALKS
-    };
+    public final static String SELECTIVE_MSG = "message";
 
     public static Context mainContext;
     private static Account mAccount;

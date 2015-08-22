@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.brentondurkee.ccm.events.EventDetail">
+    <item android:id="@+id/action_settings" android:title="@string/refresh"
+        android:orderInCategory="100" app:showAsAction="never" />
+</menu>
