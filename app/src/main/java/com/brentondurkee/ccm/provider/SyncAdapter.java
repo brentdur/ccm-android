@@ -56,11 +56,21 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             DataContract.Group.COLUMN_NAME_ENTRY_ID,
             DataContract.Group.COLUMN_NAME_VERSION,
             DataContract.Group._ID};
+    final String[] SIGNUP_PROJECTION = new String[]{
+            DataContract.Signup.COLUMN_NAME_ENTRY_ID,
+            DataContract.Signup.COLUMN_NAME_VERSION,
+            DataContract.Signup._ID};
+    final String[] TOPIC_PROJECTION = new String[]{
+            DataContract.Topic.COLUMN_NAME_ENTRY_ID,
+            DataContract.Topic.COLUMN_NAME_VERSION,
+            DataContract.Topic._ID};
     private final String eventFeed = "http://ccm.brentondurkee.com/api/events";
     private final String talkFeed = "http://ccm.brentondurkee.com/api/talks";
     private final String msgFeed ="http://ccm.brentondurkee.com/api/messages/mine";
     private final String locationFeed = "http://ccm.brentondurkee.com/api/locations";
     private final String groupFeed = "http://ccm.brentondurkee.com/api/groups";
+    private final String signupFeed = "http://ccm.brentondurkee.com/api/signups";
+    private final String topicFeed = "http://ccm.brentondurkee.com/api/topics";
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -76,11 +86,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.v(TAG, "starting sync");
         String token = AccountManager.get(getContext()).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);
+        if (extras.getBoolean(SyncUtil.SELECTIVE_KEY, false)) {
+            Log.v(TAG, "selective sync");
+            if(extras.getString(SyncUtil.SELECTION).equals("signup")){
+                sync(signupFeed, DataContract.Signup.CONTENT_URI, SIGNUP_PROJECTION, "signup", token);
+            }
+            return;
+        }
         sync(eventFeed, DataContract.Event.CONTENT_URI, EVENT_PROJECTION, "event", token);
         sync(talkFeed, DataContract.Talk.CONTENT_URI, TALK_PROJECTION, "talk", token);
         sync(msgFeed, DataContract.Msg.CONTENT_URI, MSG_PROJECTION, "msg", token);
         sync(locationFeed, DataContract.Location.CONTENT_URI, LOCATION_PROJECTION, "location", token);
         sync(groupFeed, DataContract.Group.CONTENT_URI, GROUP_PROJECTION, "group", token);
+        sync(signupFeed, DataContract.Signup.CONTENT_URI, SIGNUP_PROJECTION, "signup", token);
+        sync(topicFeed, DataContract.Topic.CONTENT_URI, TOPIC_PROJECTION, "topic", token);
 
     }
 
@@ -210,11 +229,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getInt("version"));
         }
         if(type.equals("msg")){
+            JSONObject topic = object.getJSONObject("topic");
             return updateMsg(content,
                     object.getString("from"),
+                    object.getString("simpleFrom"),
                     object.getString("simpleTo"),
                     object.getString("subject"),
                     object.getString("date"),
+                    topic.getString("_id"),
                     object.getString("message"),
                     object.getInt("version"));
         }
@@ -232,6 +254,23 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getString("address"),
                     object.getDouble("lat"),
                     object.getDouble("lng"),
+                    object.getInt("version"));
+        }
+        if(type.equals("topic")){
+            return updateTopic(content,
+                    object.getString("name"),
+                    object.getString("isAnon"),
+                    object.getInt("version"));
+        }
+        if(type.equals("signup")){
+            return updateSignup(content,
+                    object.getString("name"),
+                    object.getString("dateInfo"),
+                    object.getString("location"),
+                    object.getString("address"),
+                    object.getString("description"),
+                    object.getInt("memberCount"),
+                    object.getString("isMemberOf"),
                     object.getInt("version"));
         }
         return null;
@@ -261,11 +300,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getInt("version"));
         }
         if(type.equals("msg")){
+            JSONObject topic = object.getJSONObject("topic");
             return addMsg(content,
                     object.getString("from"),
+                    object.getString("simpleFrom"),
                     object.getString("simpleTo"),
                     object.getString("subject"),
                     object.getString("date"),
+                    topic.getString("_id"),
                     object.getString("message"),
                     object.getString("_id"),
                     object.getInt("version"));
@@ -285,6 +327,25 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getString("address"),
                     object.getDouble("lat"),
                     object.getDouble("lng"),
+                    object.getString("_id"),
+                    object.getInt("version"));
+        }
+        if(type.equals("topic")){
+            return addTopic(content,
+                    object.getString("name"),
+                    object.getString("isAnon"),
+                    object.getString("_id"),
+                    object.getInt("version"));
+        }
+        if(type.equals("signup")){
+            return addSignup(content,
+                    object.getString("name"),
+                    object.getString("dateInfo"),
+                    object.getString("location"),
+                    object.getString("address"),
+                    object.getString("description"),
+                    object.getInt("memberCount"),
+                    object.getString("isMemberOf"),
                     object.getString("_id"),
                     object.getInt("version"));
         }
@@ -316,23 +377,28 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 .build();
     }
 
-    public ContentProviderOperation updateMsg(Uri existing, String from, String to, String subject, String date, String message, int version){
+
+    public ContentProviderOperation updateMsg(Uri existing, String from, String simpleFrom, String to, String subject, String date, String topic, String message, int version){
         return ContentProviderOperation.newUpdate(existing)
                 .withValue(DataContract.Msg.COLUMN_NAME_FROM, from)
+                .withValue(DataContract.Msg.COLUMN_NAME_SIMPLE_FROM, simpleFrom)
                 .withValue(DataContract.Msg.COLUMN_NAME_TO, to)
                 .withValue(DataContract.Msg.COLUMN_NAME_DATE, date)
                 .withValue(DataContract.Msg.COLUMN_NAME_SUBJECT, subject)
+                .withValue(DataContract.Msg.COLUMN_NAME_TOPIC, topic)
                 .withValue(DataContract.Msg.COLUMN_NAME_MESSAGE, message)
                 .withValue(DataContract.Msg.COLUMN_NAME_VERSION, version)
                 .build();
     }
 
-    public ContentProviderOperation addMsg(Uri existing, String from, String to, String subject, String date, String message, String id, int version){
+    public ContentProviderOperation addMsg(Uri existing, String from, String simpleFrom, String to, String subject, String date, String topic, String message, String id, int version){
         return ContentProviderOperation.newInsert(existing)
                 .withValue(DataContract.Msg.COLUMN_NAME_FROM, from)
+                .withValue(DataContract.Msg.COLUMN_NAME_SIMPLE_FROM, simpleFrom)
                 .withValue(DataContract.Msg.COLUMN_NAME_TO, to)
                 .withValue(DataContract.Msg.COLUMN_NAME_DATE, date)
                 .withValue(DataContract.Msg.COLUMN_NAME_SUBJECT, subject)
+                .withValue(DataContract.Msg.COLUMN_NAME_TOPIC, topic)
                 .withValue(DataContract.Msg.COLUMN_NAME_MESSAGE, message)
                 .withValue(DataContract.Msg.COLUMN_NAME_ENTRY_ID, id)
                 .withValue(DataContract.Msg.COLUMN_NAME_VERSION, version)
@@ -415,6 +481,54 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 .withValue(DataContract.Location.COLUMN_NAME_LAT, lat)
                 .withValue(DataContract.Location.COLUMN_NAME_LNG, lng)
                 .withValue(DataContract.Location.COLUMN_NAME_VERSION, version)
+                .build();
+    }
+
+    public ContentProviderOperation updateTopic(Uri existing, String name, String isAnon, int version) throws JSONException{
+        int anon = Boolean.parseBoolean(isAnon) ? 1 : 0;
+        return ContentProviderOperation.newUpdate(existing)
+                .withValue(DataContract.Topic.COLUMN_NAME_NAME, name)
+                .withValue(DataContract.Topic.COLUMN_NAME_IS_ANON, anon)
+                .withValue(DataContract.Topic.COLUMN_NAME_VERSION, version)
+                .build();
+    }
+
+    public ContentProviderOperation updateSignup(Uri existing, String name, String dateInfo, String location, String address, String description, int memberCount, String memberOf, int version) throws JSONException{
+        int member = Boolean.parseBoolean(memberOf) ? 1 : 0;
+        return ContentProviderOperation.newUpdate(existing)
+                .withValue(DataContract.Signup.COLUMN_NAME_NAME, name)
+                .withValue(DataContract.Signup.COLUMN_NAME_DATE_INFO, dateInfo)
+                .withValue(DataContract.Signup.COLUMN_NAME_LOCATION, location)
+                .withValue(DataContract.Signup.COLUMN_NAME_ADDRESS, address)
+                .withValue(DataContract.Signup.COLUMN_NAME_DESCRIPTION, description)
+                .withValue(DataContract.Signup.COLUMN_NAME_MEMBER_COUNT, memberCount)
+                .withValue(DataContract.Signup.COLUMN_NAME_MEMBER_OF, member)
+                .withValue(DataContract.Signup.COLUMN_NAME_VERSION, version)
+                .build();
+    }
+
+    public ContentProviderOperation addTopic(Uri existing, String name, String isAnon, String id, int version) throws JSONException{
+        int anon = Boolean.parseBoolean(isAnon) ? 1 : 0;
+        return ContentProviderOperation.newInsert(existing)
+                .withValue(DataContract.Topic.COLUMN_NAME_NAME, name)
+                .withValue(DataContract.Topic.COLUMN_NAME_IS_ANON, anon)
+                .withValue(DataContract.Topic.COLUMN_NAME_ENTRY_ID, id)
+                .withValue(DataContract.Topic.COLUMN_NAME_VERSION, version)
+                .build();
+    }
+
+    public ContentProviderOperation addSignup(Uri existing, String name, String dateInfo, String location, String address, String description, int memberCount, String memberOf, String id, int version) throws JSONException{
+        int member = Boolean.parseBoolean(memberOf) ? 1 : 0;
+        return ContentProviderOperation.newInsert(existing)
+                .withValue(DataContract.Signup.COLUMN_NAME_NAME, name)
+                .withValue(DataContract.Signup.COLUMN_NAME_DATE_INFO, dateInfo)
+                .withValue(DataContract.Signup.COLUMN_NAME_LOCATION, location)
+                .withValue(DataContract.Signup.COLUMN_NAME_ADDRESS, address)
+                .withValue(DataContract.Signup.COLUMN_NAME_DESCRIPTION, description)
+                .withValue(DataContract.Signup.COLUMN_NAME_MEMBER_COUNT, memberCount)
+                .withValue(DataContract.Signup.COLUMN_NAME_MEMBER_OF, member)
+                .withValue(DataContract.Signup.COLUMN_NAME_ENTRY_ID, id)
+                .withValue(DataContract.Signup.COLUMN_NAME_VERSION, version)
                 .build();
     }
 

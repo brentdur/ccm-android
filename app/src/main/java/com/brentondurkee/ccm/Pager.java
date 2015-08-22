@@ -30,9 +30,11 @@ import com.brentondurkee.ccm.admin.AdminActivity;
 import com.brentondurkee.ccm.admin.AdminUtil;
 import com.brentondurkee.ccm.auth.AuthUtil;
 import com.brentondurkee.ccm.events.EventList;
+import com.brentondurkee.ccm.inbox.MsgDetail;
 import com.brentondurkee.ccm.inbox.MsgList;
 import com.brentondurkee.ccm.provider.SyncUtil;
 import com.brentondurkee.ccm.provider.gcm.RegIntentService;
+import com.brentondurkee.ccm.signups.SignupList;
 import com.brentondurkee.ccm.talks.TalkList;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -111,9 +113,15 @@ public class Pager extends FragmentActivity {
             openA = new Intent(getBaseContext(), AdminActivity.class);
             openA.putExtra(AdminUtil.ADD_TYPE, AdminUtil.TYPE_TALK);
         }
-        else{
+        else if (id == R.id.add_msg){
             openA = new Intent(getBaseContext(), AdminActivity.class);
             openA.putExtra(AdminUtil.ADD_TYPE, AdminUtil.TYPE_MSG);
+        }
+        else if (id == R.id.inbox){
+            openA = new Intent(getBaseContext(), MsgList.class);
+        }
+        else {
+            return super.onOptionsItemSelected(item);
         }
         startActivity(openA);
 
@@ -243,7 +251,7 @@ class CollectionPagerActivity extends FragmentPagerAdapter {
 //        return super.getPageTitle(position);
         switch(position){
             case 1: return "Events";
-            case 0: return "Messages";
+            case 0: return "Signups";
             case 2: return "Talks";
             default: return "Default";
         }
@@ -254,7 +262,7 @@ class CollectionPagerActivity extends FragmentPagerAdapter {
         Log.v(TAG, "get item: " + position);
         switch(position){
             case 1: return new EventList();
-            case 0: return new MsgList();
+            case 0: return new SignupList();
             case 2: return new TalkList();
             default: Log.v(TAG, "Default"); return null;
 

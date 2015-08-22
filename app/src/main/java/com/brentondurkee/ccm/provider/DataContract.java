@@ -51,6 +51,10 @@ public class DataContract {
     private static final String PATH_LOCATIONS = "locations";
 
     private static final String PATH_GROUPS = "groups";
+
+    private static final String PATH_SIGNUPS = "signups";
+
+    private static final String PATH_TOPICS = "topics";
     /**
      * Columns supported by "events" records.
      */
@@ -160,6 +164,8 @@ public class DataContract {
          * talk title
          */
         public static final String COLUMN_NAME_FROM = "sender";
+        public static final String COLUMN_NAME_SIMPLE_FROM = "simpleFrom";
+        public static final String COLUMN_NAME_TOPIC = "topic";
         public static final String COLUMN_NAME_TO = "receiver";
         public static final String COLUMN_NAME_DATE = "date";
         public static final String COLUMN_NAME_SUBJECT = "subject";
@@ -236,6 +242,79 @@ public class DataContract {
         public static final String COLUMN_NAME_WRITETALKS = "write_talks";
         public static final String COLUMN_NAME_WRITEMSGS = "write_msgs";
         public static final String COLUMN_NAME_WRITEEVENTS = "write_events";
+        public static final String COLUMN_NAME_VERSION = "version";
+    }
+
+    public static class Signup implements BaseColumns {
+        /**
+         * MIME type for lists of talks.
+         */
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ccm.signups";
+        /**
+         * MIME type for individual talk.
+         */
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ccm.signup";
+
+        /**
+         * Fully qualified URI for "talk" resources.
+         */
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_SIGNUPS).build();
+
+        /**
+         * Table name where records are stored for "talk" resources.
+         */
+        public static final String TABLE_NAME = "user_signup";
+        /**
+         * MongoDB ID. (Note: Not to be confused with the database primary key, which is _ID.
+         */
+        public static final String COLUMN_NAME_ENTRY_ID = "signup_id";
+        /**
+         * talk title
+         */
+        public static final String COLUMN_NAME_NAME = "name";
+        public static final String COLUMN_NAME_MEMBER_OF = "memberOf";
+        public static final String COLUMN_NAME_MEMBER_COUNT = "memberCount";
+        public static final String COLUMN_NAME_LOCATION = "location";
+        public static final String COLUMN_NAME_DESCRIPTION = "description";
+        public static final String COLUMN_NAME_DATE_INFO = "dateInfo";
+        public static final String COLUMN_NAME_ADDRESS = "address";
+        public static final String COLUMN_NAME_VERSION = "version";
+    }
+
+    public static class Topic implements BaseColumns {
+        /**
+         * MIME type for lists of talks.
+         */
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ccm.topics";
+        /**
+         * MIME type for individual talk.
+         */
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ccm.topic";
+
+        /**
+         * Fully qualified URI for "talk" resources.
+         */
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_TOPICS).build();
+
+        /**
+         * Table name where records are stored for "talk" resources.
+         */
+        public static final String TABLE_NAME = "user_topic";
+        /**
+         * MongoDB ID. (Note: Not to be confused with the database primary key, which is _ID.
+         */
+        public static final String COLUMN_NAME_ENTRY_ID = "topic_id";
+        /**
+         * talk title
+         */
+        public static final String COLUMN_NAME_NAME = "name";
+        public static final String COLUMN_NAME_IS_ANON = "isAnon";
         public static final String COLUMN_NAME_VERSION = "version";
     }
 }

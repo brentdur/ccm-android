@@ -108,6 +108,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".inbox.MsgList"
+            android:label="@string/title_activity_msg_list"
+            android:parentActivityName=".Pager" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Pager" />
+        </activity>
+        <activity
             android:name=".events.EventDetail"
             android:label="@string/title_activity_event_detail"
             android:parentActivityName=".Pager" >
@@ -126,6 +134,14 @@
         <activity
             android:name=".talks.TalkDetail"
             android:label="@string/title_activity_talk_detail"
+            android:parentActivityName=".Pager" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Pager" />
+        </activity>
+        <activity
+            android:name=".signups.SignupDetail"
+            android:label="@string/title_activity_signups_detail"
             android:parentActivityName=".Pager" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

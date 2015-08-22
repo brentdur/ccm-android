@@ -30,11 +30,12 @@ import com.brentondurkee.ccm.provider.SyncUtil;
  */
 public class MsgAddFragment extends Fragment implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-    private final String[] from = {DataContract.Group.COLUMN_NAME_NAME, DataContract.Group.COLUMN_NAME_NAME};
+    private final String[] from = {DataContract.Topic.COLUMN_NAME_NAME, DataContract.Topic.COLUMN_NAME_NAME};
     private final int[] to = {R.id.spinnerTarget, android.R.id.text1};
     private static final String[] PROJECTION = new String[]{
-            DataContract.Group._ID,
-            DataContract.Group.COLUMN_NAME_NAME
+            DataContract.Topic._ID,
+            DataContract.Topic.COLUMN_NAME_NAME,
+            DataContract.Topic.COLUMN_NAME_ENTRY_ID
     };
 
     SimpleCursorAdapter mAdapter;
@@ -63,13 +64,15 @@ public class MsgAddFragment extends Fragment implements AdapterView.OnItemSelect
             @Override
             public void onClick(View v) {
                 Bundle data = new Bundle();
-                data.putString(SyncPosts.MSG_FROM, ((EditText) rootView.findViewById(R.id.msgAddFrom)).getText().toString());
                 data.putString(SyncPosts.MSG_SUBJECT, ((EditText) rootView.findViewById(R.id.msgAddSubject)).getText().toString());
                 data.putString(SyncPosts.MSG_MESSAGE, ((EditText) rootView.findViewById(R.id.msgAddMsg)).getText().toString());
+
                 if(toSelect.equals("")){
-                    AdminUtil.toast(getActivity(), "You didn't put in a recipient!");
+                    AdminUtil.toast(getActivity(), "You didn't select a topic!");
                 }
-                data.putString(SyncPosts.MSG_TO, toSelect);
+                else {
+                    data.putString(SyncPosts.MSG_TOPIC, toSelect);
+                }
 
                 new AsyncTask<Bundle, Void, Boolean>() {
                     @Override
@@ -102,12 +105,12 @@ public class MsgAddFragment extends Fragment implements AdapterView.OnItemSelect
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Cursor cursor = (Cursor) mAdapter.getItem(position);
-        toSelect = cursor.getString(1);
+        toSelect = cursor.getString(2);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), DataContract.Group.CONTENT_URI, PROJECTION, null, null, null);
+        return new CursorLoader(getActivity(), DataContract.Topic.CONTENT_URI, PROJECTION, null, null, null);
     }
 
     @Override

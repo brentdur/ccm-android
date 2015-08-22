@@ -34,6 +34,11 @@ public class SyncUtil {
     // Value below must match the account type specified in res/xml/syncadapter.xml
     public final static String PREF_ACCOUNT_EMAIL="account_email";
 
+    public final static String SELECTIVE_KEY = "selective";
+    public final static String SELECTION = "selection";
+
+    public final static String SELECTIVE_SIGNUP = "signup";
+
     public static Context mainContext;
     private static Account mAccount;
     private static String authToken;
@@ -94,6 +99,22 @@ public class SyncUtil {
         // Disable sync backoff and ignore sync preferences. In other words...perform sync NOW!
         b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        ContentResolver.requestSync(
+                mAccount, // Sync account
+                DataContract.CONTENT_AUTHORITY,                 // Content authority
+                b);                                             // Extras
+    }
+
+    public static void TriggerSelectiveRefresh(String selection) {
+        //TODO: add authKey support
+        //TODO: selective sync
+        Bundle b = new Bundle();
+        Log.v("Refresh", "refreshing");
+        // Disable sync backoff and ignore sync preferences. In other words...perform sync NOW!
+        b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        b.putBoolean(SELECTIVE_KEY, true);
+        b.putString(SELECTION, selection);
         ContentResolver.requestSync(
                 mAccount, // Sync account
                 DataContract.CONTENT_AUTHORITY,                 // Content authority

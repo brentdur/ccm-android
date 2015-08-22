@@ -13,34 +13,19 @@
         style="@style/EditSubject" />
 
     <EditText
-        android:id="@+id/msgAddFrom"
-        android:layout_below="@+id/msgAddSubject"
-        android:layout_toEndOf="@+id/textView4"
-        style="@style/EditAuthor" />
-
-    <EditText
         android:id="@+id/msgAddMsg"
-        android:layout_below="@+id/textView4"
+        android:layout_below="@+id/spinner_to"
         android:layout_alignParentStart="true"
         style="@style/EditMsg" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/author_lead"
-        android:id="@+id/textView"
-        android:textColor="@color/leadText"
-        android:layout_alignBottom="@+id/msgAddFrom"
-        android:layout_alignParentStart="true"
-        style="@style/PrimaryText" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/to_lead"
+        android:text="@string/topic_lead"
         android:id="@+id/textView4"
         android:textColor="@color/leadText"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/msgAddSubject"
         android:layout_alignParentStart="true"
         style="@style/PrimaryText" />
 
@@ -49,7 +34,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/spinner_to"
         android:layout_alignTop="@+id/textView4"
-        android:layout_toEndOf="@+id/textView4" />
+        android:layout_toEndOf="@+id/textView4"
+        android:gravity="start" />
 
     <Button
         android:id="@+id/button"

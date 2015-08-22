@@ -45,38 +45,13 @@ public class MsgDetail extends FragmentActivity {
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_detail, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            SyncUtil.TriggerRefresh();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     /**
      * A placeholder fragment containing a simple view.
      */
     public static class MsgDetailFragment extends Fragment {
 
         final String[] PROJECTION = new String[]{
-            DataContract.Msg.COLUMN_NAME_FROM,
-                DataContract.Msg.COLUMN_NAME_TO,
+                DataContract.Msg.COLUMN_NAME_SIMPLE_FROM,
                 DataContract.Msg.COLUMN_NAME_SUBJECT,
                 DataContract.Msg.COLUMN_NAME_DATE,
                 DataContract.Msg.COLUMN_NAME_MESSAGE
@@ -93,15 +68,16 @@ public class MsgDetail extends FragmentActivity {
             Cursor mCursor = getActivity().getContentResolver().query(DataContract.Msg.CONTENT_URI, PROJECTION, DataContract.Msg._ID + "='" + id + "'", null, null);
             mCursor.moveToFirst();
             String from = mCursor.getString(0);
-            String to = mCursor.getString(1);
-            String subject = mCursor.getString(2);
-            String date = Utils.dateForm(mCursor.getString(3));
-            String message = mCursor.getString(4);
+            String subject = mCursor.getString(1);
+            String date = Utils.dateForm(mCursor.getString(2));
+            String message = mCursor.getString(3);
 
             View rootView = inflater.inflate(R.layout.fragment_msg_detail, container, false);
             ((TextView) rootView.findViewById(R.id.msgDetailSubject)).setText(subject);
+            if (from.isEmpty()){
+                from = "Anonymous";
+            }
             ((TextView) rootView.findViewById(R.id.msgDetailFrom)).setText(from);
-            ((TextView) rootView.findViewById(R.id.msgDetailTo)).setText(to);
             ((TextView) rootView.findViewById(R.id.msgDetailTime)).setText(date);
             ((TextView) rootView.findViewById(R.id.msgDetailMsg)).setText(message);
             mCursor.close();

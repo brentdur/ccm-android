@@ -39,17 +39,28 @@ public class SyncPosts {
     public final static String TALK_REFERENCE = "TALK_REFERENCE";
     public final static String TALK_OUTLINE = "TALK_OUTLINE";
 
-    public final static String MSG_FROM = "MSG_FROM";
-    public final static String MSG_TO = "MSG_TO";
-    public final static String MSG_DATE = "MSG_DATE";
+    public final static String MSG_TOPIC = "MSG_TOPIC";
     public final static String MSG_SUBJECT = "MSG_SUBJECT";
     public final static String MSG_MESSAGE = "MSG_MESSAGE";
+
+    public final static String SIGNUP_NAME = "SIGNUP_NAME";
+    public final static String SIGNUP_DATE_INFO = "SIGNUP_DATE_INFO";
+    public final static String SIGNUP_LOCATION = "SIGNUP_LOCATION";
+    public final static String SIGNUP_ADDRESS = "SIGNUP_ADDRESS";
+    public final static String SIGNUP_DESCRIPTION = "SIGNUP_DESCRIPTION";
+
+    public final static String PUT_USER_SIGNUP = "SIGNUP";
+
+    public final static String DELETE_MESSAGE = "message";
 
     private final static String TAG = "SyncPosts";
 
     private final static String addEventUrl="http://ccm.brentondurkee.com/api/events";
     private final static String addTalkUrl="http://ccm.brentondurkee.com/api/talks";
     private final static String addMsgUrl="http://ccm.brentondurkee.com/api/messages";
+    private final static String addSignupUrl="http://ccm.brentondurkee.com/api/signups";
+    private final static String putUserToSignupUrl = "http://ccm.brentondurkee.com/api/signups/addme";
+    private final static String deleteMsgUrl = "http://ccm.brentondurkee.com/api/messages";
 
     public static boolean addEvent(Bundle data, Account account, Context context){
         String token = AccountManager.get(context).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);
@@ -169,7 +180,7 @@ public class SyncPosts {
 
             OutputStream out = new BufferedOutputStream(conn.getOutputStream());
             PrintWriter output = new PrintWriter(out);
-            String req = String.format("{\"from\": \"%s\",\"to\": \"%s\",\"subject\": \"%s\",\"message\":\"%s\"}", data.getString(MSG_FROM), data.getString(MSG_TO), data.getString(MSG_SUBJECT), data.getString(MSG_MESSAGE));
+            String req = String.format("{\"topic\": \"%s\",\"subject\": \"%s\",\"message\":\"%s\"}", data.getString(MSG_TOPIC), data.getString(MSG_SUBJECT), data.getString(MSG_MESSAGE));
 
             output.print(req);
             output.close();
@@ -198,5 +209,135 @@ public class SyncPosts {
         return good;
     }
 
+    public static boolean addSignup(Bundle data, Account account, Context context){
+        String token = AccountManager.get(context).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);
+        Log.v(TAG, "Start Add Signup");
+        boolean good = false;
+        try {
+            URL url = new URL(addSignupUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.addRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setChunkedStreamingMode(0);
+
+            OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+            PrintWriter output = new PrintWriter(out);
+            String req = String.format("{\"name\": \"%s\",\"location\": \"%s\",\"dateInfo\": \"%s\",\"description\": \"%s\"", data.getString(SIGNUP_NAME), data.getString(SIGNUP_LOCATION), data.getString(SIGNUP_DATE_INFO), data.getString(SIGNUP_DESCRIPTION));
+            if(!data.getString(SIGNUP_ADDRESS).isEmpty()){
+                req += String.format(",\"address\":\"%s\"", data.getString(SIGNUP_ADDRESS));
+            }
+            req += "}";
+            Log.v(TAG, req);
+            output.print(req);
+            output.close();
+
+            int response = conn.getResponseCode();
+            Log.v(TAG, "Response: " + response);
+            if (response == 200) {
+                good=true;
+            }
+            else {
+                InputStream stream = new BufferedInputStream(conn.getInputStream());
+                Scanner reader = new Scanner(stream);
+                StringBuilder string = new StringBuilder();
+                do {
+                    string.append(reader.nextLine());
+                } while(reader.hasNextLine());
+                Log.d(TAG, "Raw Json: " + string.toString());
+                reader.close();
+            }
+            conn.disconnect();
+        }
+        catch(IOException e){
+            Log.w(TAG, "IOException");
+        }
+
+        return good;
+    }
+
+    public static boolean putUserToSignup(Bundle data, Account account, Context context){
+        String token = AccountManager.get(context).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);
+        Log.v(TAG, "Start Put user to Signup");
+        boolean good = false;
+        try {
+            URL url = new URL(putUserToSignupUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.addRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestMethod("PUT");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setChunkedStreamingMode(0);
+
+            OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+            PrintWriter output = new PrintWriter(out);
+            String req = String.format("{\"signup\": \"%s\"}", data.getString(PUT_USER_SIGNUP));
+            Log.v(TAG, req);
+            output.print(req);
+            output.close();
+
+            int response = conn.getResponseCode();
+            Log.v(TAG, "Response: " + response);
+            if (response == 200) {
+                good=true;
+            }
+            else {
+                InputStream stream = new BufferedInputStream(conn.getInputStream());
+                Scanner reader = new Scanner(stream);
+                StringBuilder string = new StringBuilder();
+                do {
+                    string.append(reader.nextLine());
+                } while(reader.hasNextLine());
+                Log.d(TAG, "Raw Json: " + string.toString());
+                reader.close();
+            }
+            conn.disconnect();
+        }
+        catch(IOException e){
+            Log.w(TAG, "IOException");
+        }
+
+        return good;
+    }
+
+    public static boolean deleteMsg(Bundle data, Account account, Context context){
+        String token = AccountManager.get(context).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);
+        Log.v(TAG, "Start Delete Message");
+        boolean good = false;
+        try {
+            URL url = new URL(deleteMsgUrl+"?"+data.getString(DELETE_MESSAGE));
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.addRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestMethod("DELETE");
+            conn.setDoInput(true);
+            conn.setChunkedStreamingMode(0);
+
+            int response = conn.getResponseCode();
+            Log.v(TAG, "Response: " + response);
+            if (response == 200) {
+                good=true;
+            }
+            else {
+                InputStream stream = new BufferedInputStream(conn.getInputStream());
+                Scanner reader = new Scanner(stream);
+                StringBuilder string = new StringBuilder();
+                do {
+                    string.append(reader.nextLine());
+                } while(reader.hasNextLine());
+                Log.d(TAG, "Raw Json: " + string.toString());
+                reader.close();
+            }
+            conn.disconnect();
+        }
+        catch(IOException e){
+            Log.w(TAG, "IOException");
+        }
+
+        return good;
+    }
 
 }
