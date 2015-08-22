@@ -244,7 +244,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             return updateGroup(content,
                     object.getString("name"),
                     object.getString("writeTalks"),
-                    object.getString("writeMsgs"),
+                    object.getString("writeSignups"),
                     object.getString("writeEvents"),
                     object.getInt("version"));
         }
@@ -316,7 +316,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             return addGroup(content,
                     object.getString("name"),
                     object.getString("writeTalks"),
-                    object.getString("writeMsgs"),
+                    object.getString("writeSignups"),
                     object.getString("writeEvents"),
                     object.getString("_id"),
                     object.getInt("version"));
@@ -441,22 +441,22 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 .build();
     }
 
-    public ContentProviderOperation addGroup(Uri existing, String name, String wTalks, String wMsgs, String wEvents, String id, int version) throws JSONException{
+    public ContentProviderOperation addGroup(Uri existing, String name, String wTalks, String wSignups, String wEvents, String id, int version) throws JSONException{
         return ContentProviderOperation.newInsert(existing)
                 .withValue(DataContract.Group.COLUMN_NAME_NAME, name)
                 .withValue(DataContract.Group.COLUMN_NAME_WRITETALKS, wTalks)
-                .withValue(DataContract.Group.COLUMN_NAME_WRITEMSGS, wMsgs)
+                .withValue(DataContract.Group.COLUMN_NAME_WRITESIGNUPS, wSignups)
                 .withValue(DataContract.Group.COLUMN_NAME_WRITEEVENTS, wEvents)
                 .withValue(DataContract.Group.COLUMN_NAME_ENTRY_ID, id)
                 .withValue(DataContract.Group.COLUMN_NAME_VERSION, version)
                 .build();
     }
 
-    public ContentProviderOperation updateGroup(Uri existing, String name, String wTalks, String wMsgs, String wEvents, int version) throws JSONException{
+    public ContentProviderOperation updateGroup(Uri existing, String name, String wTalks, String wSignups, String wEvents, int version) throws JSONException{
         return ContentProviderOperation.newUpdate(existing)
                 .withValue(DataContract.Group.COLUMN_NAME_NAME, name)
                 .withValue(DataContract.Group.COLUMN_NAME_WRITETALKS, wTalks)
-                .withValue(DataContract.Group.COLUMN_NAME_WRITEMSGS, wMsgs)
+                .withValue(DataContract.Group.COLUMN_NAME_WRITESIGNUPS, wSignups)
                 .withValue(DataContract.Group.COLUMN_NAME_WRITEEVENTS, wEvents)
                 .withValue(DataContract.Group.COLUMN_NAME_VERSION, version)
                 .build();

@@ -12,6 +12,9 @@ import android.os.Bundle;
 import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.auth.AuthUtil;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -20,6 +23,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -53,6 +57,12 @@ public class SyncPosts {
 
     public final static String DELETE_MESSAGE = "message";
 
+    public final static String ME_SIGNUPS_KEY ="SIGNUPS";
+    public final static String ME_EVENTS_KEY ="EVENTS";
+    public final static String ME_TALKS_KEY ="TALKS";
+    public final static String ME_MINISTERS_KEY ="MINISTERS";
+
+
     private final static String TAG = "SyncPosts";
 
     private final static String addEventUrl="http://ccm.brentondurkee.com/api/events";
@@ -61,6 +71,7 @@ public class SyncPosts {
     private final static String addSignupUrl="http://ccm.brentondurkee.com/api/signups";
     private final static String putUserToSignupUrl = "http://ccm.brentondurkee.com/api/signups/addme";
     private final static String deleteMsgUrl = "http://ccm.brentondurkee.com/api/messages";
+    private final static String getMeUrl = "http://ccm.brentondurkee.com/api/users/me";
 
     public static boolean addEvent(Bundle data, Account account, Context context){
         String token = AccountManager.get(context).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);
@@ -338,6 +349,63 @@ public class SyncPosts {
         }
 
         return good;
+    }
+
+    public static Bundle getMe(Bundle data, Account account, Context context){
+        Bundle retData = new Bundle();
+        String token = AccountManager.get(context).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);
+        Log.v(TAG, "Start Get Me");
+        boolean good = false;
+        try {
+            URL url = new URL(getMeUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.addRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestMethod("GET");
+            conn.setDoInput(true);
+            conn.setChunkedStreamingMode(0);
+
+            int response = conn.getResponseCode();
+            Log.v(TAG, "Response: " + response);
+            if (response == 200) {
+                good=true;
+                Scanner input = new Scanner(new BufferedInputStream(conn.getInputStream()));
+                JSONObject retdata = new JSONObject(input.nextLine());
+                JSONArray groups = retdata.getJSONArray("groups");
+                for (int i = 0; i < groups.length(); i++){
+                    JSONObject grp = groups.getJSONObject(i);
+                    if(grp.getBoolean("writeSignups")){
+                        retData.putBoolean(ME_SIGNUPS_KEY, true);
+                    }
+                    if(grp.getBoolean("writeEvents")){
+                        retData.putBoolean(ME_EVENTS_KEY, true);
+                    }
+                    if(grp.getBoolean("writeTalks")){
+                        retData.putBoolean(ME_TALKS_KEY, true);
+                    }
+                    if(grp.getString("name").equals("ministers")) {
+                        retData.putBoolean(ME_MINISTERS_KEY, true);
+                    }
+                }
+                Log.v(TAG, "Token: " + token);
+            }
+            else {
+                InputStream stream = new BufferedInputStream(conn.getInputStream());
+                Scanner reader = new Scanner(stream);
+                StringBuilder string = new StringBuilder();
+                do {
+                    string.append(reader.nextLine());
+                } while(reader.hasNextLine());
+                Log.d(TAG, "Raw Json: " + string.toString());
+                reader.close();
+            }
+            conn.disconnect();
+        }
+        catch(Exception e){
+            Log.w(TAG, "Exception");
+        }
+
+        return retData;
     }
 
 }

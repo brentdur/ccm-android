@@ -505,7 +505,7 @@ public class DataProvider extends ContentProvider {
      */
     static class DataDatabase extends SQLiteOpenHelper {
         /** Schema version. */
-        public static final int DATABASE_VERSION = 10;
+        public static final int DATABASE_VERSION = 11;
         /** Filename for SQLite file. */
         public static final String DATABASE_NAME = "ccmdata.db";
 
@@ -554,7 +554,7 @@ public class DataProvider extends ContentProvider {
                         DataContract.Group.COLUMN_NAME_ENTRY_ID + TYPE_TEXT + COMMA_SEP +
                         DataContract.Group.COLUMN_NAME_NAME + TYPE_TEXT + COMMA_SEP +
                         DataContract.Group.COLUMN_NAME_WRITEEVENTS + TYPE_TEXT + COMMA_SEP +
-                        DataContract.Group.COLUMN_NAME_WRITEMSGS + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Group.COLUMN_NAME_WRITESIGNUPS + TYPE_TEXT + COMMA_SEP +
                         DataContract.Group.COLUMN_NAME_WRITETALKS + TYPE_TEXT + COMMA_SEP +
                         DataContract.Group.COLUMN_NAME_VERSION + TYPE_INTEGER + ")";
         private static final String SQL_CREATE_LOCATIONS =

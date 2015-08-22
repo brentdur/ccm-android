@@ -43,6 +43,7 @@
     <string name="add_msg">Send Message</string>
     <string name="add_talk">Add Talk</string>
     <string name="show_inbox">Inbox</string>
+    <string name="add_signup">Add Signup</string>
 
     <string name="author_lead">by</string>
     <string name="to_lead">for</string>

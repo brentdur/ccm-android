@@ -19,10 +19,15 @@ package com.brentondurkee.ccm.provider;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import com.brentondurkee.ccm.Log;
+import com.brentondurkee.ccm.Pager;
+import com.brentondurkee.ccm.admin.AdminUtil;
 
 /**
  * Static helper methods for working with the sync framework.
@@ -33,11 +38,23 @@ public class SyncUtil {
     private static final String CONTENT_AUTHORITY = DataContract.CONTENT_AUTHORITY;
     // Value below must match the account type specified in res/xml/syncadapter.xml
     public final static String PREF_ACCOUNT_EMAIL="account_email";
+    public final static String PREF_CAN_SIGNUPS = "can_write_signups";
+    public final static String PREF_CAN_EVENTS = "can_write_events";
+    public final static String PREF_CAN_TALKS = "can_write_talks";
+    public final static String PREF_IS_MINISTER = "is_minister";
 
     public final static String SELECTIVE_KEY = "selective";
     public final static String SELECTION = "selection";
 
     public final static String SELECTIVE_SIGNUP = "signup";
+
+    private static final String[] GROUP_PROJECTION = new String[]{
+            DataContract.Group._ID,
+            DataContract.Group.COLUMN_NAME_NAME,
+            DataContract.Group.COLUMN_NAME_WRITEEVENTS,
+            DataContract.Group.COLUMN_NAME_WRITESIGNUPS,
+            DataContract.Group.COLUMN_NAME_WRITETALKS
+    };
 
     public static Context mainContext;
     private static Account mAccount;
@@ -76,6 +93,21 @@ public class SyncUtil {
         Log.v(TAG, "Flushing");
         mAccount=null;
         authToken=null;
+    }
+
+    public static Void syncDone() {
+        Log.v(TAG, "Done");
+        compareGroups(SyncPosts.getMe(null, getAccount(), mainContext));
+        return null;
+    }
+
+    public static void compareGroups(Bundle data){
+        SharedPreferences.Editor manager = PreferenceManager.getDefaultSharedPreferences(mainContext).edit();
+        manager.putBoolean(PREF_CAN_SIGNUPS, data.getBoolean(SyncPosts.ME_SIGNUPS_KEY, false));
+        manager.putBoolean(PREF_CAN_EVENTS, data.getBoolean(SyncPosts.ME_EVENTS_KEY, false));
+        manager.putBoolean(PREF_CAN_TALKS, data.getBoolean(SyncPosts.ME_TALKS_KEY, false));
+        manager.putBoolean(PREF_IS_MINISTER, data.getBoolean(SyncPosts.ME_MINISTERS_KEY, false));
+        manager.commit();
     }
 
 

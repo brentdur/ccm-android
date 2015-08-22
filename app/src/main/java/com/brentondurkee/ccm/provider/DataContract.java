@@ -240,7 +240,7 @@ public class DataContract {
          */
         public static final String COLUMN_NAME_NAME = "name";
         public static final String COLUMN_NAME_WRITETALKS = "write_talks";
-        public static final String COLUMN_NAME_WRITEMSGS = "write_msgs";
+        public static final String COLUMN_NAME_WRITESIGNUPS = "write_signups";
         public static final String COLUMN_NAME_WRITEEVENTS = "write_events";
         public static final String COLUMN_NAME_VERSION = "version";
     }

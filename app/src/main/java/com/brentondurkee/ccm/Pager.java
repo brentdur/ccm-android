@@ -9,9 +9,11 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.OperationCanceledException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
@@ -32,6 +34,7 @@ import com.brentondurkee.ccm.auth.AuthUtil;
 import com.brentondurkee.ccm.events.EventList;
 import com.brentondurkee.ccm.inbox.MsgDetail;
 import com.brentondurkee.ccm.inbox.MsgList;
+import com.brentondurkee.ccm.provider.SyncPosts;
 import com.brentondurkee.ccm.provider.SyncUtil;
 import com.brentondurkee.ccm.provider.gcm.RegIntentService;
 import com.brentondurkee.ccm.signups.SignupList;
@@ -49,6 +52,11 @@ public class Pager extends FragmentActivity {
     private final String TAG=getClass().getSimpleName();
     public final static String PREF_ACCOUNT_EMAIL="account_email";
     private Toolbar toolbar;
+
+    private boolean writeSignups;
+    private boolean writeEvents;
+    private boolean writeTalks;
+    private boolean isMinister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +91,7 @@ public class Pager extends FragmentActivity {
         tabLayout.getTabAt(1).select();
 
 
+
     }
 
     @Override
@@ -90,6 +99,51 @@ public class Pager extends FragmentActivity {
         MenuInflater mInflate = getMenuInflater();
         mInflate.inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(writeEvents){
+            if(menu.findItem(R.id.add_event) == null){
+                menu.add(Menu.NONE, R.id.add_event, Menu.NONE, R.string.add_event);
+            }
+        }
+        if(writeSignups){
+            if(menu.findItem(R.id.add_signup) == null) {
+                menu.add(Menu.NONE, R.id.add_signup, Menu.NONE, R.string.add_signup);
+            }
+        }
+        if(writeTalks){
+            if(menu.findItem(R.id.add_talk) == null) {
+                menu.add(Menu.NONE, R.id.add_talk, Menu.NONE, R.string.add_talk);
+            }
+        }
+        if(isMinister){
+            if(menu.findItem(R.id.inbox) == null) {
+                menu.removeItem(R.id.add_msg);
+                menu.add(Menu.NONE, R.id.inbox, Menu.NONE, R.string.show_inbox);
+            }
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    public void updatePermissionBools(){
+        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        new AsyncTask<Integer, Void, Void>() {
+            @Override
+            protected Void doInBackground(Integer... data) {
+                return SyncUtil.syncDone();
+            }
+
+            @Override
+            protected void onPostExecute(Void data) {
+                super.onPostExecute(data);
+                writeEvents = pref.getBoolean(SyncUtil.PREF_CAN_EVENTS, false);
+                writeSignups = pref.getBoolean(SyncUtil.PREF_CAN_SIGNUPS, false);
+                writeTalks = pref.getBoolean(SyncUtil.PREF_CAN_TALKS, false);
+                isMinister = pref.getBoolean(SyncUtil.PREF_IS_MINISTER, false);
+            }
+        }.execute(0);
     }
 
     @Override
@@ -193,6 +247,7 @@ public class Pager extends FragmentActivity {
                     Bundle ret = future.getResult();
                     SyncUtil.addAuthToken(ret.getString(AccountManager.KEY_AUTHTOKEN));
                     doGCM();
+                    updatePermissionBools();
                 }
                 catch(OperationCanceledException e){
                     Log.v(TAG, "Cancelled LogIn");
