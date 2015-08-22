@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nothing Here"
+        android:id="@+id/textView9"
+        style="@style/SuperHeadText"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="150dp" />
+</LinearLayout>

@@ -11,6 +11,7 @@ import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,6 +44,7 @@ public class MsgList extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        Log.v("Msg List", "AA");
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));
@@ -76,7 +78,7 @@ public class MsgList extends FragmentActivity {
 
     public static class MsgListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-        SimpleCursorAdapter mAdapter;
+        MessageCursorAdapter mAdapter;
         final String[] FROM = new String[]{DataContract.Msg.COLUMN_NAME_SIMPLE_FROM, DataContract.Msg.COLUMN_NAME_SUBJECT, DataContract.Msg.COLUMN_NAME_DATE};
         final int[] TO = new int[]{R.id.msgFrom, R.id.msgSubject, R.id.msgTime};
         final String[] PROJECTION = new String[]{
@@ -84,7 +86,14 @@ public class MsgList extends FragmentActivity {
                 DataContract.Msg.COLUMN_NAME_SIMPLE_FROM,
                 DataContract.Msg.COLUMN_NAME_SUBJECT,
                 DataContract.Msg.COLUMN_NAME_DATE,
-                DataContract.Msg.COLUMN_NAME_ENTRY_ID
+                DataContract.Msg.COLUMN_NAME_ENTRY_ID,
+                DataContract.Msg.COLUMN_NAME_TOPIC
+        };
+
+        final String[] TOPIC_PROJECTION = new String[]{
+                DataContract.Topic._ID,
+                DataContract.Topic.COLUMN_NAME_ENTRY_ID,
+                DataContract.Topic.COLUMN_NAME_NAME
         };
 
         public MsgListFragment() {
@@ -93,33 +102,37 @@ public class MsgList extends FragmentActivity {
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-
-            mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.message, null, FROM, TO, 0);
-
-            mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-                @Override
-                public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                    if (columnIndex == 3) {
-                        String date = Utils.dateForm(cursor.getString(columnIndex));
-                        TextView textView = (TextView) view;
-                        textView.setText(date);
-                        return true;
-                    }
-                    if (columnIndex == 1){
-                        TextView textView = (TextView) view;
-                        String data = cursor.getString(columnIndex);
-                        if(data.isEmpty()){
-                            textView.setText("Anonymous");
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            });
+            mAdapter = new MessageCursorAdapter(getActivity(), null, 0);
+            getLoaderManager().initLoader(1, null, this);
+//            mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.message, null, FROM, TO, 0);
+            setEmptyText("No messages");
+//            mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+//                @Override
+//                public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+//
+//                    if (columnIndex == 3) {
+//                        String date = Utils.dateForm(cursor.getString(columnIndex));
+//                        TextView textView = (TextView) view;
+//                        textView.setText(date);
+//                        return true;
+//                    }
+//                    if (columnIndex == 1){
+//                        TextView textView = (TextView) view;
+//                        String data = cursor.getString(columnIndex);
+//                        if(data.isEmpty()){
+//                            textView.setText("Anonymous");
+//                            return true;
+//                        }
+//                    }
+//                    return false;
+//                }
+//            });
             registerForContextMenu(getListView());
             setListAdapter(mAdapter);
             getLoaderManager().initLoader(0, null, this);
         }
+
+
 
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
@@ -166,12 +179,24 @@ public class MsgList extends FragmentActivity {
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(getActivity(), DataContract.Msg.CONTENT_URI, PROJECTION, null, null, null);
+            Log.v("Msg List", "Loaded");
+            if(id == 1) {
+                return new CursorLoader(getActivity(), DataContract.Topic.CONTENT_URI, TOPIC_PROJECTION, null, null, null);
+            }
+            else {
+                return new CursorLoader(getActivity(), DataContract.Msg.CONTENT_URI, PROJECTION, null, null, DataContract.Msg.COLUMN_NAME_TOPIC);
+            }
         }
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            mAdapter.changeCursor(data);
+            Log.v("Msg List", "Changed");
+            if (loader.getId() == 1){
+                mAdapter.setTopicCursor(data);
+            }
+            else {
+                mAdapter.changeCursor(data);
+            }
         }
 
         @Override
