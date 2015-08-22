@@ -76,6 +76,7 @@ public class MsgList extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     public static class MsgListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
         MessageCursorAdapter mAdapter;
@@ -104,29 +105,7 @@ public class MsgList extends FragmentActivity {
             super.onActivityCreated(savedInstanceState);
             mAdapter = new MessageCursorAdapter(getActivity(), null, 0);
             getLoaderManager().initLoader(1, null, this);
-//            mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.message, null, FROM, TO, 0);
             setEmptyText("No messages");
-//            mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-//                @Override
-//                public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-//
-//                    if (columnIndex == 3) {
-//                        String date = Utils.dateForm(cursor.getString(columnIndex));
-//                        TextView textView = (TextView) view;
-//                        textView.setText(date);
-//                        return true;
-//                    }
-//                    if (columnIndex == 1){
-//                        TextView textView = (TextView) view;
-//                        String data = cursor.getString(columnIndex);
-//                        if(data.isEmpty()){
-//                            textView.setText("Anonymous");
-//                            return true;
-//                        }
-//                    }
-//                    return false;
-//                }
-//            });
             registerForContextMenu(getListView());
             setListAdapter(mAdapter);
             getLoaderManager().initLoader(0, null, this);

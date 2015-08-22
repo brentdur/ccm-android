@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -25,6 +26,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.Log;
@@ -49,9 +51,13 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 public class Pager extends FragmentActivity {
     CollectionPagerActivity mAdapter;
     ViewPager mPager;
+
+    private TabLayout tabLayout;
     private final String TAG=getClass().getSimpleName();
     public final static String PREF_ACCOUNT_EMAIL="account_email";
     private Toolbar toolbar;
+
+    private int lastSelected = 1;
 
     private boolean writeSignups;
     private boolean writeEvents;
@@ -79,16 +85,14 @@ public class Pager extends FragmentActivity {
         mAdapter = new CollectionPagerActivity(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
-        mPager.setCurrentItem(1);
+        mPager.setCurrentItem(lastSelected);
         mPager.setPageMargin(25);
         Log.v(TAG, "created");
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.frame);
+        tabLayout = (TabLayout) findViewById(R.id.frame);
         tabLayout.setupWithViewPager(mPager);
         tabLayout.setTabTextColors(Color.WHITE, Color.BLACK);
-        tabLayout.getTabAt(1).select();
-
-
+        tabLayout.getTabAt(lastSelected).select();
 
     }
 
@@ -221,12 +225,10 @@ public class Pager extends FragmentActivity {
                     Account account = new Account(ret.getString(AccountManager.KEY_ACCOUNT_NAME), ret.getString(AccountManager.KEY_ACCOUNT_TYPE));
                     SyncUtil.addAccount(account, true);
                     getAuthToken(account);
-                }
-                catch(OperationCanceledException e){
+                } catch (OperationCanceledException e) {
                     Log.v(TAG, "Cancelled LogIn");
                     addAccount();
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     Log.w(TAG, "Threw exceptions: " + e.toString());
                 }
@@ -290,6 +292,22 @@ public class Pager extends FragmentActivity {
         SyncUtil.flush();
         super.onDestroy();
     }
+
+//    @Override
+//    protected void onPause() {
+//        lastSelected = mPager.getCurrentItem();
+//        Log.v(TAG, "Last Selected Pause: "+lastSelected);
+//        super.onPause();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        Log.v(TAG, "Last Selected REsume: "+lastSelected);
+//        tabLayout.getTabAt(lastSelected).select();
+//        mPager.setCurrentItem(lastSelected);
+//        super.onResume();
+//    }
+
 }
 
 class CollectionPagerActivity extends FragmentPagerAdapter {
@@ -321,6 +339,7 @@ class CollectionPagerActivity extends FragmentPagerAdapter {
 
         }
     }
+
 
     @Override
     public int getCount() {
