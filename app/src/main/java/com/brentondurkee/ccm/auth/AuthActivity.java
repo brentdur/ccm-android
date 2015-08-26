@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
+import com.brentondurkee.ccm.admin.AdminUtil;
 
 /**
  * Created by brenton on 6/10/15.
@@ -90,6 +91,11 @@ public class AuthActivity extends AccountAuthenticatorActivity{
         final String password = ((TextView) findViewById(R.id.password)).getText().toString();
         final String accountType = getIntent().getStringExtra(AuthUtil.ARG_ACCOUNT_TYPE);
 
+        if (email.isEmpty() || password.isEmpty()){
+            return;
+        }
+        AdminUtil.showDialog(this);
+
         new AsyncTask<Void, Void, Intent>(){
             @Override
             protected Intent doInBackground(Void... params){
@@ -105,6 +111,7 @@ public class AuthActivity extends AccountAuthenticatorActivity{
             }
             @Override
             protected void onPostExecute(Intent intent){
+                AdminUtil.hideDialog();
                 finishLogin(intent);
             }
         }.execute();

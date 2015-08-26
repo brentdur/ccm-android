@@ -4,6 +4,7 @@
 
 package com.brentondurkee.ccm.admin;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -43,6 +44,8 @@ public class TalkAddFragment extends Fragment {
                 String outline = ((EditText) rootView.findViewById(R.id.talkAddOutline)).getText().toString();
                 data.putStringArray(SyncPosts.TALK_OUTLINE, outline.split("\\n"));
 
+                AdminUtil.showDialog(getActivity());
+
                 //runs the network io in a seperate thread
                 new AsyncTask<Bundle, Void, Boolean>(){
                     @Override
@@ -53,6 +56,7 @@ public class TalkAddFragment extends Fragment {
                     @Override
                     protected void onPostExecute(Boolean aBoolean) {
                         super.onPostExecute(aBoolean);
+                        AdminUtil.hideDialog();
                         if (aBoolean) {
                             AdminUtil.toast(getActivity(), "Talk Added Successfully");
                             SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_TALK);

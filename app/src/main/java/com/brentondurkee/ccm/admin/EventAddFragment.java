@@ -88,6 +88,7 @@ public class EventAddFragment extends Fragment implements AdapterView.OnItemSele
                 data.putString(SyncPosts.EVENT_LOCATION, text);
                 data.putString(SyncPosts.EVENT_DESCRIPTION, ((EditText) rootView.findViewById(R.id.addEventDesc)).getText().toString());
 
+                AdminUtil.showDialog(getActivity());
                 //run the network io on a different thread
                 new AsyncTask<Bundle, Void, Boolean>() {
                     @Override
@@ -98,6 +99,7 @@ public class EventAddFragment extends Fragment implements AdapterView.OnItemSele
                     @Override
                     protected void onPostExecute(Boolean aBoolean) {
                         super.onPostExecute(aBoolean);
+                        AdminUtil.hideDialog();
                         if (aBoolean) {
                             AdminUtil.toast(getActivity(), "Event Added Successfully");
                             SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_EVENT);

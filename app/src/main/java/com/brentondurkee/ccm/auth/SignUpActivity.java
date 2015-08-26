@@ -14,6 +14,7 @@ import android.widget.EditText;
 
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.Log;
+import com.brentondurkee.ccm.admin.AdminUtil;
 
 /**
  * Created by brenton on 6/10/15.
@@ -56,11 +57,19 @@ public class SignUpActivity extends Activity {
     }
 
     public void createAccount(){
+        final String name = ((EditText)findViewById(R.id.signup_name)).getText().toString();
+        final String email = ((EditText)findViewById(R.id.signup_email)).getText().toString();
+        final String password = ((EditText)findViewById(R.id.signup_password)).getText().toString();
+
+        if(name.isEmpty() || email.isEmpty() || password.isEmpty()){
+            return;
+        }
+
         Log.v(TAG, "Create Account");
+        AdminUtil.showDialog(this);
         new AsyncTask<String, Void, Intent>() {
-            String name = ((EditText)findViewById(R.id.signup_name)).getText().toString();
-            String email = ((EditText)findViewById(R.id.signup_email)).getText().toString();
-            String password = ((EditText)findViewById(R.id.signup_password)).getText().toString();
+
+
 
             @Override
             protected Intent doInBackground(String... params) {
@@ -88,6 +97,7 @@ public class SignUpActivity extends Activity {
 
             @Override
             protected void onPostExecute(Intent intent) {
+                AdminUtil.hideDialog();
                 if(fine == true) {
                     setResult(RESULT_OK, intent);
                 }

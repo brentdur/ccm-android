@@ -4,6 +4,7 @@
 
 package com.brentondurkee.ccm.admin;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
@@ -21,6 +22,8 @@ public class AdminUtil {
     public final static String TYPE_MSG="MSG";
     public final static String TYPE_TALK="TALK";
     public final static String TYPE_SIGNUP="SIGNUP";
+
+    private static ProgressDialog mDialog;
 
 
 
@@ -41,5 +44,22 @@ public class AdminUtil {
     public static void succeed(Context context){
         Intent intent = new Intent(context, Pager.class);
         context.startActivity(intent);
+    }
+
+    public static void showDialog(Context context){
+        if(mDialog != null){
+            hideDialog();
+            return;
+        }
+        mDialog = new ProgressDialog(context);
+        mDialog.setMessage("Please wait...");
+        mDialog.setCancelable(false);
+        mDialog.show();
+
+    }
+
+    public static void hideDialog(){
+        mDialog.hide();
+        mDialog = null;
     }
 }

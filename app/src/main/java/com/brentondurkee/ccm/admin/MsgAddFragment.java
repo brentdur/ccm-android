@@ -74,6 +74,8 @@ public class MsgAddFragment extends Fragment implements AdapterView.OnItemSelect
                     data.putString(SyncPosts.MSG_TOPIC, toSelect);
                 }
 
+                AdminUtil.showDialog(getActivity());
+
                 new AsyncTask<Bundle, Void, Boolean>() {
                     @Override
                     protected Boolean doInBackground(Bundle... data) {
@@ -83,11 +85,12 @@ public class MsgAddFragment extends Fragment implements AdapterView.OnItemSelect
                     @Override
                     protected void onPostExecute(Boolean aBoolean) {
                         super.onPostExecute(aBoolean);
+                        AdminUtil.hideDialog();
                         if (aBoolean) {
-                            AdminUtil.toast(getActivity(), "Message Added Successfully");
+                            AdminUtil.toast(getActivity(), "Message Sent");
                             AdminUtil.succeed(getActivity());
                         } else {
-                            AdminUtil.toast(getActivity(), "Failed to Add Message");
+                            AdminUtil.toast(getActivity(), "Failed to Send Message");
                         }
                     }
                 }.execute(data);

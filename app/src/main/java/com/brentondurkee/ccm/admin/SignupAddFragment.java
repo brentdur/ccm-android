@@ -89,6 +89,7 @@ public class SignupAddFragment extends Fragment implements AdapterView.OnItemSel
                 data.putString(SyncPosts.SIGNUP_LOCATION, text);
                 data.putString(SyncPosts.SIGNUP_DESCRIPTION, ((EditText) rootView.findViewById(R.id.addSignupDesc)).getText().toString());
 
+                AdminUtil.showDialog(getActivity());
                 //run the network io on a different thread
                 new AsyncTask<Bundle, Void, Boolean>() {
                     @Override
@@ -99,6 +100,7 @@ public class SignupAddFragment extends Fragment implements AdapterView.OnItemSel
                     @Override
                     protected void onPostExecute(Boolean aBoolean) {
                         super.onPostExecute(aBoolean);
+                        AdminUtil.hideDialog();
                         if (aBoolean) {
                             AdminUtil.toast(getActivity(), "Signup Added Successfully");
                             SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_SIGNUP);
