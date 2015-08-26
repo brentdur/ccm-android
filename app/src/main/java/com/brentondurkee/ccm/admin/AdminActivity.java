@@ -29,22 +29,28 @@ public class AdminActivity extends FragmentActivity {
         toolbar.setTitleTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
         setActionBar(toolbar);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
         String type = getIntent().getStringExtra(AdminUtil.ADD_TYPE);
 
         if (savedInstanceState == null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             if(type.equals(AdminUtil.TYPE_EVENT)){
+                setTitle("Add Event");
                 ft.add(R.id.container, new EventAddFragment());
             }
             else if(type.equals(AdminUtil.TYPE_MSG)){
+                setTitle("Send Message");
                 ft.add(R.id.container, new MsgAddFragment());
             }
             else if(type.equals(AdminUtil.TYPE_TALK)) {
+                setTitle("Add Talk");
                 ft.add(R.id.container, new TalkAddFragment());
             }
             else if(type.equals(AdminUtil.TYPE_SIGNUP)) {
+                setTitle("Add Signup");
                 ft.add(R.id.container, new SignupAddFragment());
+            }
+            else {
+                setTitle("Error");
             }
             ft.commit();
         }
