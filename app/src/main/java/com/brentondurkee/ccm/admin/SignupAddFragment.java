@@ -101,6 +101,7 @@ public class SignupAddFragment extends Fragment implements AdapterView.OnItemSel
                         super.onPostExecute(aBoolean);
                         if (aBoolean) {
                             AdminUtil.toast(getActivity(), "Signup Added Successfully");
+                            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_SIGNUP);
                             AdminUtil.succeed(getActivity());
                         } else {
                             AdminUtil.toast(getActivity(), "Failed to Add Signup");

@@ -55,6 +55,7 @@ public class TalkAddFragment extends Fragment {
                         super.onPostExecute(aBoolean);
                         if (aBoolean) {
                             AdminUtil.toast(getActivity(), "Talk Added Successfully");
+                            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_TALK);
                             AdminUtil.succeed(getActivity());
                         } else {
                             AdminUtil.toast(getActivity(), "Failed to Add Talk");

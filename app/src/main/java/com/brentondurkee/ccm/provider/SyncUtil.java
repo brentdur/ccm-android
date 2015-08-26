@@ -48,6 +48,11 @@ public class SyncUtil {
 
     public final static String SELECTIVE_SIGNUP = "signup";
     public final static String SELECTIVE_MSG = "message";
+    public final static String SELECTIVE_EVENT = "event";
+    public final static String SELECTIVE_TALK = "talk";
+    public final static String SELECTIVE_LOCATION = "location";
+    public final static String SELECTIVE_GROUP = "group";
+    public final static String SELECTIVE_TOPIC = "topic";
 
     public static Context mainContext;
     private static Account mAccount;

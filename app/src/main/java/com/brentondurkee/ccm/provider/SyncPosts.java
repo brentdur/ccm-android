@@ -90,7 +90,7 @@ public class SyncPosts {
 
             OutputStream out = new BufferedOutputStream(conn.getOutputStream());
             PrintWriter output = new PrintWriter(out);
-            String req = String.format("{\"title\": \"%s\",\"location\": \"%s\",\"date\": \"%s\",\"description\": \"%s\"", data.getString(EVENT_TITLE), data.getString(EVENT_LOCATION), data.getString(EVENT_DATE), data.getString(EVENT_DESCRIPTION));
+            String req = String.format("{\"title\": \"%s\",\"location\": \"%s\",\"date\": \"%s\",\"description\": \"%s\"", data.getString(EVENT_TITLE), data.getString(EVENT_LOCATION), data.getString(EVENT_DATE), data.getString(EVENT_DESCRIPTION).replace("\n","\\n"));
             if(!data.getString(EVENT_ADDRESS).isEmpty()){
                 req += String.format(",\"address\":\"%s\"", data.getString(EVENT_ADDRESS));
             }
@@ -192,7 +192,7 @@ public class SyncPosts {
 
             OutputStream out = new BufferedOutputStream(conn.getOutputStream());
             PrintWriter output = new PrintWriter(out);
-            String req = String.format("{\"topic\": \"%s\",\"subject\": \"%s\",\"message\":\"%s\"}", data.getString(MSG_TOPIC), data.getString(MSG_SUBJECT), data.getString(MSG_MESSAGE));
+            String req = String.format("{\"topic\": \"%s\",\"subject\": \"%s\",\"message\":\"%s\"}", data.getString(MSG_TOPIC), data.getString(MSG_SUBJECT), data.getString(MSG_MESSAGE).replace("\n", "\\n"));
 
             output.print(req);
             output.close();
@@ -237,7 +237,7 @@ public class SyncPosts {
 
             OutputStream out = new BufferedOutputStream(conn.getOutputStream());
             PrintWriter output = new PrintWriter(out);
-            String req = String.format("{\"name\": \"%s\",\"location\": \"%s\",\"dateInfo\": \"%s\",\"description\": \"%s\"", data.getString(SIGNUP_NAME), data.getString(SIGNUP_LOCATION), data.getString(SIGNUP_DATE_INFO), data.getString(SIGNUP_DESCRIPTION));
+            String req = String.format("{\"name\": \"%s\",\"location\": \"%s\",\"dateInfo\": \"%s\",\"description\": \"%s\"", data.getString(SIGNUP_NAME), data.getString(SIGNUP_LOCATION), data.getString(SIGNUP_DATE_INFO), data.getString(SIGNUP_DESCRIPTION).replace("\n","\\n"));
             if(!data.getString(SIGNUP_ADDRESS).isEmpty()){
                 req += String.format(",\"address\":\"%s\"", data.getString(SIGNUP_ADDRESS));
             }

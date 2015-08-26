@@ -90,11 +90,26 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         String token = AccountManager.get(getContext()).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);
         if (extras.getBoolean(SyncUtil.SELECTIVE_KEY, false)) {
             Log.v(TAG, "selective sync");
-            if(extras.getString(SyncUtil.SELECTION).equals(SyncUtil.SELECTIVE_SIGNUP)){
+            if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_SIGNUP)){
                 sync(signupFeed, DataContract.Signup.CONTENT_URI, SIGNUP_PROJECTION, "signup", token);
             }
-            else if(extras.getString(SyncUtil.SELECTION).equals(SyncUtil.SELECTIVE_MSG)){
+            else if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_MSG)){
                 sync(msgFeed, DataContract.Msg.CONTENT_URI, MSG_PROJECTION, "msg", token);
+            }
+            else if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_EVENT)){
+                sync(eventFeed, DataContract.Event.CONTENT_URI, EVENT_PROJECTION, "event", token);
+            }
+            else if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_TALK)){
+                sync(talkFeed, DataContract.Talk.CONTENT_URI, TALK_PROJECTION, "talk", token);
+            }
+            else if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_LOCATION)){
+                sync(locationFeed, DataContract.Location.CONTENT_URI, LOCATION_PROJECTION, "location", token);
+            }
+            else if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_GROUP)){
+                sync(groupFeed, DataContract.Group.CONTENT_URI, GROUP_PROJECTION, "group", token);
+            }
+            else if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_TOPIC)){
+                sync(topicFeed, DataContract.Topic.CONTENT_URI, TOPIC_PROJECTION, "topic", token);
             }
             return;
         }

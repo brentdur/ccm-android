@@ -100,6 +100,7 @@ public class EventAddFragment extends Fragment implements AdapterView.OnItemSele
                         super.onPostExecute(aBoolean);
                         if (aBoolean) {
                             AdminUtil.toast(getActivity(), "Event Added Successfully");
+                            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_EVENT);
                             AdminUtil.succeed(getActivity());
                         } else {
                             AdminUtil.toast(getActivity(), "Failed to Add Event");

@@ -27,20 +27,26 @@ public class ListenService extends GcmListenerService{
             SyncUtil.TriggerRefresh();
         }
         if(message.contains("events")){
-            SyncUtil.TriggerRefresh();
-        }
-        if(message.contains("messages")){
-            SyncUtil.TriggerRefresh();
+            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_EVENT);
         }
         if(message.contains("talks")){
-            SyncUtil.TriggerRefresh();
+            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_TALK);
+        }
+        if(message.contains("msgs")){
+            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_MSG);
+        }
+        if(message.contains("signups")){
+            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_SIGNUP);
+        }
+        if(message.contains("groups")){
+            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_GROUP);
         }
         if(message.contains("locations")){
-            SyncUtil.TriggerRefresh();
+            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_LOCATION);
         }
-        //TODO: add other messages
-        //TODO: add sync based on type (selective sync)
-
+        if(message.contains("topics")){
+            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_TOPIC);
+        }
     }
 
 }
