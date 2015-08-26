@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 
+import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.auth.AuthUtil;
 import com.brentondurkee.ccm.Log;
 
@@ -64,13 +65,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             DataContract.Topic.COLUMN_NAME_ENTRY_ID,
             DataContract.Topic.COLUMN_NAME_VERSION,
             DataContract.Topic._ID};
-    private final String eventFeed = "http://ccm.brentondurkee.com/api/events";
-    private final String talkFeed = "http://ccm.brentondurkee.com/api/talks";
-    private final String msgFeed ="http://ccm.brentondurkee.com/api/messages/mine";
-    private final String locationFeed = "http://ccm.brentondurkee.com/api/locations";
-    private final String groupFeed = "http://ccm.brentondurkee.com/api/groups";
-    private final String signupFeed = "http://ccm.brentondurkee.com/api/signups";
-    private final String topicFeed = "http://ccm.brentondurkee.com/api/topics";
+
+    private final String eventFeed = Utils.DOMAIN + "/api/events";
+    private final String talkFeed = Utils.DOMAIN + "/api/talks";
+    private final String msgFeed =Utils.DOMAIN + "/api/messages/mine";
+    private final String locationFeed = Utils.DOMAIN + "/api/locations";
+    private final String groupFeed = Utils.DOMAIN + "/api/groups";
+    private final String signupFeed = Utils.DOMAIN + "/api/signups";
+    private final String topicFeed = Utils.DOMAIN + "/api/topics";
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);

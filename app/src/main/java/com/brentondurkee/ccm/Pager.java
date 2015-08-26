@@ -173,6 +173,10 @@ public class Pager extends FragmentActivity {
             openA = new Intent(getBaseContext(), AdminActivity.class);
             openA.putExtra(AdminUtil.ADD_TYPE, AdminUtil.TYPE_MSG);
         }
+        else if (id == R.id.add_signup){
+            openA = new Intent(getBaseContext(), AdminActivity.class);
+            openA.putExtra(AdminUtil.ADD_TYPE, AdminUtil.TYPE_SIGNUP);
+        }
         else if (id == R.id.inbox){
             openA = new Intent(getBaseContext(), MsgList.class);
         }

@@ -1,6 +1,7 @@
 package com.brentondurkee.ccm;
 
 import android.app.Activity;
+import android.nfc.Tag;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -18,6 +19,8 @@ public class Utils {
 
     private static final String TAG = "Utils";
 
+    public static final String DOMAIN = "http://ccm.brentondurkee.com";
+
     public static String dateTo(String date){
         long[] parts = getParts(date);
         date = String.format("%2d days %02d:%02d:%02d", parts[4], parts[3], parts[2], parts[1]);
@@ -27,7 +30,7 @@ public class Utils {
     public static String dateForm(String date){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(getMillis(date));
-        return String.format("%2d/%02d @ %02d:%02d", calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+        return String.format("%2d/%02d @ %02d:%02d", calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
     }
 
     public static long[] millisToDif(long millis){

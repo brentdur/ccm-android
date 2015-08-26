@@ -10,6 +10,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.brentondurkee.ccm.Log;
+import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.auth.AuthUtil;
 
 import org.json.JSONArray;
@@ -65,13 +66,13 @@ public class SyncPosts {
 
     private final static String TAG = "SyncPosts";
 
-    private final static String addEventUrl="http://ccm.brentondurkee.com/api/events";
-    private final static String addTalkUrl="http://ccm.brentondurkee.com/api/talks";
-    private final static String addMsgUrl="http://ccm.brentondurkee.com/api/messages";
-    private final static String addSignupUrl="http://ccm.brentondurkee.com/api/signups";
-    private final static String putUserToSignupUrl = "http://ccm.brentondurkee.com/api/signups/addme";
-    private final static String deleteMsgUrl = "http://ccm.brentondurkee.com/api/messages";
-    private final static String getMeUrl = "http://ccm.brentondurkee.com/api/users/me";
+    private final static String addEventUrl= Utils.DOMAIN + "/api/events";
+    private final static String addTalkUrl=Utils.DOMAIN + "/api/talks";
+    private final static String addMsgUrl=Utils.DOMAIN + "/api/messages";
+    private final static String addSignupUrl=Utils.DOMAIN + "/api/signups";
+    private final static String putUserToSignupUrl = Utils.DOMAIN + "/api/signups/addme";
+    private final static String deleteMsgUrl = Utils.DOMAIN + "/api/messages";
+    private final static String getMeUrl = Utils.DOMAIN + "/api/users/me";
 
     public static boolean addEvent(Bundle data, Account account, Context context){
         String token = AccountManager.get(context).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);

@@ -43,6 +43,9 @@ public class AdminActivity extends FragmentActivity {
             else if(type.equals(AdminUtil.TYPE_TALK)) {
                 ft.add(R.id.container, new TalkAddFragment());
             }
+            else if(type.equals(AdminUtil.TYPE_SIGNUP)) {
+                ft.add(R.id.container, new SignupAddFragment());
+            }
             ft.commit();
         }
     }

@@ -20,6 +20,7 @@ public class AdminUtil {
     public final static String TYPE_EVENT="EVENT";
     public final static String TYPE_MSG="MSG";
     public final static String TYPE_TALK="TALK";
+    public final static String TYPE_SIGNUP="SIGNUP";
 
 
 

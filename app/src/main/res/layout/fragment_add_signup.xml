@@ -1,4 +1,8 @@
- <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ <!--
+  ~ Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -8,33 +12,38 @@
         android:id="@+id/addEvent">
 
         <EditText
-            android:id="@+id/addEventTitle"
+            android:id="@+id/addSignupTitle"
             style="@style/EditTitle"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             />
 
         <EditText
-            android:id="@+id/addEventDate"
-            style="@style/EditDate"
-            android:layout_below="@+id/addEventTitle"
+            android:id="@+id/addSignupDate"
+            style="@style/EditTimeInfo"
+            android:layout_below="@+id/addSignupTitle"
             android:layout_toEndOf="@+id/textView1" />
 
-
+        <EditText
+            android:id="@+id/addSignupName"
+            style="@style/EditLocationName"
+            android:visibility="invisible"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
 
         <EditText
-            android:id="@+id/addEventDesc"
+            android:id="@+id/addSignupDesc"
             style="@style/EditDesc"
-            android:layout_below="@+id/spinner_place"
+            android:layout_below="@+id/signup_spinner_place"
             android:layout_alignParentStart="true" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/count_edit_lead"
+            android:text="@string/time_info_lead"
             android:id="@+id/textView1"
             android:textColor="@color/leadText"
-            android:layout_alignBottom="@+id/addEventDate"
+            android:layout_alignBottom="@+id/addSignupDate"
             android:layout_alignParentStart="true"
             style="@style/PrimaryText" />
 
@@ -51,31 +60,23 @@
      <Spinner
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:id="@+id/spinner_place"
-         android:layout_below="@+id/addEventDate"
+         android:id="@+id/signup_spinner_place"
+         android:layout_below="@+id/addSignupDate"
          android:layout_toEndOf="@+id/textView2" />
 
      <Button
-         android:id="@+id/button"
+         android:id="@+id/button_signup"
          android:layout_alignParentBottom="true"
          android:layout_centerHorizontal="true"
          style="@style/EditSubmit"/>
 
      <EditText
-         android:id="@+id/addEventName"
-         style="@style/EditLocationName"
-         android:visibility="invisible"
-         android:layout_centerVertical="true"
-         android:layout_below="@+id/spinner_place"
-         android:layout_alignParentStart="true" />
-
-     <EditText
          style="@style/EditAddress"
-         android:id="@+id/addEventAddress"
+         android:id="@+id/addSignupAddress"
          android:visibility="invisible"
          android:layout_width="fill_parent"
          android:layout_height="wrap_content"
-         android:layout_below="@+id/addEventName"
+         android:layout_below="@+id/addSignupName"
          android:layout_alignParentEnd="true" />
 
 

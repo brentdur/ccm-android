@@ -36,6 +36,7 @@
     <string name="have_account">Have An Account?</string>
     <string name="need_account">Need An Account?</string>
     <string name="signin_button">Sign In</string>
+    <string name="time_info_hint">every wednesday at 3:00</string>
 
     <string name="submit_button">Submit</string>
     <string name="refresh">Refresh</string>
@@ -52,6 +53,7 @@
     <string name="date_lead">since</string>
     <string name="count_lead">Be there in</string>
     <string name="count_edit_lead">Starts at</string>
+    <string name="time_info_lead">when</string>
     <string name="location_lead">at</string>
     <string name="reference_lead">on</string>
 </resources>

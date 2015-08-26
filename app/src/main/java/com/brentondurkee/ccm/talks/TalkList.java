@@ -66,7 +66,7 @@ import com.brentondurkee.ccm.provider.DataContract;
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(getActivity(), DataContract.Talk.CONTENT_URI, PROJECTION, null, null, null);
+            return new CursorLoader(getActivity(), DataContract.Talk.CONTENT_URI, PROJECTION, null, null, DataContract.Talk.COLUMN_NAME_DATE + " DESC");
         }
 
         @Override

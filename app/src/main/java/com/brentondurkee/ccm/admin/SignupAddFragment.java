@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015. This work has been created by Brenton Durkee.
+ * Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
  */
 
 package com.brentondurkee.ccm.admin;
@@ -17,24 +17,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
+import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncPosts;
 import com.brentondurkee.ccm.provider.SyncUtil;
-import com.brentondurkee.ccm.Log;
 
 /**
     This class is the fragment activity and the fragment for the add event activity
     Relies on AdminUtil
  */
-public class EventAddFragment extends Fragment implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class SignupAddFragment extends Fragment implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = "EventAddFragment";
+    private static final String TAG = "SignupAddFragment";
 
     SimpleCursorAdapter mAdapter;
     String toSelect = "";
@@ -48,7 +49,7 @@ public class EventAddFragment extends Fragment implements AdapterView.OnItemSele
             DataContract.Location.COLUMN_NAME_NAME
     };
 
-    public EventAddFragment() {
+    public SignupAddFragment() {
     }
 
     @Override
@@ -61,48 +62,48 @@ public class EventAddFragment extends Fragment implements AdapterView.OnItemSele
         getLoaderManager().initLoader(0, null, this);
 
         //inflate the view, add the spinner and button
-        final View rootView = inflater.inflate(R.layout.fragment_add_event, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_add_signup, container, false);
         this.rootView = rootView;
 
-        Spinner spin = (Spinner) rootView.findViewById(R.id.spinner_place);
+        Spinner spin = (Spinner) rootView.findViewById(R.id.signup_spinner_place);
         spin.setAdapter(mAdapter);
         spin.setOnItemSelectedListener(this);
 
         //when submit is pressed
-        rootView.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.button_signup).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle data = new Bundle();
-                data.putString(SyncPosts.EVENT_TITLE, ((EditText) rootView.findViewById(R.id.addEventTitle)).getText().toString());
-                data.putString(SyncPosts.EVENT_DATE, ((EditText) rootView.findViewById(R.id.addEventDate)).getText().toString());
-                data.putString(SyncPosts.EVENT_ADDRESS, "");
+                data.putString(SyncPosts.SIGNUP_NAME, ((EditText) rootView.findViewById(R.id.addSignupTitle)).getText().toString());
+                data.putString(SyncPosts.SIGNUP_DATE_INFO, ((EditText) rootView.findViewById(R.id.addSignupDate)).getText().toString());
+                data.putString(SyncPosts.SIGNUP_ADDRESS, "");
                 String text;
                 //if a pre-fab location has been selected, then use that, else load the name
                 //  and address
                 if (selected) {
                     text = toSelect;
                 } else {
-                    text = ((EditText) rootView.findViewById(R.id.addEventName)).getText().toString();
-                    data.putString(SyncPosts.EVENT_ADDRESS, ((EditText) rootView.findViewById(R.id.addEventAddress)).getText().toString());
+                    text = ((EditText) rootView.findViewById(R.id.addSignupName)).getText().toString();
+                    data.putString(SyncPosts.SIGNUP_ADDRESS, ((EditText) rootView.findViewById(R.id.addSignupAddress)).getText().toString());
                 }
-                data.putString(SyncPosts.EVENT_LOCATION, text);
-                data.putString(SyncPosts.EVENT_DESCRIPTION, ((EditText) rootView.findViewById(R.id.addEventDesc)).getText().toString());
+                data.putString(SyncPosts.SIGNUP_LOCATION, text);
+                data.putString(SyncPosts.SIGNUP_DESCRIPTION, ((EditText) rootView.findViewById(R.id.addSignupDesc)).getText().toString());
 
                 //run the network io on a different thread
                 new AsyncTask<Bundle, Void, Boolean>() {
                     @Override
                     protected Boolean doInBackground(Bundle... data) {
-                        return SyncPosts.addEvent(data[0], SyncUtil.getAccount(), getActivity());
+                        return SyncPosts.addSignup(data[0], SyncUtil.getAccount(), getActivity());
                     }
 
                     @Override
                     protected void onPostExecute(Boolean aBoolean) {
                         super.onPostExecute(aBoolean);
                         if (aBoolean) {
-                            AdminUtil.toast(getActivity(), "Event Added Successfully");
+                            AdminUtil.toast(getActivity(), "Signup Added Successfully");
                             AdminUtil.succeed(getActivity());
                         } else {
-                            AdminUtil.toast(getActivity(), "Failed to Add Event");
+                            AdminUtil.toast(getActivity(), "Failed to Add Signup");
                         }
 
                     }
@@ -129,20 +130,20 @@ public class EventAddFragment extends Fragment implements AdapterView.OnItemSele
         toSelect = cursor.getString(1);
 
         if (toSelect.equals("Other")) {
-            rootView.findViewById(R.id.addEventAddress).setVisibility(View.VISIBLE);
-            rootView.findViewById(R.id.addEventName).setVisibility(View.VISIBLE);
+            rootView.findViewById(R.id.addSignupAddress).setVisibility(View.VISIBLE);
+            rootView.findViewById(R.id.addSignupName).setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            p.addRule(RelativeLayout.BELOW, R.id.addEventAddress);
-            rootView.findViewById(R.id.addEventDesc).setLayoutParams(p);
+            p.addRule(RelativeLayout.BELOW, R.id.addSignupAddress);
+            rootView.findViewById(R.id.addSignupDesc).setLayoutParams(p);
             selected = false;
         }
         else {
             if(!selected){
                 RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                p.addRule(RelativeLayout.BELOW, R.id.spinner_place);
-                rootView.findViewById(R.id.addEventAddress).setVisibility(View.INVISIBLE);
-                rootView.findViewById(R.id.addEventName).setVisibility(View.INVISIBLE);
-                rootView.findViewById(R.id.addEventDesc).setLayoutParams(p);
+                p.addRule(RelativeLayout.BELOW, R.id.signup_spinner_place);
+                rootView.findViewById(R.id.addSignupAddress).setVisibility(View.INVISIBLE);
+                rootView.findViewById(R.id.addSignupName).setVisibility(View.INVISIBLE);
+                rootView.findViewById(R.id.addSignupDesc).setLayoutParams(p);
             }
             selected = true;
 

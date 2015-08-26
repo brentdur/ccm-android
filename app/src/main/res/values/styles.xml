@@ -52,6 +52,19 @@
         <item name="android:gravity">left</item>
     </style>
 
+    <style name="EditTimeInfo" parent="HeaderText">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/time_info_hint</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="ShowTimeInfo" parent="EditTimeInfo">
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:gravity">left</item>
+    </style>
+
     <style name="EditSubject" parent="SuperHeadText">
         <item name="android:gravity">left</item>
         <item name="android:layout_width">fill_parent</item>

@@ -79,7 +79,7 @@ public class EventList extends ListFragment implements LoaderManager.LoaderCallb
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), DataContract.Event.CONTENT_URI, PROJECTION, null, null, null);
+        return new CursorLoader(getActivity(), DataContract.Event.CONTENT_URI, PROJECTION, null, null, DataContract.Event.COLUMN_NAME_DATE);
     }
 
     @Override

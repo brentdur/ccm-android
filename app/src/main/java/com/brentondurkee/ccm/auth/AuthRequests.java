@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 import com.brentondurkee.ccm.Log;
+import com.brentondurkee.ccm.Utils;
 
 /**
  * Created by brenton on 6/10/15.
@@ -26,9 +27,9 @@ public class AuthRequests {
 
     private final static String TAG = "AuthRequests";
 
-    private final static String signUpUrl="http://ccm.brentondurkee.com/api/users";
-    private final static String signInUrl="http://ccm.brentondurkee.com/auth/local";
-    private final static String GCMUrl="http://ccm.brentondurkee.com/api/users/gcm";
+    private final static String signUpUrl= Utils.DOMAIN + "/api/users";
+    private final static String signInUrl=Utils.DOMAIN + "/auth/local";
+    private final static String GCMUrl=Utils.DOMAIN + "/api/users/gcm";
 
     public static String userSignUp(final String name, final String email, final String pass){
         Log.v(TAG, "Start Signup");
