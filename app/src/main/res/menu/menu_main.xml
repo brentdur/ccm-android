@@ -4,5 +4,5 @@
     <item android:id="@+id/action_settings" android:title="@string/refresh"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
     <item android:id="@+id/add_msg" android:title="@string/add_msg"
-        android:orderInCategory="100" app:showAsAction="ifRoom" />
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>

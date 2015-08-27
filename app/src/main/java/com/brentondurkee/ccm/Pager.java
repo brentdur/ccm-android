@@ -19,15 +19,15 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.admin.AdminActivity;
@@ -48,7 +48,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 /**
  * Created by brenton on 6/11/15.
  */
-public class Pager extends FragmentActivity {
+public class Pager extends AppCompatActivity {
     CollectionPagerActivity mAdapter;
     ViewPager mPager;
 
@@ -78,9 +78,9 @@ public class Pager extends FragmentActivity {
             addAccount();
         }
 
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
-        setActionBar(toolbar);
 
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
 
         mAdapter = new CollectionPagerActivity(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);

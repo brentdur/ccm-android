@@ -7,7 +7,7 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toolbar;
+import android.support.v7.widget.Toolbar;
 
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.Utils;
@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class SignupDetail extends FragmentActivity{
+public class SignupDetail extends AppCompatActivity{
 
     private Toolbar toolbar;
 
@@ -48,9 +48,9 @@ public class SignupDetail extends FragmentActivity{
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));
-        toolbar.setTitleTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
-        setActionBar(toolbar);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setTitleTextColor(getResources().getColor(android.R.color.black));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

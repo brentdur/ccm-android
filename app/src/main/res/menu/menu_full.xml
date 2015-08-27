@@ -4,13 +4,13 @@
     <item android:id="@+id/action_settings" android:title="@string/refresh"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
     <item android:id="@+id/add_event" android:title="@string/add_event"
-        android:orderInCategory="100" app:showAsAction="ifRoom" />
+        android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/add_signup" android:title="@string/add_signup"
-        android:orderInCategory="100" app:showAsAction="ifRoom" />
+        android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/add_talk" android:title="@string/add_talk"
-        android:orderInCategory="100" app:showAsAction="ifRoom" />
+        android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/add_msg" android:title="@string/add_msg"
-        android:orderInCategory="100" app:showAsAction="ifRoom" />
+        android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/inbox" android:title="@string/show_inbox"
-        android:orderInCategory="100" app:showAsAction="ifRoom" />
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>

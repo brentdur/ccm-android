@@ -111,6 +111,7 @@
         <activity
             android:name=".inbox.MsgList"
             android:label="@string/title_activity_msg_list"
+            android:launchMode="singleTop"
             android:parentActivityName=".Pager" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

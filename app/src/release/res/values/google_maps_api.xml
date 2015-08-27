@@ -1,17 +1,11 @@
-resources>
-    <!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+  -->
 
-    To get one, follow this link, follow the directions and press "Create" at the end:
-
-https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=FA:42:79:E8:14:4B:B5:2F:5D:63:41:26:B2:F8:E5:69:8A:79:8D:F8%3Bcom.brentondurkee.ccm
-
-    You can also add your credentials to an existing key, using this line:
-    FA:42:79:E8:14:4B:B5:2F:5D:63:41:26:B2:F8:E5:69:8A:79:8D:F8;com.brentondurkee.ccm
-
-    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
-    string in this file.
-    -->
+<resources>
     <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">
         AIzaSyD9OrxkDhvWpiuKDajoXp4hlHGgu-4B4TQ
     </string>
 </resources>
+

@@ -12,10 +12,14 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="AppTheme.Actionbar.Text" parent="@android:style/TextAppearance">
+        <item name="android:titleTextStyle">@android:color/black</item>
+    </style>
+
     <style name="MyTab">
-        <item name="tabIndicatorColor">@color/primaryAccent</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="tabSelectedTextColor">@android:color/white</item>
+        <item name="tabIndicatorColor">@android:color/black</item>
+        <item name="android:textColor">@color/leadText</item>
+        <item name="tabSelectedTextColor">@android:color/black</item>
         <item name="textAllCaps">false</item>
         <item name="android:textSize">20sp</item>
     </style>

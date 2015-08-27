@@ -7,16 +7,17 @@ package com.brentondurkee.ccm.admin;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.R;
 
 /**
  * Created by brenton on 7/20/15.
  */
-public class AdminActivity extends FragmentActivity {
+public class AdminActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     @Override
@@ -26,9 +27,9 @@ public class AdminActivity extends FragmentActivity {
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));
-        toolbar.setTitleTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
-        setActionBar(toolbar);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setTitleTextColor(getResources().getColor(android.R.color.black));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         String type = getIntent().getStringExtra(AdminUtil.ADD_TYPE);
 
         if (savedInstanceState == null) {

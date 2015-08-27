@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,7 +22,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
@@ -35,7 +36,7 @@ import com.brentondurkee.ccm.provider.SyncUtil;
  *
  * List fragment for messages
  */
-public class MsgList extends FragmentActivity {
+public class MsgList extends AppCompatActivity {
 
     private Toolbar toolbar;
 
@@ -49,8 +50,8 @@ public class MsgList extends FragmentActivity {
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));
         toolbar.setTitleTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
-        setActionBar(toolbar);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

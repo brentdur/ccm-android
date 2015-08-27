@@ -8,6 +8,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.Utils;
@@ -31,7 +32,7 @@ import com.brentondurkee.ccm.provider.SyncUtil;
  *
  * Detail fragment for Messages
  */
-public class MsgDetail extends FragmentActivity {
+public class MsgDetail extends AppCompatActivity {
 
     private Toolbar toolbar;
 
@@ -42,9 +43,9 @@ public class MsgDetail extends FragmentActivity {
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));
-        toolbar.setTitleTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
-        setActionBar(toolbar);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setTitleTextColor(getResources().getColor(android.R.color.black));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -92,9 +93,14 @@ public class MsgDetail extends FragmentActivity {
                 }
             }.execute(data);
         }
+        if (id == android.R.id.home){
+            finish();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
+
     /**
      * A placeholder fragment containing a simple view.
      */

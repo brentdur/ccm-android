@@ -4,7 +4,9 @@
         android:layout_height="75dp"
         android:layout_gravity="center_horizontal|top"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
+        android:layout_marginRight="5dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp">
 
         <TextView
             android:layout_width="275dp"
