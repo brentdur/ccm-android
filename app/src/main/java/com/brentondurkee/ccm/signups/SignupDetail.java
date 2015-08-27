@@ -7,20 +7,17 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.support.v7.widget.Toolbar;
 
-import com.brentondurkee.ccm.R;
-import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.Log;
+import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.admin.AdminUtil;
 import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncPosts;
@@ -32,20 +29,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.util.List;
 
 
 public class SignupDetail extends AppCompatActivity{
-
-    private Toolbar toolbar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        Toolbar toolbar;
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.black));

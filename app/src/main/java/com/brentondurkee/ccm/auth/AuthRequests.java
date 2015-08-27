@@ -4,6 +4,9 @@
 
 package com.brentondurkee.ccm.auth;
 
+import com.brentondurkee.ccm.Log;
+import com.brentondurkee.ccm.Utils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,9 +17,6 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
-
-import com.brentondurkee.ccm.Log;
-import com.brentondurkee.ccm.Utils;
 
 /**
  * Created by brenton on 6/10/15.
@@ -108,7 +108,6 @@ public class AuthRequests {
     }
 
     public static boolean testAuth(final String auth){
-        //TODO: fill with test to call to an auth-requried end point
         //true means it's valid
         return true;
     }

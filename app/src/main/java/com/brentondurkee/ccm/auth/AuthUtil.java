@@ -6,7 +6,7 @@ package com.brentondurkee.ccm.auth;
 
 /**
  * Created by brenton on 6/10/15.
- * Utilies for authentication and account purposes
+ * Utilities for authentication and account purposes
  */
 public class AuthUtil {
     //keys for incoming intent

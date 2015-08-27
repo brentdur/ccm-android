@@ -1,31 +1,26 @@
 package com.brentondurkee.ccm.inbox;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
+import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
-import android.content.Intent;
 import android.support.v4.content.Loader;
-import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 
 import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
-import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.admin.AdminUtil;
 import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncPosts;
@@ -38,14 +33,13 @@ import com.brentondurkee.ccm.provider.SyncUtil;
  */
 public class MsgList extends AppCompatActivity {
 
-    private Toolbar toolbar;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         Log.v("Msg List", "AA");
+
+        Toolbar toolbar;
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));

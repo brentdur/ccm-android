@@ -9,34 +9,28 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.OperationCanceledException;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 
-import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.admin.AdminActivity;
 import com.brentondurkee.ccm.admin.AdminUtil;
 import com.brentondurkee.ccm.auth.AuthUtil;
 import com.brentondurkee.ccm.events.EventList;
-import com.brentondurkee.ccm.inbox.MsgDetail;
 import com.brentondurkee.ccm.inbox.MsgList;
-import com.brentondurkee.ccm.provider.SyncPosts;
 import com.brentondurkee.ccm.provider.SyncUtil;
 import com.brentondurkee.ccm.provider.gcm.RegIntentService;
 import com.brentondurkee.ccm.signups.SignupList;
@@ -52,12 +46,8 @@ public class Pager extends AppCompatActivity {
     CollectionPagerActivity mAdapter;
     ViewPager mPager;
 
-    private TabLayout tabLayout;
     private final String TAG=getClass().getSimpleName();
     public final static String PREF_ACCOUNT_EMAIL="account_email";
-    private Toolbar toolbar;
-
-    private int lastSelected = 1;
 
     private boolean writeSignups;
     private boolean writeEvents;
@@ -78,7 +68,7 @@ public class Pager extends AppCompatActivity {
             addAccount();
         }
 
-
+        Toolbar toolbar;
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -86,14 +76,15 @@ public class Pager extends AppCompatActivity {
         mAdapter = new CollectionPagerActivity(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
-        mPager.setCurrentItem(lastSelected);
+        mPager.setCurrentItem(1);
         mPager.setPageMargin(25);
         Log.v(TAG, "created");
 
+        TabLayout tabLayout;
         tabLayout = (TabLayout) findViewById(R.id.frame);
         tabLayout.setupWithViewPager(mPager);
         tabLayout.setTabTextColors(Color.WHITE, Color.BLACK);
-        tabLayout.getTabAt(lastSelected).select();
+        tabLayout.getTabAt(1).select();
 
     }
 
@@ -297,21 +288,6 @@ public class Pager extends AppCompatActivity {
         SyncUtil.flush();
         super.onDestroy();
     }
-
-//    @Override
-//    protected void onPause() {
-//        lastSelected = mPager.getCurrentItem();
-//        Log.v(TAG, "Last Selected Pause: "+lastSelected);
-//        super.onPause();
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        Log.v(TAG, "Last Selected REsume: "+lastSelected);
-//        tabLayout.getTabAt(lastSelected).select();
-//        mPager.setCurrentItem(lastSelected);
-//        super.onResume();
-//    }
 
 }
 

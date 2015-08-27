@@ -7,7 +7,6 @@ package com.brentondurkee.ccm.provider.gcm;
 import android.os.Bundle;
 
 import com.brentondurkee.ccm.Log;
-
 import com.brentondurkee.ccm.provider.SyncUtil;
 import com.google.android.gms.gcm.GcmListenerService;
 

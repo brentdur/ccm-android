@@ -27,13 +27,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
+import com.brentondurkee.ccm.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.brentondurkee.ccm.Log;
 
 /**
  * Helper for building selection clauses for {@link android.database.sqlite.SQLiteDatabase}.

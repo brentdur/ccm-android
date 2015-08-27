@@ -50,7 +50,7 @@ public class MsgAddFragment extends Fragment implements AdapterView.OnItemSelect
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //loads recieving groups from cursor
+        //loads receiving groups from cursor
         mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.spinner_layout, null, from, to, 0);
         mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         getLoaderManager().initLoader(0, null, this);

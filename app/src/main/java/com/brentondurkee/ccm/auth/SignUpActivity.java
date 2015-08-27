@@ -12,8 +12,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.Log;
+import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.admin.AdminUtil;
 
 /**
@@ -87,7 +87,7 @@ public class SignUpActivity extends Activity {
                     data.putString(AuthUtil.REG_TYPE, "Signup");
                     data.putInt(AuthUtil.SUCCESS, 1);
                 } catch(Exception e){
-
+                    Log.w(TAG, e.toString());
                 }
 
                 final Intent res = new Intent();
@@ -98,7 +98,7 @@ public class SignUpActivity extends Activity {
             @Override
             protected void onPostExecute(Intent intent) {
                 AdminUtil.hideDialog();
-                if(fine == true) {
+                if(fine) {
                     setResult(RESULT_OK, intent);
                 }
                 else {

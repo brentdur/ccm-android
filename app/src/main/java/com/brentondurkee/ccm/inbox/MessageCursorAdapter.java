@@ -15,8 +15,6 @@ import android.widget.TextView;
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.Utils;
 
-import org.w3c.dom.Text;
-
 /**
  * Created by brenton on 8/22/15.
  */

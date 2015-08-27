@@ -22,11 +22,11 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
+import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncPosts;
 import com.brentondurkee.ccm.provider.SyncUtil;
-import com.brentondurkee.ccm.Log;
 
 /**
     This class is the fragment activity and the fragment for the add event activity

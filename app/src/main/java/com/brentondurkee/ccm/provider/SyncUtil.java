@@ -20,14 +20,10 @@ import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import com.brentondurkee.ccm.Log;
-import com.brentondurkee.ccm.Pager;
-import com.brentondurkee.ccm.admin.AdminUtil;
 
 /**
  * Static helper methods for working with the sync framework.

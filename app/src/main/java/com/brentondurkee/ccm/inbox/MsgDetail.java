@@ -1,13 +1,10 @@
 package com.brentondurkee.ccm.inbox;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.database.CursorWrapper;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -20,7 +17,6 @@ import android.widget.TextView;
 
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.Utils;
-import com.brentondurkee.ccm.admin.AdminActivity;
 import com.brentondurkee.ccm.admin.AdminUtil;
 import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncPosts;
@@ -34,13 +30,13 @@ import com.brentondurkee.ccm.provider.SyncUtil;
  */
 public class MsgDetail extends AppCompatActivity {
 
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        Toolbar toolbar;
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.black));

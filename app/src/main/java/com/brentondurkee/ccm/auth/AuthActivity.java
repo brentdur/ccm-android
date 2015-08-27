@@ -8,8 +8,10 @@ import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.admin.AdminUtil;
+import com.brentondurkee.ccm.provider.gcm.RegIntentService;
 
 /**
  * Created by brenton on 6/10/15.
@@ -119,6 +122,10 @@ public class AuthActivity extends AccountAuthenticatorActivity{
 
     private void finishLogin(Intent intent){
         Log.v(TAG, "Finish Login");
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.edit().putString(RegIntentService.PREF_GCM_TOKEN, "").commit();
+
         String email = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String password = intent.getStringExtra(AuthUtil.PARAM_USER_PASS);
         String type = intent.getStringExtra(AuthUtil.REG_TYPE);

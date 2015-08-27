@@ -1,7 +1,6 @@
 package com.brentondurkee.ccm;
 
 import android.app.Activity;
-import android.nfc.Tag;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -9,8 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-import com.brentondurkee.ccm.Log;
 
 /**
  * Created by brenton on 7/6/15.

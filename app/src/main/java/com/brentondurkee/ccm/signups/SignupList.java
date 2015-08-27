@@ -14,11 +14,9 @@ import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 
 import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
-import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.provider.DataContract;
 
 /**

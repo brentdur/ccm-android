@@ -8,8 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,18 +16,15 @@ import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.provider.DataContract;
-import com.brentondurkee.ccm.provider.SyncUtil;
 
 public class TalkDetail extends AppCompatActivity {
-
-    private Toolbar toolbar;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        Toolbar toolbar;
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.black));
@@ -81,11 +76,6 @@ public class TalkDetail extends AppCompatActivity {
             String verse = mCursor.getString(5);
             String outline = mCursor.getString(6);
             Log.v("Talk Details", outline);
-            String[] outlist = outline.split("\",,,\"");
-            outline = "";
-            for(int i = 0; i<outlist.length; i ++){
-                outline += outlist[i] + "\n";
-            }
 
             View rootView = inflater.inflate(R.layout.fragment_talk_detail, container, false);
             ((TextView) rootView.findViewById(R.id.talkDetailTopic)).setText(subject);

@@ -14,9 +14,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 
+import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.auth.AuthUtil;
-import com.brentondurkee.ccm.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -194,7 +194,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         ArrayList<ContentProviderOperation> batch = new ArrayList<>(json.length());
         Cursor cursor = mResolver.query(content, projection, null, null, null);
-
         while(cursor.moveToNext()){
             boolean found = false;
             for(int i = 0; i<objects.size(); i++){
@@ -215,6 +214,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             }
         }
         cursor.close();
+
 
         for(int i = 0; i < objects.size(); i++){
             batch.add(add(content, objects.get(i), type));
@@ -427,10 +427,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 
     public ContentProviderOperation updateTalk(Uri existing, String author, String subject, String date, String reference, String verse, JSONArray outline, int version) throws JSONException{
-        String stringOutline =outline.getString(0);
-        for (int i = 1; i< outline.length(); i++){
-            stringOutline += "\",,,\"";
+        String stringOutline = " ";
+        for (int i = 0; i< outline.length(); i++){
             stringOutline += outline.getString(i);
+            stringOutline += "\n";
         }
         return ContentProviderOperation.newUpdate(existing)
                 .withValue(DataContract.Talk.COLUMN_NAME_AUTHOR, author)
@@ -444,10 +444,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     public ContentProviderOperation addTalk(Uri existing, String author, String subject, String date, String reference, String verse, JSONArray outline, String id, int version) throws JSONException{
-        String stringOutline =outline.getString(0);
-        for (int i = 1; i< outline.length(); i++){
-            stringOutline += "\",,,\"";
+        String stringOutline = " ";
+        for (int i = 0; i< outline.length(); i++){
             stringOutline += outline.getString(i);
+            stringOutline += "\n";
         }
         return ContentProviderOperation.newInsert(existing)
                 .withValue(DataContract.Talk.COLUMN_NAME_AUTHOR, author)
