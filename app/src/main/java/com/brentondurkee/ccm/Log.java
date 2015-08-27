@@ -8,7 +8,7 @@ package com.brentondurkee.ccm;
  * Created by brenton on 7/20/15.
  */
 public class Log {
-    final static boolean debug = true;
+    final static boolean debug = false;
     final static String TAGPREFIX = "CCM";
 
     public static void v(String tag, String text){

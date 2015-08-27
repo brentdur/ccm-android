@@ -49,7 +49,7 @@ public class MsgList extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setBackgroundColor(getResources().getColor(R.color.primaryCCM));
-        toolbar.setTitleTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
+        toolbar.setTitleTextColor(getResources().getColor(android.R.color.black));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

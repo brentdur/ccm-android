@@ -81,6 +81,7 @@ public class Pager extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mAdapter = new CollectionPagerActivity(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);

@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">CCM</string>
+    <string name="app_name">RUF City Campus</string>
 
     <string name="action_settings">Settings</string>
 
-    <string name="title_activity_event_detail">EventDetail</string>
+    <string name="title_activity_event_detail">Event</string>
     <string name="title_activity_msg_detail">Message</string>
-    <string name="title_activity_talk_detail">TalkDetail</string>
-    <string name="title_activity_signups_detail">Signups</string>
+    <string name="title_activity_talk_detail">Talk</string>
+    <string name="title_activity_signups_detail">Signup</string>
     <string name="title_activity_add">Add Stuff</string>
     <string name="title_activity_signin">Sign In</string>
     <string name="title_activity_signup">Sign Up</string>
