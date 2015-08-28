@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.brentondurkee.ccm.Log;
@@ -44,7 +45,7 @@ public class TalkDetail extends AppCompatActivity {
         private TextView reference;
         private TextView fullRef;
         private boolean open = false;
-        private TextView openButton;
+        private ImageButton openButton;
 
         Cursor mCursor;
         ContentResolver mResolve;
@@ -93,18 +94,18 @@ public class TalkDetail extends AppCompatActivity {
                 }
             });
             ((TextView) rootView.findViewById(R.id.talkDetailOutline)).setText(outline);
-            openButton = (TextView) rootView.findViewById(R.id.openVerse);
+            openButton = (ImageButton) rootView.findViewById(R.id.openVerse);
 
             return rootView;
         }
 
         public void clickRef(){
             if(open){
-                openButton.setText(">");
+                openButton.setImageResource(R.drawable.downarrow);
                 ObjectAnimator animation = ObjectAnimator.ofInt(fullRef, "maxLines", 0);
                 animation.setDuration(300).start();
             } else {
-                openButton.setText("V");
+                openButton.setImageResource(R.drawable.uparrow);
                 ObjectAnimator animation = ObjectAnimator.ofInt(fullRef, "maxLines", 40);
                 animation.setDuration(600).start();
 

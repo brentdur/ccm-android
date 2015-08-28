@@ -118,8 +118,6 @@ public class SyncUtil {
      * the OS additional freedom in scheduling your sync request.
      */
     public static void TriggerRefresh() {
-        //TODO: add authKey support
-        //TODO: selective sync
         Bundle b = new Bundle();
         Log.v("Refresh", "refreshing");
         // Disable sync backoff and ignore sync preferences. In other words...perform sync NOW!
@@ -132,8 +130,6 @@ public class SyncUtil {
     }
 
     public static void TriggerSelectiveRefresh(String selection) {
-        //TODO: add authKey support
-        //TODO: selective sync
         Bundle b = new Bundle();
         Log.v("Refresh", "refreshing");
         // Disable sync backoff and ignore sync preferences. In other words...perform sync NOW!

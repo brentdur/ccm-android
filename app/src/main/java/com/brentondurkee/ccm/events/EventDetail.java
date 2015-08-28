@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.brentondurkee.ccm.Log;
@@ -65,7 +66,7 @@ public class EventDetail extends AppCompatActivity{
         private SupportMapFragment m;
         private double[] latLng;
         private boolean open = false;
-        private TextView openButton;
+        private ImageButton openButton;
 
         final String[] PROJECTION = new String[]{
                 DataContract.Event.COLUMN_NAME_TITLE,
@@ -119,7 +120,7 @@ public class EventDetail extends AppCompatActivity{
             ((TextView) rootView.findViewById(R.id.eventDetailDate)).setText(date);
             ((TextView) rootView.findViewById(R.id.eventDetailDesc)).setText(description);
 
-            openButton = (TextView) rootView.findViewById(R.id.openMaps);
+            openButton = (ImageButton) rootView.findViewById(R.id.openMaps);
             openButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
@@ -165,10 +166,10 @@ public class EventDetail extends AppCompatActivity{
                     android.R.anim.fade_out);
 
             if(open) {
-                openButton.setText(">");
+                openButton.setImageResource(R.drawable.downarrow);
                 ft.hide(m);
             } else {
-                openButton.setText("V");
+                openButton.setImageResource(R.drawable.uparrow);
                 ft.show(m);
             }
             ft.commit();

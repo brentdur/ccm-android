@@ -60,15 +60,15 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="-5dp" />
 
-        <TextView
+        <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:text=">"
             android:id="@+id/openMaps"
-            android:textColor="@color/primaryCCM"
-            android:textSize="40sp"
+            android:src="@drawable/downarrow"
             android:layout_below="@+id/addButton"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:adjustViewBounds="false"
+            android:background="@null" />
 
         <Button
             style="@style/SubHeadText"

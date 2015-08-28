@@ -83,16 +83,15 @@
             android:layout_alignStart="@+id/textView8"
             android:maxLines="0" />
 
-        <TextView
+        <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:text=">"
             android:id="@+id/openVerse"
-            android:textColor="@color/primaryCCM"
-            android:textSize="40sp"
+            android:src="@drawable/downarrow"
             android:layout_above="@+id/talkDetailFullVerse"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="12dp" />
+            android:adjustViewBounds="false"
+            android:background="@null" />
 
     </RelativeLayout>
 </ScrollView>

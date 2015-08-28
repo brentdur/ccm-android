@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.brentondurkee.ccm.Log;
@@ -80,7 +81,7 @@ public class SignupDetail extends AppCompatActivity{
         private GoogleMap mMap; // Might be null if Google Play services APK is not available.
         private SupportMapFragment m;
         private boolean open = false;
-        private TextView openButton;
+        private ImageButton openButton;
 
         final String[] PROJECTION = new String[]{
                 DataContract.Signup.COLUMN_NAME_NAME,
@@ -147,7 +148,7 @@ public class SignupDetail extends AppCompatActivity{
                 }
             });
 
-            openButton = (TextView) rootView.findViewById(R.id.openMaps);
+            openButton = (ImageButton) rootView.findViewById(R.id.openMaps);
             openButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
@@ -205,10 +206,10 @@ public class SignupDetail extends AppCompatActivity{
                     android.R.anim.fade_out);
 
             if (open) {
-                openButton.setText(">");
+                openButton.setImageResource(R.drawable.downarrow);
                 ft.hide(m);
             } else {
-                openButton.setText("V");
+                openButton.setImageResource(R.drawable.uparrow);
                 ft.show(m);
             }
             ft.commit();
