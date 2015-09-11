@@ -16,7 +16,7 @@ public class Utils {
 
     private static final String TAG = "Utils";
 
-    public static final String DOMAIN = "http://ccm.brentondurkee.com";
+    public static final String DOMAIN = "http://ccmtest.brentondurkee.com";
 
     public static String dateTo(String date){
         long[] parts = getParts(date);

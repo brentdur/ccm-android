@@ -31,7 +31,7 @@ public class ListenService extends GcmListenerService{
         if(message.contains("talks")){
             SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_TALK);
         }
-        if(message.contains("msgs")){
+        if(message.contains("messages")){
             SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_MSG);
         }
         if(message.contains("signups")){
