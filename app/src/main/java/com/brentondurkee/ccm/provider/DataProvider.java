@@ -25,7 +25,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 
-import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.common.SelectionBuilder;
 
 public class DataProvider extends ContentProvider {
@@ -56,9 +55,9 @@ public class DataProvider extends ContentProvider {
 
     public static final int ROUTE_TALKS_ID = 4;
 
-    public static final int ROUTE_MSGS = 5;
+    public static final int ROUTE_CONVO = 5;
 
-    public static final int ROUTE_MSGS_ID = 6;
+    public static final int ROUTE_CONVO_ID = 6;
 
     public static final int ROUTE_LOCATIONS = 7;
 
@@ -74,6 +73,10 @@ public class DataProvider extends ContentProvider {
     public static final int ROUTE_TOPICS = 13;
     public static final int ROUTE_TOPICS_ID = 14;
 
+    public static final int ROUTE_BC = 15;
+
+    public static final int ROUTE_BC_ID = 16;
+
     /**
      * UriMatcher, used to decode incoming URIs.
      */
@@ -83,8 +86,8 @@ public class DataProvider extends ContentProvider {
         sUriMatcher.addURI(AUTHORITY, "events/*", ROUTE_EVENTS_ID);
         sUriMatcher.addURI(AUTHORITY, "talks", ROUTE_TALKS);
         sUriMatcher.addURI(AUTHORITY, "talks/*", ROUTE_TALKS_ID);
-        sUriMatcher.addURI(AUTHORITY, "messages", ROUTE_MSGS);
-        sUriMatcher.addURI(AUTHORITY, "messages/*", ROUTE_MSGS_ID);
+        sUriMatcher.addURI(AUTHORITY, "conversations", ROUTE_CONVO);
+        sUriMatcher.addURI(AUTHORITY, "conversations/*", ROUTE_CONVO_ID);
         sUriMatcher.addURI(AUTHORITY, "groups", ROUTE_GROUPS);
         sUriMatcher.addURI(AUTHORITY, "groups/*", ROUTE_GROUPS_ID);
         sUriMatcher.addURI(AUTHORITY, "locations", ROUTE_LOCATIONS);
@@ -93,6 +96,8 @@ public class DataProvider extends ContentProvider {
         sUriMatcher.addURI(AUTHORITY, "signups/*", ROUTE_SIGNUPS_ID);
         sUriMatcher.addURI(AUTHORITY, "topics", ROUTE_TOPICS);
         sUriMatcher.addURI(AUTHORITY, "topics/*", ROUTE_TOPICS_ID);
+        sUriMatcher.addURI(AUTHORITY, "broadcasts", ROUTE_BC);
+        sUriMatcher.addURI(AUTHORITY, "broadcasts/*", ROUTE_BC_ID);
     }
 
     @Override
@@ -116,10 +121,10 @@ public class DataProvider extends ContentProvider {
                 return DataContract.Talk.CONTENT_TYPE;
             case ROUTE_TALKS_ID:
                 return DataContract.Talk.CONTENT_ITEM_TYPE;
-            case ROUTE_MSGS:
-                return DataContract.Msg.CONTENT_TYPE;
-            case ROUTE_MSGS_ID:
-                return DataContract.Msg.CONTENT_ITEM_TYPE;
+            case ROUTE_CONVO:
+                return DataContract.Convo.CONTENT_TYPE;
+            case ROUTE_CONVO_ID:
+                return DataContract.Convo.CONTENT_ITEM_TYPE;
             case ROUTE_GROUPS:
                 return DataContract.Group.CONTENT_TYPE;
             case ROUTE_GROUPS_ID:
@@ -136,6 +141,10 @@ public class DataProvider extends ContentProvider {
                 return DataContract.Topic.CONTENT_TYPE;
             case ROUTE_TOPICS_ID:
                 return DataContract.Topic.CONTENT_ITEM_TYPE;
+            case ROUTE_BC:
+                return DataContract.Broadcast.CONTENT_TYPE;
+            case ROUTE_BC_ID:
+                return DataContract.Broadcast.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -182,11 +191,11 @@ public class DataProvider extends ContentProvider {
                 assert ctx != null;
                 c.setNotificationUri(ctx.getContentResolver(), uri);
                 return c;
-            case ROUTE_MSGS_ID:
+            case ROUTE_CONVO_ID:
                 id = uri.getLastPathSegment();
-                builder.where(DataContract.Msg._ID + "=?", id);
-            case ROUTE_MSGS:
-                builder.table(DataContract.Msg.TABLE_NAME).where(selection, selectionArgs);
+                builder.where(DataContract.Convo._ID + "=?", id);
+            case ROUTE_CONVO:
+                builder.table(DataContract.Convo.TABLE_NAME).where(selection, selectionArgs);
                 c = builder.query(db, projection, sortOrder);
                 ctx = getContext();
                 assert ctx != null;
@@ -232,6 +241,16 @@ public class DataProvider extends ContentProvider {
                 assert ctx != null;
                 c.setNotificationUri(ctx.getContentResolver(), uri);
                 return c;
+            case ROUTE_BC_ID:
+                id = uri.getLastPathSegment();
+                builder.where(DataContract.Broadcast._ID + "=?", id);
+            case ROUTE_BC:
+                builder.table(DataContract.Broadcast.TABLE_NAME).where(selection, selectionArgs);
+                c = builder.query(db, projection, sortOrder);
+                ctx = getContext();
+                assert ctx != null;
+                c.setNotificationUri(ctx.getContentResolver(), uri);
+                return c;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -260,11 +279,11 @@ public class DataProvider extends ContentProvider {
                 break;
             case ROUTE_TALKS_ID:
                 throw new UnsupportedOperationException("Insert not supported on URI: " + uri);
-            case ROUTE_MSGS:
-                id = db.insertOrThrow(DataContract.Msg.TABLE_NAME, null, values);
-                result = Uri.parse(DataContract.Msg.CONTENT_URI + "/" + id);
+            case ROUTE_CONVO:
+                id = db.insertOrThrow(DataContract.Convo.TABLE_NAME, null, values);
+                result = Uri.parse(DataContract.Convo.CONTENT_URI + "/" + id);
                 break;
-            case ROUTE_MSGS_ID:
+            case ROUTE_CONVO_ID:
                 throw new UnsupportedOperationException("Insert not supported on URI: " + uri);
             case ROUTE_GROUPS:
                 id = db.insertOrThrow(DataContract.Group.TABLE_NAME, null, values);
@@ -289,6 +308,12 @@ public class DataProvider extends ContentProvider {
                 result = Uri.parse(DataContract.Topic.CONTENT_URI + "/" + id);
                 break;
             case ROUTE_TOPICS_ID:
+                throw new UnsupportedOperationException("Insert not supported on URI: " + uri);
+            case ROUTE_BC:
+                id = db.insertOrThrow(DataContract.Broadcast.TABLE_NAME, null, values);
+                result = Uri.parse(DataContract.Broadcast.CONTENT_URI + "/" + id);
+                break;
+            case ROUTE_BC_ID:
                 throw new UnsupportedOperationException("Insert not supported on URI: " + uri);
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -333,13 +358,13 @@ public class DataProvider extends ContentProvider {
                         .where(selection, selectionArgs)
                         .delete(db);
                 break;
-            case ROUTE_MSGS:
-                count = builder.table(DataContract.Msg.TABLE_NAME).where(selection, selectionArgs).delete(db);
+            case ROUTE_CONVO:
+                count = builder.table(DataContract.Convo.TABLE_NAME).where(selection, selectionArgs).delete(db);
                 break;
-            case ROUTE_MSGS_ID:
+            case ROUTE_CONVO_ID:
                 id = uri.getLastPathSegment();
-                count = builder.table(DataContract.Msg.TABLE_NAME)
-                        .where(DataContract.Msg._ID + "=?", id)
+                count = builder.table(DataContract.Convo.TABLE_NAME)
+                        .where(DataContract.Convo._ID + "=?", id)
                         .where(selection, selectionArgs)
                         .delete(db);
                 break;
@@ -380,6 +405,16 @@ public class DataProvider extends ContentProvider {
                 id = uri.getLastPathSegment();
                 count = builder.table(DataContract.Topic.TABLE_NAME)
                         .where(DataContract.Topic._ID + "=?", id)
+                        .where(selection, selectionArgs)
+                        .delete(db);
+                break;
+            case ROUTE_BC:
+                count = builder.table(DataContract.Broadcast.TABLE_NAME).where(selection, selectionArgs).delete(db);
+                break;
+            case ROUTE_BC_ID:
+                id = uri.getLastPathSegment();
+                count = builder.table(DataContract.Broadcast.TABLE_NAME)
+                        .where(DataContract.Broadcast._ID + "=?", id)
                         .where(selection, selectionArgs)
                         .delete(db);
                 break;
@@ -428,15 +463,15 @@ public class DataProvider extends ContentProvider {
                         .where(selection, selectionArgs)
                         .update(db, values);
                 break;
-            case ROUTE_MSGS:
-                count = builder.table(DataContract.Msg.TABLE_NAME)
+            case ROUTE_CONVO:
+                count = builder.table(DataContract.Convo.TABLE_NAME)
                         .where(selection, selectionArgs)
                         .update(db, values);
                 break;
-            case ROUTE_MSGS_ID:
+            case ROUTE_CONVO_ID:
                 id = uri.getLastPathSegment();
-                count = builder.table(DataContract.Msg.TABLE_NAME)
-                        .where(DataContract.Msg._ID + "=?", id)
+                count = builder.table(DataContract.Convo.TABLE_NAME)
+                        .where(DataContract.Convo._ID + "=?", id)
                         .where(selection, selectionArgs)
                         .update(db, values);
                 break;
@@ -485,6 +520,18 @@ public class DataProvider extends ContentProvider {
                 id = uri.getLastPathSegment();
                 count = builder.table(DataContract.Topic.TABLE_NAME)
                         .where(DataContract.Topic._ID + "=?", id)
+                        .where(selection, selectionArgs)
+                        .update(db, values);
+                break;
+            case ROUTE_BC:
+                count = builder.table(DataContract.Broadcast.TABLE_NAME)
+                        .where(selection, selectionArgs)
+                        .update(db, values);
+                break;
+            case ROUTE_BC_ID:
+                id = uri.getLastPathSegment();
+                count = builder.table(DataContract.Broadcast.TABLE_NAME)
+                        .where(DataContract.Broadcast._ID + "=?", id)
                         .where(selection, selectionArgs)
                         .update(db, values);
                 break;
@@ -536,18 +583,14 @@ public class DataProvider extends ContentProvider {
                         DataContract.Talk.COLUMN_NAME_VERSION + TYPE_INTEGER + COMMA_SEP +
                         DataContract.Talk.COLUMN_NAME_VERSE + TYPE_TEXT + COMMA_SEP +
                         DataContract.Talk.COLUMN_NAME_DATE + TYPE_TEXT + ")";
-        private static final String SQL_CREATE_MSGS =
-                "CREATE TABLE " + DataContract.Msg.TABLE_NAME + " (" +
-                        DataContract.Msg._ID + " INTEGER PRIMARY KEY," +
-                        DataContract.Msg.COLUMN_NAME_ENTRY_ID + TYPE_TEXT + COMMA_SEP +
-                        DataContract.Msg.COLUMN_NAME_FROM + TYPE_TEXT + COMMA_SEP +
-                        DataContract.Msg.COLUMN_NAME_SIMPLE_FROM + TYPE_TEXT + COMMA_SEP +
-                        DataContract.Msg.COLUMN_NAME_TOPIC + TYPE_TEXT + COMMA_SEP +
-                        DataContract.Msg.COLUMN_NAME_SUBJECT + TYPE_TEXT + COMMA_SEP +
-                        DataContract.Msg.COLUMN_NAME_TO + TYPE_TEXT + COMMA_SEP +
-                        DataContract.Msg.COLUMN_NAME_MESSAGE + TYPE_TEXT + COMMA_SEP +
-                        DataContract.Msg.COLUMN_NAME_VERSION + TYPE_INTEGER + COMMA_SEP +
-                        DataContract.Msg.COLUMN_NAME_DATE + TYPE_TEXT + ")";
+        private static final String SQL_CREATE_BCS =
+                "CREATE TABLE " + DataContract.Broadcast.TABLE_NAME + " (" +
+                        DataContract.Broadcast._ID + " INTEGER PRIMARY KEY," +
+                        DataContract.Broadcast.COLUMN_NAME_ENTRY_ID + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Broadcast.COLUMN_NAME_TITLE + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Broadcast.COLUMN_NAME_MSG + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Broadcast.COLUMN_NAME_VERSION + TYPE_INTEGER + ")";
+        //TODO Add convo here
         private static final String SQL_CREATE_GROUPS =
                 "CREATE TABLE " + DataContract.Group.TABLE_NAME + " (" +
                         DataContract.Group._ID + " INTEGER PRIMARY KEY," +
@@ -591,8 +634,9 @@ public class DataProvider extends ContentProvider {
                 "DROP TABLE IF EXISTS " + DataContract.Event.TABLE_NAME;
         private static final String SQL_DELETE_TALKS =
                 "DROP TABLE IF EXISTS " + DataContract.Talk.TABLE_NAME;
-        private static final String SQL_DELETE_MSGS =
-                "DROP TABLE IF EXISTS " + DataContract.Msg.TABLE_NAME;
+        private static final String SQL_DELETE_BCS =
+                "DROP TABLE IF EXISTS " + DataContract.Broadcast.TABLE_NAME;
+        //TODO add convo here
         private static final String SQL_DELETE_GROUPS =
                 "DROP TABLE IF EXISTS " + DataContract.Group.TABLE_NAME;
         private static final String SQL_DELETE_LOCATIONS =
@@ -610,10 +654,10 @@ public class DataProvider extends ContentProvider {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(SQL_CREATE_EVENTS);
             db.execSQL(SQL_CREATE_TALKS);
-            db.execSQL(SQL_CREATE_MSGS);
+            db.execSQL(SQL_CREATE_BCS);
+            //TODO add convo here
             db.execSQL(SQL_CREATE_GROUPS);
             db.execSQL(SQL_CREATE_LOCATIONS);
-            Log.i(TAG, SQL_CREATE_SIGNUPS);
             db.execSQL(SQL_CREATE_SIGNUPS);
             db.execSQL(SQL_CREATE_TOPICS);
         }
@@ -624,7 +668,8 @@ public class DataProvider extends ContentProvider {
             // to simply to discard the data and start over
             db.execSQL(SQL_DELETE_EVENTS);
             db.execSQL(SQL_DELETE_TALKS);
-            db.execSQL(SQL_DELETE_MSGS);
+            //TODO add convo here
+            db.execSQL(SQL_DELETE_BCS);
             db.execSQL(SQL_DELETE_LOCATIONS);
             db.execSQL(SQL_DELETE_GROUPS);
             db.execSQL(SQL_DELETE_SIGNUPS);

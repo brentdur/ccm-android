@@ -42,6 +42,7 @@
     <string name="refresh">Refresh</string>
     <string name="add_event">Add Event</string>
     <string name="add_msg">Send Message</string>
+    <string name="add_bc">Send Broadcast</string>
     <string name="add_talk">Add Talk</string>
     <string name="show_inbox">Inbox</string>
     <string name="add_signup">Add Signup</string>

@@ -4,8 +4,13 @@
 
 package com.brentondurkee.ccm.auth;
 
+import android.accounts.Account;
+import android.content.Context;
+import android.os.Bundle;
+
 import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.Utils;
+import com.brentondurkee.ccm.provider.SyncPosts;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -107,9 +112,9 @@ public class AuthRequests {
         return good;
     }
 
-    public static boolean testAuth(final String auth){
-        //true means it's valid
-        return true;
+    public static boolean testAuth(final String auth, final Account account, final Context context){
+        Bundle data = SyncPosts.getMe(null, account, context);
+        return data.getBoolean(SyncPosts.ME_RESPONSE_KEY);
     }
 
 

@@ -46,7 +46,6 @@ public class DataContract {
 
     private static final String PATH_TALKS = "talks";
 
-    private static final String PATH_MSGS = "messages";
 
     private static final String PATH_LOCATIONS = "locations";
 
@@ -55,6 +54,10 @@ public class DataContract {
     private static final String PATH_SIGNUPS = "signups";
 
     private static final String PATH_TOPICS = "topics";
+
+    private static final String PATH_CONVO = "conversations";
+
+    private static final String PATH_BC = "broadcasts";
     /**
      * Columns supported by "events" records.
      */
@@ -134,42 +137,78 @@ public class DataContract {
         public static final String COLUMN_NAME_VERSION = "version";
     }
 
-    public static class Msg implements BaseColumns {
+    public static class Convo implements BaseColumns {
         /**
          * MIME type for lists of talks.
          */
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ccm.messages";
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ccm.conversations";
         /**
          * MIME type for individual talk.
          */
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ccm.message";
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ccm.conversation";
 
         /**
          * Fully qualified URI for "talk" resources.
          */
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MSGS).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CONVO).build();
 
         /**
          * Table name where records are stored for "talk" resources.
          */
-        public static final String TABLE_NAME = "message";
+        public static final String TABLE_NAME = "conversation";
         /**
          * MongoDB ID. (Note: Not to be confused with the database primary key, which is _ID.
          */
-        public static final String COLUMN_NAME_ENTRY_ID = "msg_id";
+        public static final String COLUMN_NAME_ENTRY_ID = "conversation_id";
         /**
          * talk title
          */
-        public static final String COLUMN_NAME_FROM = "sender";
-        public static final String COLUMN_NAME_SIMPLE_FROM = "simpleFrom";
+
+        //TODO figure this out
+        public static final String COLUMN_NAME_USER = "participant";
         public static final String COLUMN_NAME_TOPIC = "topic";
-        public static final String COLUMN_NAME_TO = "receiver";
-        public static final String COLUMN_NAME_DATE = "date";
+        public static final String COLUMN_NAME_MESSAGES = "messages";
+        public static final String COLUMN_NAME_SENDERS = "senders";
+        public static final String COLUMN_NAME_SINGLETON = "singleton";
         public static final String COLUMN_NAME_SUBJECT = "subject";
-        public static final String COLUMN_NAME_MESSAGE = "message";
+        public static final String COLUMN_NAME_KILLED = "userKilled";
+        public static final String COLUMN_NAME_VERSION = "version";
+    }
+
+    public static class Broadcast implements BaseColumns {
+        /**
+         * MIME type for lists of talks.
+         */
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.ccm.broadcasts";
+        /**
+         * MIME type for individual talk.
+         */
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.ccm.broadcast";
+
+        /**
+         * Fully qualified URI for "talk" resources.
+         */
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_BC).build();
+
+        /**
+         * Table name where records are stored for "talk" resources.
+         */
+        public static final String TABLE_NAME = "broadcast";
+        /**
+         * MongoDB ID. (Note: Not to be confused with the database primary key, which is _ID.
+         */
+        public static final String COLUMN_NAME_ENTRY_ID = "broadcast_id";
+        /**
+         * talk title
+         */
+        public static final String COLUMN_NAME_TITLE = "title";
+        public static final String COLUMN_NAME_MSG = "message";
         public static final String COLUMN_NAME_VERSION = "version";
     }
 

@@ -71,9 +71,9 @@ public class Authenticator extends AbstractAccountAuthenticator {
             }
         }
 
-        Log.v(TAG, AuthRequests.testAuth(authToken) + " auth test");
+        Log.v(TAG, AuthRequests.testAuth(authToken, account, mContext) + " auth test");
 
-        if(!AuthRequests.testAuth(authToken)){
+        if(!AuthRequests.testAuth(authToken, account, mContext)){
             authToken = "";
             Log.v(TAG, "Test Auth Failed");
         }

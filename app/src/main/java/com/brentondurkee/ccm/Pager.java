@@ -52,6 +52,8 @@ public class Pager extends AppCompatActivity {
     private boolean writeSignups;
     private boolean writeEvents;
     private boolean writeTalks;
+    private boolean writeConvo;
+    private boolean writeBroadcast;
     private boolean isMinister;
 
     @Override
@@ -112,16 +114,19 @@ public class Pager extends AppCompatActivity {
                 menu.add(Menu.NONE, R.id.add_talk, Menu.NONE, R.string.add_talk);
             }
         }
-        if(isMinister){
-            if(menu.findItem(R.id.inbox) == null) {
-                menu.removeItem(R.id.add_msg);
-                menu.add(Menu.NONE, R.id.inbox, Menu.NONE, R.string.show_inbox);
+        if(writeBroadcast){
+            if(menu.findItem(R.id.add_bc) == null){
+                menu.add(Menu.NONE, R.id.add_bc, Menu.NONE, R.string.add_bc);
             }
+        }
+        if(menu.findItem(R.id.show_inbox) == null) {
+            menu.add(Menu.NONE, R.id.show_inbox, Menu.NONE, R.string.show_inbox);
         }
         return super.onPrepareOptionsMenu(menu);
     }
 
     public void updatePermissionBools(){
+        Log.v(TAG, "Starting Permission Update");
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         new AsyncTask<Integer, Void, Void>() {
             @Override
@@ -136,6 +141,11 @@ public class Pager extends AppCompatActivity {
                 writeSignups = pref.getBoolean(SyncUtil.PREF_CAN_SIGNUPS, false);
                 writeTalks = pref.getBoolean(SyncUtil.PREF_CAN_TALKS, false);
                 isMinister = pref.getBoolean(SyncUtil.PREF_IS_MINISTER, false);
+                writeConvo = pref.getBoolean(SyncUtil.PREF_CAN_CONVO, false);
+                writeBroadcast = pref.getBoolean(SyncUtil.PREF_CAN_BROADCAST, false);
+                if(!pref.getBoolean(SyncUtil.PREF_GCM_OK, false)) {
+                    doGCM();
+                }
             }
         }.execute(0);
     }
@@ -161,7 +171,8 @@ public class Pager extends AppCompatActivity {
             openA = new Intent(getBaseContext(), AdminActivity.class);
             openA.putExtra(AdminUtil.ADD_TYPE, AdminUtil.TYPE_TALK);
         }
-        else if (id == R.id.add_msg){
+        else if (id == R.id.add_bc){
+            //TODO update with right type
             openA = new Intent(getBaseContext(), AdminActivity.class);
             openA.putExtra(AdminUtil.ADD_TYPE, AdminUtil.TYPE_MSG);
         }

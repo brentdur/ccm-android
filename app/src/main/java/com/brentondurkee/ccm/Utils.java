@@ -16,6 +16,7 @@ public class Utils {
 
     private static final String TAG = "Utils";
 
+    //TODO change back before release
     public static final String DOMAIN = "http://ccmtest.brentondurkee.com";
 
     public static String dateTo(String date){

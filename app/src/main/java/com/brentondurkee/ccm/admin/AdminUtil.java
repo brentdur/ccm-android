@@ -22,6 +22,7 @@ public class AdminUtil {
     public final static String TYPE_MSG="MSG";
     public final static String TYPE_TALK="TALK";
     public final static String TYPE_SIGNUP="SIGNUP";
+    //TODO add convo bc
 
     private static ProgressDialog mDialog;
 

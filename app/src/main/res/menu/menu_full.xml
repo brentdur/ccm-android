@@ -9,8 +9,10 @@
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/add_talk" android:title="@string/add_talk"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/add_msg" android:title="@string/add_msg"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/add_bc" android:title="@string/add_bc"
+        android:orderInCategory="100" app:showAsAction="never"/>
     <item android:id="@+id/inbox" android:title="@string/show_inbox"
-        android:orderInCategory="100" app:showAsAction="never" />
+        android:orderInCategory="100" app:showAsAction="ifRoom" />
+    <item android:id="@+id/add_msg" android:title="@string/add_msg"
+        android:orderInCategory="100" app:showAsAction="ifRoom" />
 </menu>

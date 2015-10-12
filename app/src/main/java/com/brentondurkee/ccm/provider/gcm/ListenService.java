@@ -31,9 +31,6 @@ public class ListenService extends GcmListenerService{
         if(message.contains("talks")){
             SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_TALK);
         }
-        if(message.contains("messages")){
-            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_MSG);
-        }
         if(message.contains("signups")){
             SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_SIGNUP);
         }
@@ -45,6 +42,12 @@ public class ListenService extends GcmListenerService{
         }
         if(message.contains("topics")){
             SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_TOPIC);
+        }
+        if(message.contains("broadcasts")){
+            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_BC);
+        }
+        if(message.contains("conversations")){
+            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_CONVO);
         }
     }
 

@@ -21,6 +21,7 @@ import android.widget.ListView;
 
 import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
+import com.brentondurkee.ccm.admin.AdminActivity;
 import com.brentondurkee.ccm.admin.AdminUtil;
 import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncPosts;
@@ -32,12 +33,11 @@ import com.brentondurkee.ccm.provider.SyncUtil;
  * List fragment for messages
  */
 public class MsgList extends AppCompatActivity {
-
+    //TODO update to show convos and broadcasts
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        Log.v("Msg List", "AA");
 
         Toolbar toolbar;
 
@@ -64,10 +64,33 @@ public class MsgList extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_settings){
-            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_MSG);
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(SyncUtil.isMinister){
+            if(menu.findItem(R.id.add_msg) == null){
+                menu.add(Menu.NONE, R.id.add_msg, Menu.NONE, R.string.add_msg);
+            }
         }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent openA;
+        if (item.getItemId() == R.id.action_settings){
+            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_CONVO);
+            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_BC);
+            return true;
+        }
+        else if (item.getItemId() == R.id.add_msg){
+            //TODO update with right type
+            openA = new Intent(getBaseContext(), AdminActivity.class);
+            openA.putExtra(AdminUtil.ADD_TYPE, AdminUtil.TYPE_MSG);
+        }
+        else {
+            return super.onOptionsItemSelected(item);
+        }
+        startActivity(openA);
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -129,6 +152,7 @@ public class MsgList extends AppCompatActivity {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             if(item.getItemId() == R.id.delete_msg){
                 Bundle data = new Bundle();
+                //TODO rework this
                 data.putString(SyncPosts.DELETE_MESSAGE, ((CursorWrapper) mAdapter.getItem(info.position)).getString(4));
                 new AsyncTask<Bundle, Void, Boolean>() {
                     @Override

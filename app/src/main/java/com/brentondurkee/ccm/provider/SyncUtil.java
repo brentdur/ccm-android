@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import com.brentondurkee.ccm.Log;
+import com.brentondurkee.ccm.provider.gcm.RegIntentService;
 
 /**
  * Static helper methods for working with the sync framework.
@@ -37,18 +38,24 @@ public class SyncUtil {
     public final static String PREF_CAN_SIGNUPS = "can_write_signups";
     public final static String PREF_CAN_EVENTS = "can_write_events";
     public final static String PREF_CAN_TALKS = "can_write_talks";
+    public final static String PREF_CAN_CONVO = "can_write_convos";
+    public final static String PREF_CAN_BROADCAST = "can_write_broadcasts";
     public final static String PREF_IS_MINISTER = "is_minister";
+    public final static String PREF_GCM_OK = "gcm_ok";
 
     public final static String SELECTIVE_KEY = "selective";
     public final static String SELECTION = "selection";
 
     public final static String SELECTIVE_SIGNUP = "signup";
-    public final static String SELECTIVE_MSG = "message";
+    public final static String SELECTIVE_CONVO = "conversation";
+    public final static String SELECTIVE_BC = "broadcast";
     public final static String SELECTIVE_EVENT = "event";
     public final static String SELECTIVE_TALK = "talk";
     public final static String SELECTIVE_LOCATION = "location";
     public final static String SELECTIVE_GROUP = "group";
     public final static String SELECTIVE_TOPIC = "topic";
+
+    public static boolean isMinister = false;
 
     public static Context mainContext;
     private static Account mAccount;
@@ -96,11 +103,18 @@ public class SyncUtil {
     }
 
     public static void compareGroups(Bundle data){
-        SharedPreferences.Editor manager = PreferenceManager.getDefaultSharedPreferences(mainContext).edit();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mainContext);
+        SharedPreferences.Editor manager = pref.edit();
         manager.putBoolean(PREF_CAN_SIGNUPS, data.getBoolean(SyncPosts.ME_SIGNUPS_KEY, false));
         manager.putBoolean(PREF_CAN_EVENTS, data.getBoolean(SyncPosts.ME_EVENTS_KEY, false));
         manager.putBoolean(PREF_CAN_TALKS, data.getBoolean(SyncPosts.ME_TALKS_KEY, false));
+        manager.putBoolean(PREF_CAN_BROADCAST, data.getBoolean(SyncPosts.ME_BROADCAST_KEY, false));
+        manager.putBoolean(PREF_CAN_CONVO, data.getBoolean(SyncPosts.ME_CONVOS_KEY, false));
+        boolean gcmOk = pref.getString(RegIntentService.PREF_GCM_TOKEN, "").equals(data.getString(SyncPosts.ME_GCM_KEY));
+        manager.putBoolean("sentTokenToServer" , gcmOk);
+        manager.putBoolean(PREF_GCM_OK, gcmOk);
         manager.putBoolean(PREF_IS_MINISTER, data.getBoolean(SyncPosts.ME_MINISTERS_KEY, false));
+        isMinister = data.getBoolean(SyncPosts.ME_MINISTERS_KEY, false);
         manager.commit();
     }
 

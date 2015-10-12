@@ -45,10 +45,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             DataContract.Talk.COLUMN_NAME_ENTRY_ID,
             DataContract.Talk.COLUMN_NAME_VERSION,
             DataContract.Talk._ID};
-    final String[] MSG_PROJECTION = new String[]{
-            DataContract.Msg.COLUMN_NAME_ENTRY_ID,
-            DataContract.Msg.COLUMN_NAME_VERSION,
-            DataContract.Msg._ID};
     final String[] LOCATION_PROJECTION = new String[]{
             DataContract.Location.COLUMN_NAME_ENTRY_ID,
             DataContract.Location.COLUMN_NAME_VERSION,
@@ -65,14 +61,24 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             DataContract.Topic.COLUMN_NAME_ENTRY_ID,
             DataContract.Topic.COLUMN_NAME_VERSION,
             DataContract.Topic._ID};
+    final String[] CONVO_PROJECTION = new String[]{
+            DataContract.Convo.COLUMN_NAME_ENTRY_ID,
+            DataContract.Convo.COLUMN_NAME_VERSION,
+            DataContract.Convo._ID};
+    final String[] BROADCAST_PROJECTION = new String[]{
+            DataContract.Broadcast.COLUMN_NAME_ENTRY_ID,
+            DataContract.Broadcast.COLUMN_NAME_VERSION,
+            DataContract.Broadcast._ID};
 
     private final String eventFeed = Utils.DOMAIN + "/api/events";
     private final String talkFeed = Utils.DOMAIN + "/api/talks";
-    private final String msgFeed =Utils.DOMAIN + "/api/messages/mine";
     private final String locationFeed = Utils.DOMAIN + "/api/locations";
     private final String groupFeed = Utils.DOMAIN + "/api/groups";
     private final String signupFeed = Utils.DOMAIN + "/api/signups";
     private final String topicFeed = Utils.DOMAIN + "/api/topics";
+    private final String convoFeed = Utils.DOMAIN + "/api/conversations/mine";
+    private final String convoMinisterFeed = Utils.DOMAIN + "/api/conversations/minister";
+    private final String bcFeed = Utils.DOMAIN + "/api/broadcasts/mine";
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -93,9 +99,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_SIGNUP)){
                 sync(signupFeed, DataContract.Signup.CONTENT_URI, SIGNUP_PROJECTION, "signup", token);
             }
-            else if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_MSG)){
-                sync(msgFeed, DataContract.Msg.CONTENT_URI, MSG_PROJECTION, "msg", token);
-            }
             else if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_EVENT)){
                 sync(eventFeed, DataContract.Event.CONTENT_URI, EVENT_PROJECTION, "event", token);
             }
@@ -111,15 +114,23 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             else if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_TOPIC)){
                 sync(topicFeed, DataContract.Topic.CONTENT_URI, TOPIC_PROJECTION, "topic", token);
             }
+            else if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_CONVO)){
+                //TODO determine if it needs the minster feed or not
+                sync(convoFeed, DataContract.Convo.CONTENT_URI, CONVO_PROJECTION, "convo", token);
+            }
+            else if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_BC)){
+                sync(bcFeed, DataContract.Broadcast.CONTENT_URI, BROADCAST_PROJECTION, "broadcast", token);
+            }
             return;
         }
         sync(eventFeed, DataContract.Event.CONTENT_URI, EVENT_PROJECTION, "event", token);
         sync(talkFeed, DataContract.Talk.CONTENT_URI, TALK_PROJECTION, "talk", token);
-        sync(msgFeed, DataContract.Msg.CONTENT_URI, MSG_PROJECTION, "msg", token);
         sync(locationFeed, DataContract.Location.CONTENT_URI, LOCATION_PROJECTION, "location", token);
         sync(groupFeed, DataContract.Group.CONTENT_URI, GROUP_PROJECTION, "group", token);
         sync(signupFeed, DataContract.Signup.CONTENT_URI, SIGNUP_PROJECTION, "signup", token);
         sync(topicFeed, DataContract.Topic.CONTENT_URI, TOPIC_PROJECTION, "topic", token);
+        sync(convoFeed, DataContract.Convo.CONTENT_URI, CONVO_PROJECTION, "convo", token);
+        sync(bcFeed, DataContract.Broadcast.CONTENT_URI, BROADCAST_PROJECTION, "broadcast", token);
 
     }
 
@@ -246,18 +257,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getJSONArray("outline"),
                     object.getInt("version"));
         }
-        if(type.equals("msg")){
-            JSONObject topic = object.getJSONObject("topic");
-            return updateMsg(content,
-                    object.getString("from"),
-                    object.getString("simpleFrom"),
-                    object.getString("simpleTo"),
-                    object.getString("subject"),
-                    object.getString("date"),
-                    topic.getString("_id"),
-                    object.getString("message"),
-                    object.getInt("version"));
-        }
         if(type.equals("group")){
             return updateGroup(content,
                     object.getString("name"),
@@ -291,6 +290,25 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getString("isMemberOf"),
                     object.getInt("version"));
         }
+        //TODO Figure this out
+//        if(type.equals("convo")){
+//            JSONObject participant = object.getJSONObject("participant");
+//            return updateConvo(content,
+//                    object.getString("pa"),
+//                    object.getString("simpleFrom"),
+//                    object.getString("simpleTo"),
+//                    object.getString("subject"),
+//                    object.getString("date"),
+//                    participant.getString("user"),
+//                    object.getString("message"),
+//                    object.getInt("version"));
+//        }
+        if(type.equals("broadcast")){
+            return updateBC(content,
+                    object.getString("title"),
+                    object.getString("message"),
+                    object.getInt("version"));
+        }
         return null;
     }
 
@@ -314,19 +332,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getString("reference"),
                     object.getString("fullVerse"),
                     object.getJSONArray("outline"),
-                    object.getString("_id"),
-                    object.getInt("version"));
-        }
-        if(type.equals("msg")){
-            JSONObject topic = object.getJSONObject("topic");
-            return addMsg(content,
-                    object.getString("from"),
-                    object.getString("simpleFrom"),
-                    object.getString("simpleTo"),
-                    object.getString("subject"),
-                    object.getString("date"),
-                    topic.getString("_id"),
-                    object.getString("message"),
                     object.getString("_id"),
                     object.getInt("version"));
         }
@@ -367,6 +372,27 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getString("_id"),
                     object.getInt("version"));
         }
+        //TODO Figure this out
+//        if(type.equals("convo")){
+//            JSONObject participant = object.getJSONObject("participant");
+//            return addConvo(content,
+//                    object.getString("pa"),
+//                    object.getString("simpleFrom"),
+//                    object.getString("simpleTo"),
+//                    object.getString("subject"),
+//                    object.getString("date"),
+//                    participant.getString("user"),
+//                    object.getString("message"),
+//                    object.getInt("version")),
+//                    object.getString("_id");
+//        }
+        if(type.equals("broadcast")){
+            return addBC(content,
+                    object.getString("title"),
+                    object.getString("message"),
+                    object.getInt("version"),
+                    object.getString("_id"));
+        }
         return null;
     }
 
@@ -394,35 +420,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 .withValue(DataContract.Event.COLUMN_NAME_VERSION, version)
                 .build();
     }
-
-
-    public ContentProviderOperation updateMsg(Uri existing, String from, String simpleFrom, String to, String subject, String date, String topic, String message, int version){
-        return ContentProviderOperation.newUpdate(existing)
-                .withValue(DataContract.Msg.COLUMN_NAME_FROM, from)
-                .withValue(DataContract.Msg.COLUMN_NAME_SIMPLE_FROM, simpleFrom)
-                .withValue(DataContract.Msg.COLUMN_NAME_TO, to)
-                .withValue(DataContract.Msg.COLUMN_NAME_DATE, date)
-                .withValue(DataContract.Msg.COLUMN_NAME_SUBJECT, subject)
-                .withValue(DataContract.Msg.COLUMN_NAME_TOPIC, topic)
-                .withValue(DataContract.Msg.COLUMN_NAME_MESSAGE, message)
-                .withValue(DataContract.Msg.COLUMN_NAME_VERSION, version)
-                .build();
-    }
-
-    public ContentProviderOperation addMsg(Uri existing, String from, String simpleFrom, String to, String subject, String date, String topic, String message, String id, int version){
-        return ContentProviderOperation.newInsert(existing)
-                .withValue(DataContract.Msg.COLUMN_NAME_FROM, from)
-                .withValue(DataContract.Msg.COLUMN_NAME_SIMPLE_FROM, simpleFrom)
-                .withValue(DataContract.Msg.COLUMN_NAME_TO, to)
-                .withValue(DataContract.Msg.COLUMN_NAME_DATE, date)
-                .withValue(DataContract.Msg.COLUMN_NAME_SUBJECT, subject)
-                .withValue(DataContract.Msg.COLUMN_NAME_TOPIC, topic)
-                .withValue(DataContract.Msg.COLUMN_NAME_MESSAGE, message)
-                .withValue(DataContract.Msg.COLUMN_NAME_ENTRY_ID, id)
-                .withValue(DataContract.Msg.COLUMN_NAME_VERSION, version)
-                .build();
-    }
-
 
     public ContentProviderOperation updateTalk(Uri existing, String author, String subject, String date, String reference, String verse, JSONArray outline, int version) throws JSONException{
         String stringOutline = " ";
@@ -549,5 +546,23 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 .withValue(DataContract.Signup.COLUMN_NAME_VERSION, version)
                 .build();
     }
+
+    public ContentProviderOperation addBC(Uri existing, String title, String message, int version, String id) throws JSONException{
+        return ContentProviderOperation.newInsert(existing)
+                .withValue(DataContract.Broadcast.COLUMN_NAME_TITLE, title)
+                .withValue(DataContract.Broadcast.COLUMN_NAME_MSG, message)
+                .withValue(DataContract.Broadcast.COLUMN_NAME_VERSION, version)
+                .withValue(DataContract.Broadcast.COLUMN_NAME_ENTRY_ID, id)
+                .build();
+    }
+
+    public ContentProviderOperation updateBC(Uri existing, String title, String message, int version) throws JSONException{
+        return ContentProviderOperation.newUpdate(existing)
+                .withValue(DataContract.Broadcast.COLUMN_NAME_TITLE, title)
+                .withValue(DataContract.Broadcast.COLUMN_NAME_MSG, message)
+                .withValue(DataContract.Broadcast.COLUMN_NAME_VERSION, version)
+                .build();
+    }
+    //TODO add update/add convo
 
 }

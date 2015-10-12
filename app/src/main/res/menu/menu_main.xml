@@ -3,6 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".Pager">
     <item android:id="@+id/action_settings" android:title="@string/refresh"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
-    <item android:id="@+id/add_msg" android:title="@string/add_msg"
+    <item android:id="@+id/show_inbox" android:title="@string/show_inbox"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>

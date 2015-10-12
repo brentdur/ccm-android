@@ -49,6 +49,8 @@ public class AdminActivity extends AppCompatActivity {
                 setTitle("Add Signup");
                 ft.add(R.id.container, new SignupAddFragment());
             }
+            //TODO add convo bc
+            //TODO remove msg
             else {
                 setTitle("Error");
             }

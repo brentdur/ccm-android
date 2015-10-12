@@ -24,6 +24,8 @@ import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncPosts;
 import com.brentondurkee.ccm.provider.SyncUtil;
 
+//TODO replace this with convo fragment
+//TODO add bc fragment
 
 /**
  * Add message activity for posting new messages

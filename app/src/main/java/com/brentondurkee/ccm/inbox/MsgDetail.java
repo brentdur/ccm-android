@@ -65,6 +65,7 @@ public class MsgDetail extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        //TODO rework this
         if (id == R.id.delete_msg){
             String msgId = getIntent().getExtras().getString("entry_id");
             Bundle data = new Bundle();
