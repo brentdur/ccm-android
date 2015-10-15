@@ -82,7 +82,6 @@ public class SyncPosts {
     private final static String addBroadcastUrl=Utils.DOMAIN + "/api/broadcasts/send";
     private final static String addSyncCastUrl=Utils.DOMAIN + "/api/broadcasts/sync";
     private final static String putUserToSignupUrl = Utils.DOMAIN + "/api/signups/addme";
-    //TODO finish these
     private final static String putUserToKillBCUrl = Utils.DOMAIN + "/api/broadcasts/kill";
     private final static String putMsgToConvo = Utils.DOMAIN + "/api/conversations/send";
     private final static String putKillConvo = Utils.DOMAIN + "/api/conversations/kill";

@@ -41,7 +41,7 @@
 
         <!-- Message -->
         <TextView
-            android:id="@+id/msgDetailMsg"
+            android:id="@+id/bcDetailMsg"
             android:layout_below="@+id/bcDetailTime"
             android:layout_alignParentStart="true"
             style="@style/EditMsg"/>
