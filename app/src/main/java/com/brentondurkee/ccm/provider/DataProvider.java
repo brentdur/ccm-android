@@ -552,7 +552,7 @@ public class DataProvider extends ContentProvider {
      */
     static class DataDatabase extends SQLiteOpenHelper {
         /** Schema version. */
-        public static final int DATABASE_VERSION = 11;
+        public static final int DATABASE_VERSION = 12;
         /** Filename for SQLite file. */
         public static final String DATABASE_NAME = "ccmdata.db";
 
@@ -590,7 +590,18 @@ public class DataProvider extends ContentProvider {
                         DataContract.Broadcast.COLUMN_NAME_TITLE + TYPE_TEXT + COMMA_SEP +
                         DataContract.Broadcast.COLUMN_NAME_MSG + TYPE_TEXT + COMMA_SEP +
                         DataContract.Broadcast.COLUMN_NAME_VERSION + TYPE_INTEGER + ")";
-        //TODO Add convo here
+        private static final String SQL_CREATE_CONVO =
+                "CREATE TABLE " + DataContract.Convo.TABLE_NAME + " (" +
+                        DataContract.Convo._ID + " INTEGER PRIMARY KEY," +
+                        DataContract.Convo.COLUMN_NAME_ENTRY_ID + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Convo.COLUMN_NAME_SUBJECT + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Convo.COLUMN_NAME_TOPIC + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Convo.COLUMN_NAME_USER + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Convo.COLUMN_NAME_FROM + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Convo.COLUMN_NAME_SINGLETON + TYPE_INTEGER + COMMA_SEP +
+                        DataContract.Convo.COLUMN_NAME_VERSION + TYPE_INTEGER + COMMA_SEP +
+                        DataContract.Convo.COLUMN_NAME_MINMESSAGES + TYPE_TEXT + COMMA_SEP +
+                        DataContract.Convo.COLUMN_NAME_MESSAGES + TYPE_TEXT + ")";
         private static final String SQL_CREATE_GROUPS =
                 "CREATE TABLE " + DataContract.Group.TABLE_NAME + " (" +
                         DataContract.Group._ID + " INTEGER PRIMARY KEY," +
@@ -636,7 +647,8 @@ public class DataProvider extends ContentProvider {
                 "DROP TABLE IF EXISTS " + DataContract.Talk.TABLE_NAME;
         private static final String SQL_DELETE_BCS =
                 "DROP TABLE IF EXISTS " + DataContract.Broadcast.TABLE_NAME;
-        //TODO add convo here
+        private static final String SQL_DELETE_CONVO =
+                "DROP TABLE IF EXISTS " + DataContract.Convo.TABLE_NAME;
         private static final String SQL_DELETE_GROUPS =
                 "DROP TABLE IF EXISTS " + DataContract.Group.TABLE_NAME;
         private static final String SQL_DELETE_LOCATIONS =
@@ -655,7 +667,7 @@ public class DataProvider extends ContentProvider {
             db.execSQL(SQL_CREATE_EVENTS);
             db.execSQL(SQL_CREATE_TALKS);
             db.execSQL(SQL_CREATE_BCS);
-            //TODO add convo here
+            db.execSQL(SQL_CREATE_CONVO);
             db.execSQL(SQL_CREATE_GROUPS);
             db.execSQL(SQL_CREATE_LOCATIONS);
             db.execSQL(SQL_CREATE_SIGNUPS);
@@ -668,7 +680,7 @@ public class DataProvider extends ContentProvider {
             // to simply to discard the data and start over
             db.execSQL(SQL_DELETE_EVENTS);
             db.execSQL(SQL_DELETE_TALKS);
-            //TODO add convo here
+            db.execSQL(SQL_DELETE_CONVO);
             db.execSQL(SQL_DELETE_BCS);
             db.execSQL(SQL_DELETE_LOCATIONS);
             db.execSQL(SQL_DELETE_GROUPS);

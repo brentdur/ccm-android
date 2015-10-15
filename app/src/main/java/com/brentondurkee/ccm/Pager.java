@@ -171,14 +171,13 @@ public class Pager extends AppCompatActivity {
             openA = new Intent(getBaseContext(), AdminActivity.class);
             openA.putExtra(AdminUtil.ADD_TYPE, AdminUtil.TYPE_TALK);
         }
-        else if (id == R.id.add_bc){
-            //TODO update with right type
-            openA = new Intent(getBaseContext(), AdminActivity.class);
-            openA.putExtra(AdminUtil.ADD_TYPE, AdminUtil.TYPE_MSG);
-        }
         else if (id == R.id.add_signup){
             openA = new Intent(getBaseContext(), AdminActivity.class);
             openA.putExtra(AdminUtil.ADD_TYPE, AdminUtil.TYPE_SIGNUP);
+        }
+        else if (id == R.id.add_bc){
+            openA = new Intent(getBaseContext(), AdminActivity.class);
+            openA.putExtra(AdminUtil.ADD_TYPE, AdminUtil.TYPE_BC);
         }
         else if (id == R.id.inbox){
             openA = new Intent(getBaseContext(), MsgList.class);

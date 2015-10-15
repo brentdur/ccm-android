@@ -1,0 +1,77 @@
+<!--
+  ~ Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.brentondurkee.ccm.inbox.MsgDetail$MsgDetailFragment">
+
+    <!-- Subject -->
+    <TextView
+        android:id="@+id/msgDetailSubject"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        style="@style/ShowSubject" />
+
+    <!-- Messages -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/msgsList"
+        android:layout_below="@+id/msgDetailSubject"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/msgText"
+        android:background="#cbcbcb"
+        android:fillViewport="false">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/msgText1"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:text="Hello"
+                style="@style/HeaderText"
+                android:background="#8b8b8b"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/msgText2"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_below="@+id/msgText1"
+                android:layout_alignParentEnd="true"
+                android:text="Hello"
+                style="@style/HeaderText"
+                android:background="#333333"
+                android:textColor="#bababa" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <!-- Send Bar -->
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/msgText"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/sendButton"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/send_button"
+        android:id="@+id/sendButton"
+        android:layout_below="@+id/msgsList"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
+</RelativeLayout>

@@ -49,8 +49,10 @@ public class AdminActivity extends AppCompatActivity {
                 setTitle("Add Signup");
                 ft.add(R.id.container, new SignupAddFragment());
             }
-            //TODO add convo bc
-            //TODO remove msg
+            else if(type.equals(AdminUtil.TYPE_BC)){
+                setTitle("Send Broadcast");
+                ft.add(R.id.container, new BroadcastAddFragment());
+            }
             else {
                 setTitle("Error");
             }

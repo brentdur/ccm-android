@@ -167,14 +167,13 @@ public class DataContract {
          * talk title
          */
 
-        //TODO figure this out
-        public static final String COLUMN_NAME_USER = "participant";
-        public static final String COLUMN_NAME_TOPIC = "topic";
-        public static final String COLUMN_NAME_MESSAGES = "messages";
-        public static final String COLUMN_NAME_SENDERS = "senders";
-        public static final String COLUMN_NAME_SINGLETON = "singleton";
         public static final String COLUMN_NAME_SUBJECT = "subject";
-        public static final String COLUMN_NAME_KILLED = "userKilled";
+        public static final String COLUMN_NAME_TOPIC = "topic";
+        public static final String COLUMN_NAME_FROM = "from";
+        public static final String COLUMN_NAME_USER = "participant";
+        public static final String COLUMN_NAME_SINGLETON = "singleton";
+        public static final String COLUMN_NAME_MINMESSAGES = "minmessages";
+        public static final String COLUMN_NAME_MESSAGES = "messages";
         public static final String COLUMN_NAME_VERSION = "version";
     }
 

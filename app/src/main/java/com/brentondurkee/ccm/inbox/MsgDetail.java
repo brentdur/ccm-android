@@ -70,18 +70,18 @@ public class MsgDetail extends AppCompatActivity {
             String msgId = getIntent().getExtras().getString("entry_id");
             Bundle data = new Bundle();
             final Context context = this;
-            data.putString(SyncPosts.DELETE_MESSAGE, msgId);
+            data.putString(SyncPosts.CONVO_ID, msgId);
             new AsyncTask<Bundle, Void, Boolean>() {
                 @Override
                 protected Boolean doInBackground(Bundle... data) {
-                    return SyncPosts.deleteMsg(data[0], SyncUtil.getAccount(), context);
+                    return SyncPosts.putKillConvo(data[0], SyncUtil.getAccount(), context);
                 }
 
                 @Override
                 protected void onPostExecute(Boolean aBoolean) {
                     super.onPostExecute(aBoolean);
                     if (aBoolean) {
-                        SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_MSG);
+                        SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_CONVO);
                         finish();
                     } else {
                         AdminUtil.toast(getApplicationContext(), "Failed to Delete");
@@ -104,10 +104,11 @@ public class MsgDetail extends AppCompatActivity {
     public static class MsgDetailFragment extends Fragment {
 
         final String[] PROJECTION = new String[]{
-                DataContract.Msg.COLUMN_NAME_SIMPLE_FROM,
-                DataContract.Msg.COLUMN_NAME_SUBJECT,
-                DataContract.Msg.COLUMN_NAME_DATE,
-                DataContract.Msg.COLUMN_NAME_MESSAGE
+                DataContract.Convo.COLUMN_NAME_SUBJECT,
+                DataContract.Convo.COLUMN_NAME_MESSAGES,
+                DataContract.Convo.COLUMN_NAME_MINMESSAGES,
+                DataContract.Convo.COLUMN_NAME_FROM,
+                DataContract.Convo.COLUMN_NAME_SINGLETON
         };
 
         public MsgDetailFragment() {
@@ -118,7 +119,7 @@ public class MsgDetail extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             Bundle extras = getActivity().getIntent().getExtras();
             String id = extras.getString("id");
-            Cursor mCursor = getActivity().getContentResolver().query(DataContract.Msg.CONTENT_URI, PROJECTION, DataContract.Msg._ID + "='" + id + "'", null, null);
+            Cursor mCursor = getActivity().getContentResolver().query(DataContract.Convo.CONTENT_URI, PROJECTION, DataContract.Convo._ID + "='" + id + "'", null, null);
             mCursor.moveToFirst();
             String from = mCursor.getString(0);
             String subject = mCursor.getString(1);

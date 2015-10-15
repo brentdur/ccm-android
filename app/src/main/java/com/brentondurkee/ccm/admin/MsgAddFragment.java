@@ -24,8 +24,6 @@ import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncPosts;
 import com.brentondurkee.ccm.provider.SyncUtil;
 
-//TODO replace this with convo fragment
-//TODO add bc fragment
 
 /**
  * Add message activity for posting new messages
@@ -66,14 +64,14 @@ public class MsgAddFragment extends Fragment implements AdapterView.OnItemSelect
             @Override
             public void onClick(View v) {
                 Bundle data = new Bundle();
-                data.putString(SyncPosts.MSG_SUBJECT, ((EditText) rootView.findViewById(R.id.msgAddSubject)).getText().toString());
-                data.putString(SyncPosts.MSG_MESSAGE, ((EditText) rootView.findViewById(R.id.msgAddMsg)).getText().toString());
+                data.putString(SyncPosts.CONVO_SUBJECT, ((EditText) rootView.findViewById(R.id.msgAddSubject)).getText().toString());
+                data.putString(SyncPosts.CONVO_MESSAGE, ((EditText) rootView.findViewById(R.id.msgAddMsg)).getText().toString());
 
                 if(toSelect.equals("")){
                     AdminUtil.toast(getActivity(), "You didn't select a topic!");
                 }
                 else {
-                    data.putString(SyncPosts.MSG_TOPIC, toSelect);
+                    data.putString(SyncPosts.CONVO_TOPIC, toSelect);
                 }
 
                 AdminUtil.showDialog(getActivity());
@@ -81,7 +79,7 @@ public class MsgAddFragment extends Fragment implements AdapterView.OnItemSelect
                 new AsyncTask<Bundle, Void, Boolean>() {
                     @Override
                     protected Boolean doInBackground(Bundle... data) {
-                        return SyncPosts.addMsg(data[0], SyncUtil.getAccount(), getActivity());
+                        return SyncPosts.addConvo(data[0], SyncUtil.getAccount(), getActivity());
                     }
 
                     @Override
@@ -89,10 +87,10 @@ public class MsgAddFragment extends Fragment implements AdapterView.OnItemSelect
                         super.onPostExecute(aBoolean);
                         AdminUtil.hideDialog();
                         if (aBoolean) {
-                            AdminUtil.toast(getActivity(), "Message Sent");
+                            AdminUtil.toast(getActivity(), "Convo Sent");
                             AdminUtil.succeed(getActivity());
                         } else {
-                            AdminUtil.toast(getActivity(), "Failed to Send Message");
+                            AdminUtil.toast(getActivity(), "Failed to Send Convo");
                         }
                     }
                 }.execute(data);

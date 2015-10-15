@@ -65,7 +65,7 @@ public class MsgList extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(SyncUtil.isMinister){
+        if(!SyncUtil.isMinister){
             if(menu.findItem(R.id.add_msg) == null){
                 menu.add(Menu.NONE, R.id.add_msg, Menu.NONE, R.string.add_msg);
             }
@@ -98,21 +98,24 @@ public class MsgList extends AppCompatActivity {
     public static class MsgListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
         MessageCursorAdapter mAdapter;
-        final String[] FROM = new String[]{DataContract.Msg.COLUMN_NAME_SIMPLE_FROM, DataContract.Msg.COLUMN_NAME_SUBJECT, DataContract.Msg.COLUMN_NAME_DATE};
+        final String[] FROM = new String[]{DataContract.Convo.COLUMN_NAME_SUBJECT, DataContract.Convo.COLUMN_NAME_FROM, DataContract.Convo.COLUMN_NAME_TOPIC};
         final int[] TO = new int[]{R.id.msgFrom, R.id.msgSubject, R.id.msgTime};
         final String[] PROJECTION = new String[]{
-                DataContract.Msg._ID,
-                DataContract.Msg.COLUMN_NAME_SIMPLE_FROM,
-                DataContract.Msg.COLUMN_NAME_SUBJECT,
-                DataContract.Msg.COLUMN_NAME_DATE,
-                DataContract.Msg.COLUMN_NAME_ENTRY_ID,
-                DataContract.Msg.COLUMN_NAME_TOPIC
+                DataContract.Convo._ID,
+                DataContract.Convo.COLUMN_NAME_SUBJECT,
+                DataContract.Convo.COLUMN_NAME_TOPIC,
+                DataContract.Convo.COLUMN_NAME_ENTRY_ID
         };
 
         final String[] TOPIC_PROJECTION = new String[]{
                 DataContract.Topic._ID,
                 DataContract.Topic.COLUMN_NAME_ENTRY_ID,
                 DataContract.Topic.COLUMN_NAME_NAME
+        };
+
+        final String[] BC_PROJECTION = new String[]{
+                DataContract.Broadcast._ID,
+                DataContract.Broadcast.COLUMN_NAME_TITLE
         };
 
         public MsgListFragment() {
@@ -126,6 +129,7 @@ public class MsgList extends AppCompatActivity {
             setEmptyText("No messages");
             registerForContextMenu(getListView());
             setListAdapter(mAdapter);
+            getLoaderManager().initLoader(2, null, this);
             getLoaderManager().initLoader(0, null, this);
         }
 
@@ -152,19 +156,18 @@ public class MsgList extends AppCompatActivity {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             if(item.getItemId() == R.id.delete_msg){
                 Bundle data = new Bundle();
-                //TODO rework this
-                data.putString(SyncPosts.DELETE_MESSAGE, ((CursorWrapper) mAdapter.getItem(info.position)).getString(4));
+                data.putString(SyncPosts.CONVO_ID, ((CursorWrapper) mAdapter.getItem(info.position)).getString(4));
                 new AsyncTask<Bundle, Void, Boolean>() {
                     @Override
                     protected Boolean doInBackground(Bundle... data) {
-                        return SyncPosts.deleteMsg(data[0], SyncUtil.getAccount(), getActivity());
+                        return SyncPosts.putKillConvo(data[0], SyncUtil.getAccount(), getActivity());
                     }
 
                     @Override
                     protected void onPostExecute(Boolean aBoolean) {
                         super.onPostExecute(aBoolean);
                         if (aBoolean) {
-                            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_MSG);
+                            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_CONVO);
                         } else {
                             AdminUtil.toast(getActivity(), "Failed to Delete");
                         }
@@ -181,8 +184,11 @@ public class MsgList extends AppCompatActivity {
             if(id == 1) {
                 return new CursorLoader(getActivity(), DataContract.Topic.CONTENT_URI, TOPIC_PROJECTION, null, null, null);
             }
+            else if (id == 2){
+                return new CursorLoader(getActivity(), DataContract.Broadcast.CONTENT_URI, BC_PROJECTION, null, null, null);
+            }
             else {
-                return new CursorLoader(getActivity(), DataContract.Msg.CONTENT_URI, PROJECTION, null, null, DataContract.Msg.COLUMN_NAME_TOPIC);
+                return new CursorLoader(getActivity(), DataContract.Convo.CONTENT_URI, PROJECTION, null, null, DataContract.Convo.COLUMN_NAME_TOPIC);
             }
         }
 
@@ -191,6 +197,9 @@ public class MsgList extends AppCompatActivity {
             Log.v("Msg List", "Changed");
             if (loader.getId() == 1){
                 mAdapter.setTopicCursor(data);
+            }
+            else if (loader.getId() == 2){
+                mAdapter.setBroadcastCursor(data);
             }
             else {
                 mAdapter.changeCursor(data);

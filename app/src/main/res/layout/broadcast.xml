@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+  -->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -18,19 +22,19 @@
         <TextView
                 android:layout_width="275dp"
                 android:layout_height="wrap_content"
-                android:text="@string/author_hint"
-                android:id="@+id/msgFrom"
+                android:text="@string/broadcast_type"
+                android:id="@+id/bcType"
                 style="@style/TitleText"
             android:layout_gravity="left"
             android:layout_marginLeft="10dp"
-            android:layout_below="@+id/msgSubject"
+            android:layout_below="@+id/bcTitle"
             android:layout_alignParentStart="true" />
 
         <TextView
                 android:layout_width="275dp"
                 android:layout_height="wrap_content"
-                android:text="@string/subject_hint"
-                android:id="@+id/msgSubject"
+                android:text="@string/title_hint"
+                android:id="@+id/bcTitle"
                 style="@style/HeaderText"
                 android:layout_gravity="center_horizontal"
             android:layout_below="@+id/separator"

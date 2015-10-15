@@ -76,8 +76,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private final String groupFeed = Utils.DOMAIN + "/api/groups";
     private final String signupFeed = Utils.DOMAIN + "/api/signups";
     private final String topicFeed = Utils.DOMAIN + "/api/topics";
-    private final String convoFeed = Utils.DOMAIN + "/api/conversations/mine";
-    private final String convoMinisterFeed = Utils.DOMAIN + "/api/conversations/minister";
+    private final String convoFeed = Utils.DOMAIN + "/api/conversations/android";
     private final String bcFeed = Utils.DOMAIN + "/api/broadcasts/mine";
 
     public SyncAdapter(Context context, boolean autoInitialize) {
@@ -115,7 +114,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 sync(topicFeed, DataContract.Topic.CONTENT_URI, TOPIC_PROJECTION, "topic", token);
             }
             else if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_CONVO)){
-                //TODO determine if it needs the minster feed or not
                 sync(convoFeed, DataContract.Convo.CONTENT_URI, CONVO_PROJECTION, "convo", token);
             }
             else if(extras.getString(SyncUtil.SELECTION, "").equals(SyncUtil.SELECTIVE_BC)){
@@ -290,19 +288,17 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getString("isMemberOf"),
                     object.getInt("version"));
         }
-        //TODO Figure this out
-//        if(type.equals("convo")){
-//            JSONObject participant = object.getJSONObject("participant");
-//            return updateConvo(content,
-//                    object.getString("pa"),
-//                    object.getString("simpleFrom"),
-//                    object.getString("simpleTo"),
-//                    object.getString("subject"),
-//                    object.getString("date"),
-//                    participant.getString("user"),
-//                    object.getString("message"),
-//                    object.getInt("version"));
-//        }
+        if(type.equals("convo")){
+            return updateConvo(content,
+                    object.getString("subject"),
+                    object.getString("topic"),
+                    object.getString("user"),
+                    object.getString("from"),
+                    object.getString("singleton"),
+                    object.getJSONArray("minMessage"),
+                    object.getJSONArray("messages"),
+                    object.getInt("version"));
+        }
         if(type.equals("broadcast")){
             return updateBC(content,
                     object.getString("title"),
@@ -372,20 +368,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getString("_id"),
                     object.getInt("version"));
         }
-        //TODO Figure this out
-//        if(type.equals("convo")){
-//            JSONObject participant = object.getJSONObject("participant");
-//            return addConvo(content,
-//                    object.getString("pa"),
-//                    object.getString("simpleFrom"),
-//                    object.getString("simpleTo"),
-//                    object.getString("subject"),
-//                    object.getString("date"),
-//                    participant.getString("user"),
-//                    object.getString("message"),
-//                    object.getInt("version")),
-//                    object.getString("_id");
-//        }
+        if(type.equals("convo")){
+            return addConvo(content,
+                    object.getString("subject"),
+                    object.getString("topic"),
+                    object.getString("user"),
+                    object.getString("from"),
+                    object.getString("singleton"),
+                    object.getJSONArray("minMessage"),
+                    object.getJSONArray("messages"),
+                    object.getInt("version"),
+                    object.getString("_id"));
+        }
         if(type.equals("broadcast")){
             return addBC(content,
                     object.getString("title"),
@@ -563,6 +557,65 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 .withValue(DataContract.Broadcast.COLUMN_NAME_VERSION, version)
                 .build();
     }
-    //TODO add update/add convo
+    public ContentProviderOperation addConvo(Uri existing, String subject, String topic, String user, String from, String singleton, JSONArray minMessage, JSONArray messages, int version, String id) throws JSONException{
+        int isSingleton = Boolean.parseBoolean(singleton) ? 1 : 0;
+        String minMesString = " ";
+        for (int i = 0; i< minMessage.length(); i++){
+            minMesString += minMessage.getString(i);
+            minMesString += "%BREAK%";
+        }
+        String mesString = " ";
+        for (int i = 0; i< messages.length(); i++){
+            String mess = messages.getString(i);
+            if(mess.isEmpty()){
+                mesString += "%OTHER%";
+            }
+            else {
+                mesString += mess;
+            }
+            mesString += "%BREAK%";
+        }
+        return ContentProviderOperation.newInsert(existing)
+                .withValue(DataContract.Convo.COLUMN_NAME_SUBJECT, subject)
+                .withValue(DataContract.Convo.COLUMN_NAME_TOPIC, topic)
+                .withValue(DataContract.Convo.COLUMN_NAME_USER, user)
+                .withValue(DataContract.Convo.COLUMN_NAME_FROM, from)
+                .withValue(DataContract.Convo.COLUMN_NAME_SINGLETON, isSingleton)
+                .withValue(DataContract.Convo.COLUMN_NAME_MINMESSAGES, minMesString)
+                .withValue(DataContract.Convo.COLUMN_NAME_MESSAGES, mesString)
+                .withValue(DataContract.Convo.COLUMN_NAME_VERSION, version)
+                .withValue(DataContract.Convo.COLUMN_NAME_ENTRY_ID, id)
+                .build();
+    }
+
+    public ContentProviderOperation updateConvo(Uri existing, String subject, String topic, String user, String from, String singleton, JSONArray minMessage, JSONArray messages, int version) throws JSONException{
+        int isSingleton = Boolean.parseBoolean(singleton) ? 1 : 0;
+        String minMesString = " ";
+        for (int i = 0; i< minMessage.length(); i++){
+            minMesString += minMessage.getString(i);
+            minMesString += "%BREAK%";
+        }
+        String mesString = " ";
+        for (int i = 0; i< messages.length(); i++){
+            String mess = messages.getString(i);
+            if(mess.isEmpty()){
+                mesString += "%OTHER%";
+            }
+            else {
+                mesString += mess;
+            }
+            mesString += "%BREAK%";
+        }
+        return ContentProviderOperation.newUpdate(existing)
+                .withValue(DataContract.Convo.COLUMN_NAME_SUBJECT, subject)
+                .withValue(DataContract.Convo.COLUMN_NAME_TOPIC, topic)
+                .withValue(DataContract.Convo.COLUMN_NAME_USER, user)
+                .withValue(DataContract.Convo.COLUMN_NAME_FROM, from)
+                .withValue(DataContract.Convo.COLUMN_NAME_SINGLETON, isSingleton)
+                .withValue(DataContract.Convo.COLUMN_NAME_MINMESSAGES, minMesString)
+                .withValue(DataContract.Convo.COLUMN_NAME_MESSAGES, mesString)
+                .withValue(DataContract.Convo.COLUMN_NAME_VERSION, version)
+                .build();
+    }
 
 }

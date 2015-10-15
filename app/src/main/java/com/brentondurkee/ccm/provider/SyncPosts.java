@@ -46,11 +46,13 @@ public class SyncPosts {
     public final static String CONVO_TOPIC = "CONVO_TOPIC";
     public final static String CONVO_SUBJECT = "CONVO_SUBJECT";
     public final static String CONVO_MESSAGE = "CONVO_MESSAGE";
+    public final static String CONVO_ID = "CONVO_ID";
 
     public final static String BROADCAST_TITLE = "BROADCAST_TITLE";
     public final static String BROADCAST_MSG = "BROADCAST_MSG";
     public final static String BROADCAST_SYNCS = "BROADCAST_SYNCS";
     public final static String BROADCAST_RECP = "BROADCAST_RECP";
+    public final static String BROADCAST_ID = "BROADCAST_ID";
 
     public final static String SIGNUP_NAME = "SIGNUP_NAME";
     public final static String SIGNUP_DATE_INFO = "SIGNUP_DATE_INFO";
@@ -204,7 +206,7 @@ public class SyncPosts {
 
             OutputStream out = new BufferedOutputStream(conn.getOutputStream());
             PrintWriter output = new PrintWriter(out);
-            String req = String.format("{\"name\": \"%s\",\"location\": \"%s\",\"dateInfo\": \"%s\",\"description\": \"%s\"", data.getString(SIGNUP_NAME), data.getString(SIGNUP_LOCATION), data.getString(SIGNUP_DATE_INFO), data.getString(SIGNUP_DESCRIPTION).replace("\n","\\n"));
+            String req = String.format("{\"name\": \"%s\",\"location\": \"%s\",\"dateInfo\": \"%s\",\"description\": \"%s\"", data.getString(SIGNUP_NAME), data.getString(SIGNUP_LOCATION), data.getString(SIGNUP_DATE_INFO), data.getString(SIGNUP_DESCRIPTION).replace("\n", "\\n"));
             if(!data.getString(SIGNUP_ADDRESS).isEmpty()){
                 req += String.format(",\"address\":\"%s\"", data.getString(SIGNUP_ADDRESS));
             }
@@ -368,6 +370,138 @@ public class SyncPosts {
             PrintWriter output = new PrintWriter(out);
             String req = String.format("{\"signup\": \"%s\"}", data.getString(PUT_USER_SIGNUP));
             Log.v(TAG, req);
+            output.print(req);
+            output.close();
+
+            int response = conn.getResponseCode();
+            Log.v(TAG, "Response: " + response);
+            if (response == 200) {
+                good=true;
+            }
+            else {
+                InputStream stream = new BufferedInputStream(conn.getInputStream());
+                Scanner reader = new Scanner(stream);
+                StringBuilder string = new StringBuilder();
+                do {
+                    string.append(reader.nextLine());
+                } while(reader.hasNextLine());
+                Log.d(TAG, "Raw Json: " + string.toString());
+                reader.close();
+            }
+            conn.disconnect();
+        }
+        catch(IOException e){
+            Log.w(TAG, "IOException");
+        }
+
+        return good;
+    }
+
+    public static boolean putSendConvoMsg(Bundle data, Account account, Context context){
+        String token = AccountManager.get(context).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);
+        Log.v(TAG, "Start Put Send Message");
+        boolean good = false;
+        try {
+            URL url = new URL(putMsgToConvo);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.addRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestMethod("PUT");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setChunkedStreamingMode(0);
+
+            OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+            PrintWriter output = new PrintWriter(out);
+            String req = String.format("{\"message\": \"%s\",\"conversation\": \"%s\"}", data.getString(CONVO_MESSAGE), data.getString(CONVO_ID));
+            output.print(req);
+            output.close();
+
+            int response = conn.getResponseCode();
+            Log.v(TAG, "Response: " + response);
+            if (response == 200) {
+                good=true;
+            }
+            else {
+                InputStream stream = new BufferedInputStream(conn.getInputStream());
+                Scanner reader = new Scanner(stream);
+                StringBuilder string = new StringBuilder();
+                do {
+                    string.append(reader.nextLine());
+                } while(reader.hasNextLine());
+                Log.d(TAG, "Raw Json: " + string.toString());
+                reader.close();
+            }
+            conn.disconnect();
+        }
+        catch(IOException e){
+            Log.w(TAG, "IOException");
+        }
+
+        return good;
+    }
+
+    public static boolean putKillConvo(Bundle data, Account account, Context context){
+        String token = AccountManager.get(context).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);
+        Log.v(TAG, "Start Put Kill Convo");
+        boolean good = false;
+        try {
+            URL url = new URL(putKillConvo);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.addRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestMethod("PUT");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setChunkedStreamingMode(0);
+
+            OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+            PrintWriter output = new PrintWriter(out);
+            String req = String.format("{\"conversation\": \"%s\"}", data.getString(CONVO_ID));
+            output.print(req);
+            output.close();
+
+            int response = conn.getResponseCode();
+            Log.v(TAG, "Response: " + response);
+            if (response == 200) {
+                good=true;
+            }
+            else {
+                InputStream stream = new BufferedInputStream(conn.getInputStream());
+                Scanner reader = new Scanner(stream);
+                StringBuilder string = new StringBuilder();
+                do {
+                    string.append(reader.nextLine());
+                } while(reader.hasNextLine());
+                Log.d(TAG, "Raw Json: " + string.toString());
+                reader.close();
+            }
+            conn.disconnect();
+        }
+        catch(IOException e){
+            Log.w(TAG, "IOException");
+        }
+
+        return good;
+    }
+
+    public static boolean putKillBroadcast(Bundle data, Account account, Context context){
+        String token = AccountManager.get(context).peekAuthToken(account, AuthUtil.TOKEN_TYPE_ACCESS);
+        Log.v(TAG, "Start Put Kill Broadcast");
+        boolean good = false;
+        try {
+            URL url = new URL(putUserToKillBCUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.addRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestMethod("PUT");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setChunkedStreamingMode(0);
+
+            OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+            PrintWriter output = new PrintWriter(out);
+            String req = String.format("{\"cast\": \"%s\"}", data.getString(BROADCAST_ID));
             output.print(req);
             output.close();
 
