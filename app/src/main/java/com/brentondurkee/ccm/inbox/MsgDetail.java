@@ -13,10 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.brentondurkee.ccm.R;
-import com.brentondurkee.ccm.Utils;
 import com.brentondurkee.ccm.admin.AdminUtil;
 import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncPosts;
@@ -67,10 +67,10 @@ public class MsgDetail extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         //TODO rework this
         if (id == R.id.delete_msg){
-            String msgId = getIntent().getExtras().getString("entry_id");
+            String convoId = getIntent().getExtras().getString("id");
             Bundle data = new Bundle();
             final Context context = this;
-            data.putString(SyncPosts.CONVO_ID, msgId);
+            data.putString(SyncPosts.CONVO_ID, convoId);
             new AsyncTask<Bundle, Void, Boolean>() {
                 @Override
                 protected Boolean doInBackground(Bundle... data) {
@@ -118,22 +118,63 @@ public class MsgDetail extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             Bundle extras = getActivity().getIntent().getExtras();
-            String id = extras.getString("id");
+            final String id = extras.getString("id");
             Cursor mCursor = getActivity().getContentResolver().query(DataContract.Convo.CONTENT_URI, PROJECTION, DataContract.Convo._ID + "='" + id + "'", null, null);
             mCursor.moveToFirst();
-            String from = mCursor.getString(0);
-            String subject = mCursor.getString(1);
-            String date = Utils.dateForm(mCursor.getString(2));
-            String message = mCursor.getString(3);
+            String subject = mCursor.getString(0);
+            String messages = mCursor.getString(1);
+            String minMessages = mCursor.getString(2);
+            String from = mCursor.getString(3);
 
-            View rootView = inflater.inflate(R.layout.fragment_msg_detail, container, false);
-            ((TextView) rootView.findViewById(R.id.msgDetailSubject)).setText(subject);
-            if (from.isEmpty()){
-                from = "Anonymous";
+
+            //TODO generate message blocks
+
+            final View rootView = inflater.inflate(R.layout.fragment_convo_detail, container, false);
+
+            final boolean isSingleton = mCursor.getInt(4) == 1;
+            if (mCursor.getInt(4) == 1) {
+                rootView.findViewById(R.id.sendButton).setEnabled(false);
+                ((TextView) rootView.findViewById(R.id.msgText)).setHint("Message is one way only");
+                rootView.findViewById(R.id.msgText).setEnabled(false);
             }
-            ((TextView) rootView.findViewById(R.id.msgDetailFrom)).setText(from);
-            ((TextView) rootView.findViewById(R.id.msgDetailTime)).setText(date);
-            ((TextView) rootView.findViewById(R.id.msgDetailMsg)).setText(message);
+
+            ((Button) rootView.findViewById(R.id.sendButton)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isSingleton) {
+                        return;
+                    }
+                    String message = ((TextView) rootView.findViewById(R.id.msgText)).getText().toString();
+                    if (message.isEmpty()){
+                        //TODO alert
+                        return;
+                    }
+                    Bundle data = new Bundle();
+                    data.putString(SyncPosts.CONVO_ID, id);
+                    data.putString(SyncPosts.CONVO_MESSAGE, message);
+                    new AsyncTask<Bundle, Void, Boolean>() {
+                        @Override
+                        protected Boolean doInBackground(Bundle... data) {
+                            return SyncPosts.putSendConvoMsg(data[0], SyncUtil.getAccount(), getActivity());
+                        }
+
+                        @Override
+                        protected void onPostExecute(Boolean aBoolean) {
+                            super.onPostExecute(aBoolean);
+                            if (aBoolean) {
+                                SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_CONVO);
+                                AdminUtil.toast(getActivity().getApplicationContext(), "Message Sent");
+                            } else {
+                                AdminUtil.toast(getActivity().getApplicationContext(), "Failed to Send Message");
+                            }
+
+                        }
+                    }.execute(data);
+                }
+            });
+
+            ((TextView) rootView.findViewById(R.id.convoDetailSubject)).setText(subject);
+
             mCursor.close();
             return rootView;
         }

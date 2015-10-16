@@ -303,7 +303,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             return updateBC(content,
                     object.getString("title"),
                     object.getString("message"),
-                    //TODO add Date
+                    object.getString("createdAt"),
                     object.getInt("version"));
         }
         return null;
@@ -386,7 +386,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getString("title"),
                     object.getString("message"),
                     object.getInt("version"),
-                    //TODO add Date
+                    object.getString("createdAt"),
                     object.getString("_id"));
         }
         return null;
@@ -543,22 +543,22 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 .build();
     }
 
-    public ContentProviderOperation addBC(Uri existing, String title, String message, int version, String id) throws JSONException{
+    public ContentProviderOperation addBC(Uri existing, String title, String message, int version, String date, String id) throws JSONException{
         return ContentProviderOperation.newInsert(existing)
                 .withValue(DataContract.Broadcast.COLUMN_NAME_TITLE, title)
                 .withValue(DataContract.Broadcast.COLUMN_NAME_MSG, message)
                 .withValue(DataContract.Broadcast.COLUMN_NAME_VERSION, version)
+                .withValue(DataContract.Broadcast.COLUMN_NAME_DATE,date)
                 .withValue(DataContract.Broadcast.COLUMN_NAME_ENTRY_ID, id)
-                //TODO add Date
                 .build();
     }
 
-    public ContentProviderOperation updateBC(Uri existing, String title, String message, int version) throws JSONException{
+    public ContentProviderOperation updateBC(Uri existing, String title, String message, String date, int version) throws JSONException{
         return ContentProviderOperation.newUpdate(existing)
                 .withValue(DataContract.Broadcast.COLUMN_NAME_TITLE, title)
                 .withValue(DataContract.Broadcast.COLUMN_NAME_MSG, message)
+                .withValue(DataContract.Broadcast.COLUMN_NAME_DATE, date)
                 .withValue(DataContract.Broadcast.COLUMN_NAME_VERSION, version)
-                //TODO add Date
                 .build();
     }
     public ContentProviderOperation addConvo(Uri existing, String subject, String topic, String user, String from, String singleton, JSONArray minMessage, JSONArray messages, int version, String id) throws JSONException{

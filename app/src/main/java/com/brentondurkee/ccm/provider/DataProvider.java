@@ -589,7 +589,7 @@ public class DataProvider extends ContentProvider {
                         DataContract.Broadcast.COLUMN_NAME_ENTRY_ID + TYPE_TEXT + COMMA_SEP +
                         DataContract.Broadcast.COLUMN_NAME_TITLE + TYPE_TEXT + COMMA_SEP +
                         DataContract.Broadcast.COLUMN_NAME_MSG + TYPE_TEXT + COMMA_SEP +
-                        //TODO add Date
+                        DataContract.Broadcast.COLUMN_NAME_DATE + TYPE_TEXT + COMMA_SEP +
                         DataContract.Broadcast.COLUMN_NAME_VERSION + TYPE_INTEGER + ")";
         private static final String SQL_CREATE_CONVO =
                 "CREATE TABLE " + DataContract.Convo.TABLE_NAME + " (" +

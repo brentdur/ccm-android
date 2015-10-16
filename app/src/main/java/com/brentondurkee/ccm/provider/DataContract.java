@@ -209,7 +209,7 @@ public class DataContract {
         public static final String COLUMN_NAME_TITLE = "title";
         public static final String COLUMN_NAME_MSG = "message";
         public static final String COLUMN_NAME_VERSION = "version";
-        //TODO add date
+        public static final String COLUMN_NAME_DATE = "date";
     }
 
     public static class Location implements BaseColumns {

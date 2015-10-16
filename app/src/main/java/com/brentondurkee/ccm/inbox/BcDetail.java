@@ -68,24 +68,22 @@ public class BcDetail extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        //TODO rework this for BC
         if (id == R.id.delete_msg){
-            String msgId = getIntent().getExtras().getString("entry_id");
+            String bcId = getIntent().getExtras().getString("id");
             Bundle data = new Bundle();
             final Context context = this;
-            data.putString(SyncPosts.CONVO_ID, msgId);
+            data.putString(SyncPosts.BROADCAST_ID, bcId);
             new AsyncTask<Bundle, Void, Boolean>() {
                 @Override
                 protected Boolean doInBackground(Bundle... data) {
-                    return SyncPosts.putKillConvo(data[0], SyncUtil.getAccount(), context);
+                    return SyncPosts.putKillBroadcast(data[0], SyncUtil.getAccount(), context);
                 }
 
                 @Override
                 protected void onPostExecute(Boolean aBoolean) {
                     super.onPostExecute(aBoolean);
                     if (aBoolean) {
-                        SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_CONVO);
+                        SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_BC);
                         finish();
                     } else {
                         AdminUtil.toast(getApplicationContext(), "Failed to Delete");
@@ -94,7 +92,6 @@ public class BcDetail extends AppCompatActivity {
                 }
             }.execute(data);
         }
-        //END TD
         if (id == android.R.id.home){
             finish();
             return true;
@@ -107,8 +104,8 @@ public class BcDetail extends AppCompatActivity {
 
         final String[] PROJECTION = new String[]{
                 DataContract.Broadcast.COLUMN_NAME_TITLE,
-                DataContract.Broadcast.COLUMN_NAME_MSG
-                //TODO add Date
+                DataContract.Broadcast.COLUMN_NAME_MSG,
+                DataContract.Broadcast.COLUMN_NAME_DATE
         };
 
         public BCDetailFragment() {

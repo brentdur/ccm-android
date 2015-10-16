@@ -51,7 +51,7 @@ public class AdminActivity extends AppCompatActivity {
             }
             else if(type.equals(AdminUtil.TYPE_BC)){
                 setTitle("Send Broadcast");
-                ft.add(R.id.container, new BroadcastAddFragment());
+                ft.add(R.id.container, new BcAddFragment());
             }
             else {
                 setTitle("Error");

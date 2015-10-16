@@ -9,7 +9,7 @@
 
     <!-- Subject -->
     <TextView
-        android:id="@+id/msgDetailSubject"
+        android:id="@+id/convoDetailSubject"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         style="@style/ShowSubject" />
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:id="@+id/msgsList"
-        android:layout_below="@+id/msgDetailSubject"
+        android:layout_below="@+id/convoDetailSubject"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/msgText"
