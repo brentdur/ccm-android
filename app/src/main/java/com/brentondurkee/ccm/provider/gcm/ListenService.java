@@ -7,7 +7,6 @@ package com.brentondurkee.ccm.provider.gcm;
 import android.os.Bundle;
 
 import com.brentondurkee.ccm.Log;
-import com.brentondurkee.ccm.provider.SyncUtil;
 import com.google.android.gms.gcm.GcmListenerService;
 
 /**
@@ -20,35 +19,8 @@ public class ListenService extends GcmListenerService{
     @Override
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("sync");
-
         Log.d(TAG, "Sync: " + message);
-        if(message.contains("all")){
-            SyncUtil.TriggerRefresh();
-        }
-        if(message.contains("events")){
-            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_EVENT);
-        }
-        if(message.contains("talks")){
-            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_TALK);
-        }
-        if(message.contains("signups")){
-            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_SIGNUP);
-        }
-        if(message.contains("groups")){
-            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_GROUP);
-        }
-        if(message.contains("locations")){
-            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_LOCATION);
-        }
-        if(message.contains("topics")){
-            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_TOPIC);
-        }
-        if(message.contains("broadcasts")){
-            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_BC);
-        }
-        if(message.contains("conversations")){
-            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_CONVO);
-        }
+
     }
 
 }

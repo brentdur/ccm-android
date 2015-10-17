@@ -6,7 +6,7 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/listTarget"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="40dp"
     style="@style/PrimaryText"
     android:textColor="#888"
     android:gravity="center"/>

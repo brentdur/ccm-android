@@ -169,7 +169,7 @@ public class DataContract {
 
         public static final String COLUMN_NAME_SUBJECT = "subject";
         public static final String COLUMN_NAME_TOPIC = "topic";
-        public static final String COLUMN_NAME_FROM = "from";
+        public static final String COLUMN_NAME_FROM = "from_who";
         public static final String COLUMN_NAME_USER = "participant";
         public static final String COLUMN_NAME_SINGLETON = "singleton";
         public static final String COLUMN_NAME_MINMESSAGES = "minmessages";

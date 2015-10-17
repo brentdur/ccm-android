@@ -5,6 +5,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
     tools:context="com.brentondurkee.ccm.inbox.MsgDetail$MsgDetailFragment">
 
     <!-- Subject -->
@@ -17,7 +18,7 @@
     <!-- Messages -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:id="@+id/msgsList"
         android:layout_below="@+id/convoDetailSubject"
         android:layout_alignParentLeft="true"
@@ -28,29 +29,31 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
 
-            <TextView
-                android:id="@+id/msgText1"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:text="Hello"
-                style="@style/HeaderText"
-                android:background="#8b8b8b"
-                android:textColor="#000000" />
+            android:id="@+id/msgListHolder">
 
-            <TextView
-                android:id="@+id/msgText2"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_below="@+id/msgText1"
-                android:layout_alignParentEnd="true"
-                android:text="Hello"
-                style="@style/HeaderText"
-                android:background="#333333"
-                android:textColor="#bababa" />
+            <!--<TextView-->
+                <!--android:id="@+id/msgText1"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:text="Hello"-->
+                <!--style="@style/HeaderText"-->
+                <!--android:background="#8b8b8b"-->
+                <!--android:textColor="#000000" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/msgText2"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:layout_below="@+id/msgText1"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:text="Hello"-->
+                <!--style="@style/HeaderText"-->
+                <!--android:background="#333333"-->
+                <!--android:textColor="#bababa" />-->
 
         </RelativeLayout>
     </ScrollView>

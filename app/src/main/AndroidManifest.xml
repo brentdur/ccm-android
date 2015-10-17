@@ -69,6 +69,9 @@
         <service
             android:name=".provider.gcm.RegIntentService"
             android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
         </service>
         <service
             android:name=".provider.SyncService"
@@ -130,12 +133,20 @@
                 android:value=".Pager" />
         </activity>
         <activity
-            android:name=".inbox.MsgDetail"
-            android:label="@string/title_activity_msg_detail"
-            android:parentActivityName=".Pager" >
+            android:name=".inbox.BcDetail"
+            android:label="@string/title_activity_bc_detail"
+            android:parentActivityName=".inbox.MsgList" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Pager" />
+                android:value=".inbox.MsgList" />
+        </activity>
+        <activity
+            android:name=".inbox.MsgDetail"
+            android:label="@string/title_activity_msg_detail"
+            android:parentActivityName=".inbox.MsgList" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".inbox.MsgList" />
         </activity>
         <activity
             android:name=".talks.TalkDetail"

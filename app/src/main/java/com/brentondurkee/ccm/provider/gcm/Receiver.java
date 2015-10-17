@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.brentondurkee.ccm.Log;
+import com.brentondurkee.ccm.provider.SyncUtil;
 import com.google.android.gms.gcm.GcmReceiver;
 
 /**
@@ -19,6 +20,7 @@ public class Receiver extends GcmReceiver{
 
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+        SyncUtil.GCMSyncRequest(intent.getExtras().getString("sync"));
         Log.v(TAG, "Received GCM");
     }
 }

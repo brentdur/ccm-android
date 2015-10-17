@@ -8,13 +8,6 @@
     android:paddingLeft="5dp"
     android:paddingRight="5dp">
 
-    <TextView
-        android:id="@+id/separator"
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/darker_gray" />
-
         <TextView
                 android:layout_width="275dp"
                 android:layout_height="wrap_content"

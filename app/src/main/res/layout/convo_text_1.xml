@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
+  -->
+
+    <TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Text1"
+        android:id="@+id/text"
+        style="@style/HeaderText"
+    android:background="#8b8b8b"
+    android:textColor="#000000"
+    android:layout_gravity="left"
+    android:paddingLeft="15dp"
+    android:paddingRight="4dp"
+    android:layout_marginRight="50dp"
+    android:layout_marginBottom="10dp"
+    android:layout_alignParentStart="true" />

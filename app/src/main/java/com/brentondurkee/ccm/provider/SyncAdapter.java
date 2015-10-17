@@ -304,7 +304,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     object.getString("title"),
                     object.getString("message"),
                     object.getString("createdAt"),
-                    object.getInt("version"));
+                    object.getInt("__v"));
         }
         return null;
     }
@@ -385,7 +385,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             return addBC(content,
                     object.getString("title"),
                     object.getString("message"),
-                    object.getInt("version"),
+                    object.getInt("__v"),
                     object.getString("createdAt"),
                     object.getString("_id"));
         }

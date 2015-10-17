@@ -58,7 +58,7 @@ public class MessageCursorAdapter extends CursorAdapter {
         holder.seperator = (TextView) v.findViewById(R.id.separator);
         holder.subjectView = (TextView) v.findViewById(R.id.msgSubject);
         holder.fromView = (TextView) v.findViewById(R.id.msgFrom);
-        holder.dateView = (TextView) v.findViewById(R.id.msgTime);
+//        holder.dateView = (TextView) v.findViewById(R.id.msgTime);
 
         v.setTag(holder);
 

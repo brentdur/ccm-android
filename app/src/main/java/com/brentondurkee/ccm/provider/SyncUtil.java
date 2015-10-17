@@ -61,6 +61,7 @@ public class SyncUtil {
     private static Account mAccount;
     private static String authToken;
 
+
     public static void addAuthToken(String token){
         Log.v(TAG, "Add Token");
         authToken = token;
@@ -111,7 +112,10 @@ public class SyncUtil {
         manager.putBoolean(PREF_CAN_BROADCAST, data.getBoolean(SyncPosts.ME_BROADCAST_KEY, false));
         manager.putBoolean(PREF_CAN_CONVO, data.getBoolean(SyncPosts.ME_CONVOS_KEY, false));
         boolean gcmOk = pref.getString(RegIntentService.PREF_GCM_TOKEN, "").equals(data.getString(SyncPosts.ME_GCM_KEY));
-        manager.putBoolean("sentTokenToServer" , gcmOk);
+        manager.putString(RegIntentService.PREF_GCM_TOKEN, data.getString(SyncPosts.ME_GCM_KEY));
+        Log.v(TAG, "GCM Ok? " + gcmOk);
+        Log.v(TAG, "Server GCM: " + data.getString(SyncPosts.ME_GCM_KEY));
+        Log.v(TAG, "Saved GCM: " + pref.getString(RegIntentService.PREF_GCM_TOKEN, ""));
         manager.putBoolean(PREF_GCM_OK, gcmOk);
         manager.putBoolean(PREF_IS_MINISTER, data.getBoolean(SyncPosts.ME_MINISTERS_KEY, false));
         isMinister = data.getBoolean(SyncPosts.ME_MINISTERS_KEY, false);
@@ -155,5 +159,35 @@ public class SyncUtil {
                 mAccount, // Sync account
                 DataContract.CONTENT_AUTHORITY,                 // Content authority
                 b);                                             // Extras
+    }
+
+    public static void GCMSyncRequest(String message) {
+        if(message.contains("all")){
+            TriggerRefresh();
+        }
+        if (message.contains("events")){
+            TriggerSelectiveRefresh(SyncUtil.SELECTIVE_EVENT);
+        }
+        if (message.contains("talks")){
+            TriggerSelectiveRefresh(SyncUtil.SELECTIVE_TALK);
+        }
+        if (message.contains("signups")){
+            TriggerSelectiveRefresh(SyncUtil.SELECTIVE_SIGNUP);
+        }
+        if (message.contains("groups")){
+            TriggerSelectiveRefresh(SyncUtil.SELECTIVE_GROUP);
+        }
+        if (message.contains("locations")){
+            TriggerSelectiveRefresh(SyncUtil.SELECTIVE_LOCATION);
+        }
+        if(message.contains("topics")){
+            TriggerSelectiveRefresh(SyncUtil.SELECTIVE_TOPIC);
+        }
+        if(message.contains("broadcasts")){
+            TriggerSelectiveRefresh(SyncUtil.SELECTIVE_BC);
+        }
+        if(message.contains("conversations")){
+            TriggerSelectiveRefresh(SyncUtil.SELECTIVE_CONVO);
+        }
     }
 }

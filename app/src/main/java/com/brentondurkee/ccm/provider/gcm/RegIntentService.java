@@ -82,4 +82,6 @@ public class RegIntentService extends IntentService{
             throw new Exception("Update GCM Failed");
         }
     }
+
+
 }

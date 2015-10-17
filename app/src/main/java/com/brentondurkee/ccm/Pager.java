@@ -90,6 +90,32 @@ public class Pager extends AppCompatActivity {
 
     }
 
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        Log.v("Pager Life", "Restart");
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        Log.v("Pager Life", "Resume");
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        Log.v("Pager Life", "Pause");
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        Log.v("Pager Life", "Stop");
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mInflate = getMenuInflater();
@@ -179,7 +205,7 @@ public class Pager extends AppCompatActivity {
             openA = new Intent(getBaseContext(), AdminActivity.class);
             openA.putExtra(AdminUtil.ADD_TYPE, AdminUtil.TYPE_BC);
         }
-        else if (id == R.id.inbox){
+        else if (id == R.id.show_inbox){
             openA = new Intent(getBaseContext(), MsgList.class);
         }
         else {
@@ -194,6 +220,7 @@ public class Pager extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        Log.v("Pager Life", "Start");
         Log.v(TAG, "Start Activity");
         Log.v(TAG, "Test token: " + SyncUtil.getAuthToken());
 
@@ -296,6 +323,7 @@ public class Pager extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         SyncUtil.flush();
+        Log.v("Pager Life", "Destroy");
         super.onDestroy();
     }
 

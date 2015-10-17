@@ -15,12 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Spinner;
 import android.widget.Switch;
 
+import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncPosts;
@@ -32,18 +33,13 @@ import java.util.ArrayList;
 /**
  * Add message activity for posting new messages
  */
-public class BcAddFragment extends Fragment implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class BcAddFragment extends Fragment implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int TOPIC_ADAPTER_ID = 0;
     private static final int GROUP_ADAPTER_ID = 1;
 
-    private final String[] from = {DataContract.Topic.COLUMN_NAME_NAME, DataContract.Topic.COLUMN_NAME_NAME};
-    private final int[] to = {R.id.spinnerTarget, android.R.id.text1};
-    private static final String[] TOPIC_PROJECTION = new String[]{
-            DataContract.Topic._ID,
-            DataContract.Topic.COLUMN_NAME_NAME,
-            DataContract.Topic.COLUMN_NAME_ENTRY_ID
-    };
+    private final String[] fromG = {DataContract.Group.COLUMN_NAME_NAME, DataContract.Group.COLUMN_NAME_NAME};
+    private final int[] to = {R.id.listTarget, android.R.id.text1};
 
     private static final String[] GROUP_PROJECTION = new String[]{
             DataContract.Group._ID,
@@ -51,13 +47,14 @@ public class BcAddFragment extends Fragment implements AdapterView.OnItemSelecte
             DataContract.Group.COLUMN_NAME_ENTRY_ID
     };
 
-    SimpleCursorAdapter topicAdapter;
+    ArrayAdapter<String> syncsAdapter;
     SimpleCursorAdapter groupAdapter;
-    Spinner topicSpinner;
     ListView syncsList;
     ListView groupList;
-    ArrayList<String> topicSelect = new ArrayList<String>(5);
+    ArrayList<String> syncSelect = new ArrayList<String>(5);
     ArrayList<String> groupSelect = new ArrayList<String>(5);
+
+    final String[] syncOptions = {"events", "signups", "talks", "groups", "locations", "topics", "broadcasts", "conversations"};
 
 
     public BcAddFragment() {
@@ -67,14 +64,9 @@ public class BcAddFragment extends Fragment implements AdapterView.OnItemSelecte
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //loads receiving groups from cursor
-//        topicAdapter = new SimpleCursorAdapter(getActivity(), R.layout.spinner_layout, null, from, to, 0);
-        topicAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_layout, null, from, to, 0);
-//        topicAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        topicAdapter.setDropDownViewResource(android.R.layout.simple_list_item_multiple_choice);
-        getLoaderManager().initLoader(TOPIC_ADAPTER_ID, null, this);
+        syncsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice, syncOptions);
 
-//        groupAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_layout, null,
+        groupAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_layout, null, fromG, to, 0);
         groupAdapter.setViewResource(android.R.layout.simple_list_item_multiple_choice);
         getLoaderManager().initLoader(GROUP_ADAPTER_ID, null, this);
 
@@ -92,7 +84,7 @@ public class BcAddFragment extends Fragment implements AdapterView.OnItemSelecte
 //        });
 
         syncsList = (ListView) rootView.findViewById(R.id.list_syncs);
-        syncsList.setAdapter(topicAdapter);
+        syncsList.setAdapter(syncsAdapter);
         syncsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         syncsList.setItemsCanFocus(false);
         syncsList.setOnItemClickListener(this);
@@ -111,12 +103,16 @@ public class BcAddFragment extends Fragment implements AdapterView.OnItemSelecte
                 data.putString(SyncPosts.BROADCAST_MSG, ((EditText) rootView.findViewById(R.id.bcAddMsg)).getText().toString());
                 final boolean isCast = ((Switch) rootView.findViewById(R.id.synyCastSwitch)).isChecked();
 
-                if (topicSelect.isEmpty()) {
-                    topicSelect.add("all");
+                if (syncSelect.isEmpty()) {
+                    syncSelect.add("all");
                 }
-
-                data.putStringArray(SyncPosts.BROADCAST_SYNCS, (String [])topicSelect.toArray());
-                data.putStringArray(SyncPosts.BROADCAST_RECP, (String []) groupSelect.toArray());
+                for (int i = 0; i < syncSelect.size(); i++){
+                    Log.v("List", syncSelect.get(i));
+                }
+                String[] topicArray = syncSelect.toArray(new String[syncSelect.size()]);
+                String[] groupArray = groupSelect.toArray(new String[groupSelect.size()]);
+                data.putStringArray(SyncPosts.BROADCAST_SYNCS, topicArray);
+                data.putStringArray(SyncPosts.BROADCAST_RECP, groupArray);
 
                 AdminUtil.showDialog(getActivity());
 
@@ -138,8 +134,6 @@ public class BcAddFragment extends Fragment implements AdapterView.OnItemSelecte
                         }
                     }
                 }.execute(data);
-
-
             }
         });
 
@@ -148,33 +142,24 @@ public class BcAddFragment extends Fragment implements AdapterView.OnItemSelecte
     }
 
 
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getAdapter().equals(topicAdapter)){
-            Cursor cursor = (Cursor) topicAdapter.getItem(position);
-            topicSelect.add(cursor.getString(2));
-        }
-    }
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getAdapter().equals(topicAdapter)){
-            Cursor cursor = (Cursor) topicAdapter.getItem(position);
-            if (topicSelect.contains(cursor.getString(2))) {
-                topicSelect.remove(cursor.getString(2));
+        if (parent.getAdapter().equals(syncsAdapter)){
+            String current = syncsAdapter.getItem(position);
+            if (syncSelect.contains(current)) {
+                syncSelect.remove(current);
             }
             else {
-                topicSelect.add(cursor.getString(2));
+                syncSelect.add(current);
             }
         }
         else if (parent.getAdapter().equals(groupAdapter)) {
             Cursor cursor = (Cursor) groupAdapter.getItem(position);
-            if (groupSelect.contains(cursor.getString(2))) {
-                groupSelect.remove(cursor.getString(2));
+            if (groupSelect.contains(cursor.getString(1))) {
+                groupSelect.remove(cursor.getString(1));
             }
             else {
-                groupSelect.add(cursor.getString(2));
+                groupSelect.add(cursor.getString(1));
             }
         }
     }
@@ -182,8 +167,6 @@ public class BcAddFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
-            case TOPIC_ADAPTER_ID:
-                return new CursorLoader(getActivity(), DataContract.Topic.CONTENT_URI, TOPIC_PROJECTION, null, null, null);
             case GROUP_ADAPTER_ID:
                 return new CursorLoader(getActivity(), DataContract.Group.CONTENT_URI, GROUP_PROJECTION, null, null, null);
             default:
@@ -194,9 +177,6 @@ public class BcAddFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()){
-            case TOPIC_ADAPTER_ID:
-                topicAdapter.changeCursor(data);
-                break;
             case GROUP_ADAPTER_ID:
                 groupAdapter.changeCursor(data);
                 break;
@@ -207,18 +187,10 @@ public class BcAddFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         switch(loader.getId()) {
-            case TOPIC_ADAPTER_ID:
-                topicAdapter.changeCursor(null);
-                break;
             case GROUP_ADAPTER_ID:
                 groupAdapter.changeCursor(null);
                 break;
         }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 }
 

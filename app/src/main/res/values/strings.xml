@@ -5,6 +5,7 @@
 
     <string name="title_activity_event_detail">Event</string>
     <string name="title_activity_msg_detail">Message</string>
+    <string name="title_activity_bc_detail">Broadcast</string>
     <string name="title_activity_talk_detail">Talk</string>
     <string name="title_activity_signups_detail">Signup</string>
     <string name="title_activity_add">Add Stuff</string>

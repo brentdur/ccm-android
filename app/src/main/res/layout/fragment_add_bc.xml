@@ -1,16 +1,17 @@
 <!--
   ~ Copyright (c) 2015. This work has been created by Brenton Durkee. Designed for use by RUF CCM
   -->
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin"
+android:paddingBottom="@dimen/activity_vertical_margin"
+tools:context="com.brentondurkee.ccm.inbox.MsgDetail$MsgDetailFragment">
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.brentondurkee.ccm.inbox.MsgDetail$MsgDetailFragment">
 
-    <!-- Sync Cast Switch -->
+<!-- Sync Cast Switch -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,7 +42,7 @@
     <!-- Syncs Type Selector -->
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="@string/topic_lead"
         android:id="@+id/textView4"
         android:textColor="@color/leadText"
@@ -95,15 +96,17 @@
         android:id="@+id/bcAddMsg"
         android:layout_below="@+id/list_groups"
         android:layout_alignParentStart="true"
-        style="@style/EditMsg" />
+        style="@style/EditMsg"
+        android:lines="3" />
 
     <!-- Submit Button -->
     <Button
         android:id="@+id/button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        style="@style/EditSubmit"/>
-
+        style="@style/EditSubmit"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false" />
 
 
 </RelativeLayout>

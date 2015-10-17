@@ -19,13 +19,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.admin.AdminActivity;
 import com.brentondurkee.ccm.admin.AdminUtil;
 import com.brentondurkee.ccm.provider.DataContract;
 import com.brentondurkee.ccm.provider.SyncPosts;
 import com.brentondurkee.ccm.provider.SyncUtil;
+import com.commonsware.cwac.merge.MergeAdapter;
 
 /**
  * Created by brenton on 6/12/15.
@@ -33,7 +33,6 @@ import com.brentondurkee.ccm.provider.SyncUtil;
  * List fragment for messages
  */
 public class MsgList extends AppCompatActivity {
-    //TODO update to show convos and broadcasts
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +81,6 @@ public class MsgList extends AppCompatActivity {
             return true;
         }
         else if (item.getItemId() == R.id.add_msg){
-            //TODO update with right type
             openA = new Intent(getBaseContext(), AdminActivity.class);
             openA.putExtra(AdminUtil.ADD_TYPE, AdminUtil.TYPE_MSG);
         }
@@ -97,25 +95,21 @@ public class MsgList extends AppCompatActivity {
 
     public static class MsgListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-        MessageCursorAdapter mAdapter;
-        final String[] FROM = new String[]{DataContract.Convo.COLUMN_NAME_SUBJECT, DataContract.Convo.COLUMN_NAME_FROM, DataContract.Convo.COLUMN_NAME_TOPIC};
-        final int[] TO = new int[]{R.id.msgFrom, R.id.msgSubject, R.id.msgTime};
+        CommunicationsCursorAdapter bcAdapter;
+        CommunicationsCursorAdapter convoAdapter;
+        MergeAdapter mergeAdapter = new MergeAdapter();
         final String[] PROJECTION = new String[]{
                 DataContract.Convo._ID,
                 DataContract.Convo.COLUMN_NAME_SUBJECT,
+                DataContract.Convo.COLUMN_NAME_FROM,
                 DataContract.Convo.COLUMN_NAME_TOPIC,
                 DataContract.Convo.COLUMN_NAME_ENTRY_ID
         };
 
-        final String[] TOPIC_PROJECTION = new String[]{
-                DataContract.Topic._ID,
-                DataContract.Topic.COLUMN_NAME_ENTRY_ID,
-                DataContract.Topic.COLUMN_NAME_NAME
-        };
-
         final String[] BC_PROJECTION = new String[]{
                 DataContract.Broadcast._ID,
-                DataContract.Broadcast.COLUMN_NAME_TITLE
+                DataContract.Broadcast.COLUMN_NAME_TITLE,
+                DataContract.Broadcast.COLUMN_NAME_ENTRY_ID
         };
 
         public MsgListFragment() {
@@ -124,11 +118,14 @@ public class MsgList extends AppCompatActivity {
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            mAdapter = new MessageCursorAdapter(getActivity(), null, 0);
-            getLoaderManager().initLoader(1, null, this);
-            setEmptyText("No messages");
+            bcAdapter = new CommunicationsCursorAdapter(getActivity(), null, 0);
+            convoAdapter = new CommunicationsCursorAdapter(getActivity(), null, 0);
+            mergeAdapter.addAdapter(bcAdapter);
+            mergeAdapter.addAdapter(convoAdapter);
+
+            setEmptyText("No Communications");
             registerForContextMenu(getListView());
-            setListAdapter(mAdapter);
+            setListAdapter(mergeAdapter);
             getLoaderManager().initLoader(2, null, this);
             getLoaderManager().initLoader(0, null, this);
         }
@@ -138,9 +135,18 @@ public class MsgList extends AppCompatActivity {
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             Intent intent = new Intent();
-            intent.setClass(getActivity(), MsgDetail.class);
-            intent.putExtra("id", mAdapter.getCursor().getString(0));
-            intent.putExtra("entry_id", mAdapter.getCursor().getString(4));
+            String itemId = ((CursorWrapper) mergeAdapter.getItem(position)).getString(0);
+            String entry_id;
+            if (((CursorWrapper) mergeAdapter.getItem(position)).getColumnName(1).equals(DataContract.Convo.COLUMN_NAME_SUBJECT)){
+                entry_id = ((CursorWrapper) mergeAdapter.getItem(position)).getString(4);
+                intent.setClass(getActivity(), MsgDetail.class);
+            }
+            else {
+                entry_id = ((CursorWrapper) mergeAdapter.getItem(position)).getString(2);
+                intent.setClass(getActivity(), BcDetail.class);
+            }
+            intent.putExtra("id", itemId);
+            intent.putExtra("entry_id", entry_id);
             startActivity(intent);
         }
 
@@ -156,53 +162,69 @@ public class MsgList extends AppCompatActivity {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             if(item.getItemId() == R.id.delete_msg){
                 Bundle data = new Bundle();
-                data.putString(SyncPosts.CONVO_ID, ((CursorWrapper) mAdapter.getItem(info.position)).getString(4));
-                new AsyncTask<Bundle, Void, Boolean>() {
-                    @Override
-                    protected Boolean doInBackground(Bundle... data) {
-                        return SyncPosts.putKillConvo(data[0], SyncUtil.getAccount(), getActivity());
-                    }
-
-                    @Override
-                    protected void onPostExecute(Boolean aBoolean) {
-                        super.onPostExecute(aBoolean);
-                        if (aBoolean) {
-                            SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_CONVO);
-                        } else {
-                            AdminUtil.toast(getActivity(), "Failed to Delete");
+                if (((CursorWrapper) mergeAdapter.getItem(info.position)).getColumnName(1).equals(DataContract.Convo.COLUMN_NAME_SUBJECT)){
+                    data.putString(SyncPosts.CONVO_ID, ((CursorWrapper) mergeAdapter.getItem(info.position)).getString(4));
+                    new AsyncTask<Bundle, Void, Boolean>() {
+                        @Override
+                        protected Boolean doInBackground(Bundle... data) {
+                            return SyncPosts.putKillConvo(data[0], SyncUtil.getAccount(), getActivity());
                         }
 
-                    }
-                }.execute(data);
+                        @Override
+                        protected void onPostExecute(Boolean aBoolean) {
+                            super.onPostExecute(aBoolean);
+                            if (aBoolean) {
+                                SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_CONVO);
+                            } else {
+                                AdminUtil.toast(getActivity(), "Failed to Delete");
+                            }
+
+                        }
+                    }.execute(data);
+                }
+                else {
+                    data.putString(SyncPosts.BROADCAST_ID, ((CursorWrapper) mergeAdapter.getItem(info.position)).getString(2));
+                    new AsyncTask<Bundle, Void, Boolean>() {
+                        @Override
+                        protected Boolean doInBackground(Bundle... data) {
+                            return SyncPosts.putKillBroadcast(data[0], SyncUtil.getAccount(), getActivity());
+                        }
+
+                        @Override
+                        protected void onPostExecute(Boolean aBoolean) {
+                            super.onPostExecute(aBoolean);
+                            if (aBoolean) {
+                                SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_BC);
+                            } else {
+                                AdminUtil.toast(getActivity(), "Failed to Delete");
+                            }
+
+                        }
+                    }.execute(data);
+                }
             }
             return super.onContextItemSelected(item);
         }
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            Log.v("Msg List", "Loaded");
-            if(id == 1) {
-                return new CursorLoader(getActivity(), DataContract.Topic.CONTENT_URI, TOPIC_PROJECTION, null, null, null);
-            }
-            else if (id == 2){
+            if (id == 2) {
                 return new CursorLoader(getActivity(), DataContract.Broadcast.CONTENT_URI, BC_PROJECTION, null, null, null);
             }
-            else {
-                return new CursorLoader(getActivity(), DataContract.Convo.CONTENT_URI, PROJECTION, null, null, DataContract.Convo.COLUMN_NAME_TOPIC);
+            else if (id == 0){
+                return new CursorLoader(getActivity(), DataContract.Convo.CONTENT_URI, PROJECTION, null, null, null);
             }
+
+            return null;
         }
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            Log.v("Msg List", "Changed");
-            if (loader.getId() == 1){
-                mAdapter.setTopicCursor(data);
+            if (loader.getId() == 0){
+                convoAdapter.changeCursor(data);
             }
             else if (loader.getId() == 2){
-                mAdapter.setBroadcastCursor(data);
-            }
-            else {
-                mAdapter.changeCursor(data);
+                bcAdapter.changeCursor(data);
             }
         }
 

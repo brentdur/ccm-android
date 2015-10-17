@@ -69,7 +69,7 @@ public class BcDetail extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.delete_msg){
-            String bcId = getIntent().getExtras().getString("id");
+            String bcId = getIntent().getExtras().getString("entry_id");
             Bundle data = new Bundle();
             final Context context = this;
             data.putString(SyncPosts.BROADCAST_ID, bcId);

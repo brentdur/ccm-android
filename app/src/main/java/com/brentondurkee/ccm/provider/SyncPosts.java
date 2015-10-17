@@ -305,12 +305,14 @@ public class SyncPosts {
                     req += ",";
                 }
             }
-            req += "],\"recepients\":[";
-            String[] recp = data.getStringArray(BROADCAST_RECP);
-            for(int i = 0; i<recp.length; i++){
-                req += String.format("\"%s\"" ,recp[i]);
-                if(i+1 < recp.length){
-                    req += ",";
+            if(!(data.getStringArray(BROADCAST_RECP).length == 0)){
+                req += "],\"recepients\":[";
+                String[] recp = data.getStringArray(BROADCAST_RECP);
+                for(int i = 0; i<recp.length; i++){
+                    req += String.format("\"%s\"" ,recp[i]);
+                    if(i+1 < recp.length){
+                        req += ",";
+                    }
                 }
             }
             req += "]}";

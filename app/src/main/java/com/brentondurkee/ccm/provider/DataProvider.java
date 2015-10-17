@@ -552,7 +552,7 @@ public class DataProvider extends ContentProvider {
      */
     static class DataDatabase extends SQLiteOpenHelper {
         /** Schema version. */
-        public static final int DATABASE_VERSION = 12;
+        public static final int DATABASE_VERSION = 13;
         /** Filename for SQLite file. */
         public static final String DATABASE_NAME = "ccmdata.db";
 
