@@ -90,6 +90,7 @@ public class MsgDetail extends AppCompatActivity {
                     if (aBoolean) {
                         SyncUtil.TriggerSelectiveRefresh(SyncUtil.SELECTIVE_CONVO);
                         finishActivity(0);
+                        finish();
                     } else {
                         AdminUtil.toast(getApplicationContext(), "Failed to Delete");
                     }

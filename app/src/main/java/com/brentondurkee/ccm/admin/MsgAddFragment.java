@@ -87,10 +87,9 @@ public class MsgAddFragment extends Fragment implements AdapterView.OnItemSelect
                         super.onPostExecute(aBoolean);
                         AdminUtil.hideDialog();
                         if (aBoolean) {
-                            AdminUtil.toast(getActivity(), "Convo Sent");
                             getActivity().finish();
                         } else {
-                            AdminUtil.toast(getActivity(), "Failed to Send Convo");
+                            AdminUtil.toast(getActivity(), "Failed to Send Message");
                         }
                     }
                 }.execute(data);

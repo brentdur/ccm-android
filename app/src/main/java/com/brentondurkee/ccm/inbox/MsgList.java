@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.brentondurkee.ccm.Log;
 import com.brentondurkee.ccm.R;
 import com.brentondurkee.ccm.admin.AdminActivity;
 import com.brentondurkee.ccm.admin.AdminUtil;
@@ -87,11 +88,20 @@ public class MsgList extends AppCompatActivity {
         else {
             return super.onOptionsItemSelected(item);
         }
-        startActivity(openA);
+        startActivityForResult(openA, 0);
 
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.v("Activity Result", "Activity Resulted");
+        MsgListFragment listFrag = (MsgListFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+        listFrag.adapterNotifies();
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     public static class MsgListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -123,6 +133,8 @@ public class MsgList extends AppCompatActivity {
             mergeAdapter.addAdapter(bcAdapter);
             mergeAdapter.addAdapter(convoAdapter);
 
+
+
             setEmptyText("No Communications");
             registerForContextMenu(getListView());
             setListAdapter(mergeAdapter);
@@ -147,7 +159,7 @@ public class MsgList extends AppCompatActivity {
             }
             intent.putExtra("id", itemId);
             intent.putExtra("entry_id", entry_id);
-            startActivity(intent);
+            startActivityForResult(intent, 0);
         }
 
         @Override
@@ -204,6 +216,12 @@ public class MsgList extends AppCompatActivity {
                 }
             }
             return super.onContextItemSelected(item);
+        }
+
+        public void adapterNotifies(){
+            bcAdapter.notifyDataSetChanged();
+            convoAdapter.notifyDataSetChanged();
+            mergeAdapter.notifyDataSetChanged();
         }
 
         @Override
