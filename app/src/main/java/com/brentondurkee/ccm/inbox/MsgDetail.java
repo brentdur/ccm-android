@@ -1,12 +1,14 @@
 package com.brentondurkee.ccm.inbox;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -133,6 +135,8 @@ public class MsgDetail extends AppCompatActivity {
 
         ScrollView scroller;
 
+        boolean isMinister;
+
         public MsgDetailFragment() {
         }
 
@@ -140,6 +144,16 @@ public class MsgDetail extends AppCompatActivity {
             Log.v("Message Cycle", "Updating Blocks");
             final RelativeLayout holder = (RelativeLayout) rootView.findViewById(R.id.msgListHolder);
 
+            int layUser;
+            int layMin;
+            if(isMinister){
+                layUser = R.layout.convo_text_2;
+                layMin = R.layout.convo_text_1;
+            }
+            else {
+                layUser = R.layout.convo_text_1;
+                layMin = R.layout.convo_text_2;
+            }
 
             holder.removeAllViews();
 
@@ -157,11 +171,11 @@ public class MsgDetail extends AppCompatActivity {
                 Log.v("Message", "Message: " + mess[i]);
                 View msg;
                 if (cur.equals("%OTHER%")) {
-                    msg = getActivity().getLayoutInflater().inflate(R.layout.convo_text_1, holder, false);
+                    msg = getActivity().getLayoutInflater().inflate(layUser, holder, false);
                     ((TextView) msg.findViewById(R.id.text)).setText(minMess[mmi++]);
                 }
                 else {
-                    msg = getActivity().getLayoutInflater().inflate(R.layout.convo_text_2, holder, false);
+                    msg = getActivity().getLayoutInflater().inflate(layMin, holder, false);
                     ((TextView) msg.findViewById(R.id.text)).setText(mess[i]);
                 }
                 msg.setId(i+1);
@@ -227,6 +241,8 @@ public class MsgDetail extends AppCompatActivity {
             Bundle extras = getActivity().getIntent().getExtras();
             final String id = extras.getString("id");
             final String entryId = extras.getString("entry_id");
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+            isMinister = pref.getBoolean(SyncUtil.PREF_IS_MINISTER, false);
             callCursor(id);
 
 

@@ -187,6 +187,7 @@ public class Pager extends AppCompatActivity {
         Intent openA;
         if (id == R.id.action_settings) {
             SyncUtil.TriggerRefresh();
+            updatePermissionBools();
             return true;
         }
         else if (id == R.id.add_event) {

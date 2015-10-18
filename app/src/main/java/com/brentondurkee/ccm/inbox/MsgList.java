@@ -1,10 +1,12 @@
 package com.brentondurkee.ccm.inbox;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -65,9 +67,10 @@ public class MsgList extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(!SyncUtil.isMinister){
-            if(menu.findItem(R.id.add_msg) == null){
-                menu.add(Menu.NONE, R.id.add_msg, Menu.NONE, R.string.add_msg);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        if(pref.getBoolean(SyncUtil.PREF_IS_MINISTER, false)){
+            if(menu.findItem(R.id.add_msg) != null){
+                menu.removeItem(R.id.add_msg);
             }
         }
         return super.onPrepareOptionsMenu(menu);
